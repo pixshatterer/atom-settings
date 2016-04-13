@@ -1,0 +1,27 @@
+"*":
+  "atom-beautify":
+    general:
+      _analyticsUserId: "68ac7b8a-4c34-4619-9f6b-6af3e0ae7590"
+  core:
+    themes: [
+      "one-dark-ui"
+      "afterglow-plus"
+    ]
+  editor:
+    invisibles: {}
+    scrollPastEnd: true
+    showIndentGuide: true
+    tabType: "soft"
+  "exception-reporting":
+    userId: "66b06d99-09fe-dd4b-9af9-e9dfa274c62f"
+  "imdone-atom":
+    openIn: {}
+    todaysJournal: {}
+  "linter-eslint": {}
+  minimap: {}
+  "one-dark-ui": {}
+  "roku-deploy": {}
+  "tree-view":
+    hideVcsIgnoredFiles: true
+  welcome:
+    showOnStartup: false

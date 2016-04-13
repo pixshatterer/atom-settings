@@ -1,0 +1,11 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Tab Control'
+      'submenu': [
+        { 'label': 'Show', 'command': 'tab-control:show' }
+      ]
+    ]
+  }
+]
