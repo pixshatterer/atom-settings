@@ -8,6 +8,7 @@
       "afterglow-plus"
     ]
   editor:
+    fontSize: 12
     invisibles: {}
     scrollPastEnd: true
     showIndentGuide: true
@@ -21,6 +22,9 @@
   minimap: {}
   "one-dark-ui": {}
   "roku-deploy": {}
+  "todo-show":
+    sortAscending: false
+    sortBy: "Type"
   "tree-view":
     hideVcsIgnoredFiles: true
   welcome:
