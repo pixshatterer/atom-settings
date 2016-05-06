@@ -3,6 +3,9 @@
     general:
       _analyticsUserId: "68ac7b8a-4c34-4619-9f6b-6af3e0ae7590"
   core:
+    disabledPackages: [
+      "project-manager"
+    ]
     themes: [
       "one-dark-ui"
       "afterglow-plus"
@@ -11,7 +14,6 @@
     fontSize: 12
     invisibles: {}
     scrollPastEnd: true
-    showIndentGuide: true
     tabType: "soft"
   "exception-reporting":
     userId: "66b06d99-09fe-dd4b-9af9-e9dfa274c62f"
@@ -21,7 +23,15 @@
   "linter-eslint": {}
   minimap: {}
   "one-dark-ui": {}
-  "roku-deploy": {}
+  "roku-deploy":
+    excludedPaths: "out,tools"
+    rokuAddress: "192.168.1.100"
+  "terminal-plus":
+    core:
+      mapTerminalsTo: "Folder"
+    style:
+      animationSpeed: 10
+      defaultPanelHeight: "200px"
   "todo-show":
     sortAscending: false
     sortBy: "Type"
