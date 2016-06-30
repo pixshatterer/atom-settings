@@ -13,6 +13,7 @@ module.exports = RokuDeploy =
   rokuUserId: null
   excludedPaths: null
   outputDirectory: null
+  separator: if process.platform != 'win32' then '/' else '\\'
   config:
       rokuAddress:
           type: 'string'
@@ -59,12 +60,26 @@ module.exports = RokuDeploy =
 
   zipPackage: ->
       console.log 'zipPackage called.'
-      request.post('http://' + module.exports.rokuAddress + ':8060/keypress/Home').on('error', (err)-> console.log err)
+      request.post('http://' + module.exports.rokuAddress + ':8060/keypress/Home').on('response', (response)->
+          if response != undefined
+              console.log "Response returned"
+              if response != undefined && response.statusCode != undefined && response.statusCode == 200
+                  console.log "Response returned 200"
+                  module.exports.zipCore()
+              else
+                  atom.notifications.addError('Sending Home command did not succeed. See console for details.')
+                  if response != undefined
+                      console.log response.body
+          else
+              console.log "No response returned."
+      )
+
+  zipCore: ->
       dirs = atom.project.getDirectories()
       dir = dirs[0]
       if(dir!=undefined)
           p = dir.getRealPathSync()
-          bundlePath = p+'\\' + @outputDirectory + '\\'
+          bundlePath = p + @separator + @outputDirectory + @separator
           try
               stat = fs.lstatSync(bundlePath)
           catch error
@@ -96,19 +111,28 @@ module.exports = RokuDeploy =
       dirs = atom.project.getDirectories()
       dir = dirs[0]
       p = dir.getRealPathSync()
-      bundlePath = p+'\\' + module.exports.outputDirectory + '\\'
+      bundlePath = p + module.exports.separator  + module.exports.outputDirectory + module.exports.separator
       rokuOptions =
           url : addrs
           formData :
               mysubmit : 'Replace'
               archive : fs.createReadStream(bundlePath+'bundle.zip')
-      request.post(rokuOptions,module.exports.requestCallback).auth(module.exports.rokuUserId,module.exports.rokuPassword,false).on('error', (err)-> console.log err)
+      request.post(rokuOptions,module.exports.requestCallback).auth(module.exports.rokuUserId,module.exports.rokuPassword,false)
       console.log 'Request started'
 
 
   requestCallback: (error,response,body) ->
-      atom.notifications.addSuccess('Deployed to '+module.exports.rokuAddress)
-      console.log response.statusCode
+      if response != undefined && response.statusCode != undefined && response.statusCode == 200
+          if response.body.indexOf("Identical to previous version -- not replacing.") != -1
+              atom.notifications.addWarning("Deploy cancelled by Roku: the package is identical to the package already on the Roku.")
+          else
+              console.log "Successfully deployed"
+              atom.notifications.addSuccess('Deployed to '+module.exports.rokuAddress)
+      else
+          atom.notifications.addFatalError("Failed to deploy to " + module.exports.rokuAddress + " see console output for details.")
+          console.log error
+          if response != undefined
+              console.log response.body
 
   setRokuAddress: (address, userId,pwd)->
       module.exports.rokuAddress = address

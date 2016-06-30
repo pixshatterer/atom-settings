@@ -3,9 +3,11 @@
 /* Layout */
 
 atom-panel.modal.expose-panel {
+  position: fixed;
   left: 0;
   margin: auto;
   width: 100%;
+  max-width: 100%;
   height: 100%;
   overflow: scroll;
   background-color: rgba(0, 0, 0, 0.4);
@@ -50,6 +52,10 @@ atom-workspace-axis.expose-blur {
           overflow: hidden;
           text-overflow: ellipsis;
           margin: 0 15px;
+
+          &.pending {
+            font-style: italic;
+          }
 
           &::before {
             margin-right: 5px;
@@ -110,6 +116,11 @@ atom-workspace-axis.expose-blur {
         }
       }
     }
+  }
+
+  // Fix stand alone minimap in relative mode (issue #23)
+  atom-text-editor-minimap[stand-alone=true] {
+    width: 190px;
   }
 
 /* Tabs numbers */

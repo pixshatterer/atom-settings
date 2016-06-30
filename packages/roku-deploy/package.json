@@ -1,7 +1,7 @@
 {
   "name": "roku-deploy",
   "main": "./lib/roku-deploy",
-  "version": "0.3.4",
+  "version": "0.3.7",
   "description": "A simple package to deploy to roku from Atom.",
   "keywords": [],
   "activationCommands": {
@@ -25,10 +25,10 @@
     "url": "https://github.com/mmratio/roku-deploy/issues"
   },
   "homepage": "https://github.com/mmratio/roku-deploy#readme",
-  "_id": "roku-deploy@0.3.4",
-  "_shasum": "53b82ed98bd9c4b456208bbe9864ac23ad0182bb",
-  "_resolved": "file:../d-116312-66678-gqd2n4/package.tgz",
-  "_from": "../d-116312-66678-gqd2n4/package.tgz",
+  "_id": "roku-deploy@0.3.7",
+  "_shasum": "472f065b1e2a439cfaa452b714ab567ccf1a9c61",
+  "_resolved": "file:../d-11651-92767-10ld6tn/package.tgz",
+  "_from": "../d-11651-92767-10ld6tn/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -49,7 +49,7 @@
       },
       {
         "name": "readable-stream",
-        "version": "1.0.33",
+        "version": "1.0.34",
         "path": "node_modules/archiver/node_modules/archiver-utils/node_modules/lazystream/node_modules/readable-stream/readable.js"
       },
       {
@@ -94,12 +94,12 @@
       },
       {
         "name": "inflight",
-        "version": "1.0.4",
+        "version": "1.0.5",
         "path": "node_modules/archiver/node_modules/glob/node_modules/inflight/inflight.js"
       },
       {
         "name": "wrappy",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "path": "node_modules/archiver/node_modules/glob/node_modules/inflight/node_modules/wrappy/wrappy.js"
       },
       {
@@ -114,12 +114,12 @@
       },
       {
         "name": "brace-expansion",
-        "version": "1.1.3",
+        "version": "1.1.4",
         "path": "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/index.js"
       },
       {
         "name": "balanced-match",
-        "version": "0.3.0",
+        "version": "0.4.1",
         "path": "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js"
       },
       {
@@ -134,7 +134,7 @@
       },
       {
         "name": "wrappy",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "path": "node_modules/archiver/node_modules/glob/node_modules/once/node_modules/wrappy/wrappy.js"
       },
       {
@@ -169,7 +169,7 @@
       },
       {
         "name": "process-nextick-args",
-        "version": "1.0.6",
+        "version": "1.0.7",
         "path": "node_modules/archiver/node_modules/readable-stream/node_modules/process-nextick-args/index.js"
       },
       {
@@ -204,7 +204,7 @@
       },
       {
         "name": "wrappy",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "path": "node_modules/archiver/node_modules/tar-stream/node_modules/end-of-stream/node_modules/once/node_modules/wrappy/wrappy.js"
       },
       {
@@ -239,7 +239,7 @@
       },
       {
         "name": "request",
-        "version": "2.71.0",
+        "version": "2.72.0",
         "path": "node_modules/request/index.js"
       },
       {
@@ -249,23 +249,8 @@
       },
       {
         "name": "aws4",
-        "version": "1.3.2",
+        "version": "1.4.1",
         "path": "node_modules/request/node_modules/aws4/aws4.js"
-      },
-      {
-        "name": "lru-cache",
-        "version": "4.0.1",
-        "path": "node_modules/request/node_modules/aws4/node_modules/lru-cache/lib/lru-cache.js"
-      },
-      {
-        "name": "pseudomap",
-        "version": "1.0.2",
-        "path": "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/pseudomap/map.js"
-      },
-      {
-        "name": "yallist",
-        "version": "2.0.0",
-        "path": "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/yallist/yallist.js"
       },
       {
         "name": "bl",
@@ -294,7 +279,7 @@
       },
       {
         "name": "process-nextick-args",
-        "version": "1.0.6",
+        "version": "1.0.7",
         "path": "node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/index.js"
       },
       {
@@ -494,7 +479,7 @@
       },
       {
         "name": "sshpk",
-        "version": "1.7.4",
+        "version": "1.8.3",
         "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/lib/index.js"
       },
       {
@@ -503,19 +488,24 @@
         "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/asn1/lib/index.js"
       },
       {
-        "name": "dashdash",
-        "version": "1.13.0",
-        "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/lib/dashdash.js"
-      },
-      {
         "name": "assert-plus",
         "version": "1.0.0",
-        "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/node_modules/assert-plus/assert.js"
+        "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/assert-plus/assert.js"
+      },
+      {
+        "name": "dashdash",
+        "version": "1.13.1",
+        "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/lib/dashdash.js"
       },
       {
         "name": "ecc-jsbn",
         "version": "0.1.1",
         "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/index.js"
+      },
+      {
+        "name": "getpass",
+        "version": "0.1.6",
+        "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/getpass/lib/index.js"
       },
       {
         "name": "jodid25519",
@@ -529,7 +519,7 @@
       },
       {
         "name": "tweetnacl",
-        "version": "0.14.3",
+        "version": "0.13.3",
         "path": "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/tweetnacl/nacl-fast.js"
       },
       {
@@ -549,12 +539,12 @@
       },
       {
         "name": "mime-types",
-        "version": "2.1.10",
+        "version": "2.1.11",
         "path": "node_modules/request/node_modules/mime-types/index.js"
       },
       {
         "name": "mime-db",
-        "version": "1.22.0",
+        "version": "1.23.0",
         "path": "node_modules/request/node_modules/mime-types/node_modules/mime-db/index.js"
       },
       {
@@ -564,7 +554,7 @@
       },
       {
         "name": "oauth-sign",
-        "version": "0.8.1",
+        "version": "0.8.2",
         "path": "node_modules/request/node_modules/oauth-sign/index.js"
       },
       {
@@ -584,7 +574,7 @@
       },
       {
         "name": "tunnel-agent",
-        "version": "0.4.2",
+        "version": "0.4.3",
         "path": "node_modules/request/node_modules/tunnel-agent/index.js"
       }
     ],
@@ -629,14 +619,12 @@
         "node_modules/archiver/node_modules/glob/glob.js",
         "node_modules/archiver/node_modules/glob/node_modules/inflight/inflight.js",
         "node_modules/archiver/node_modules/glob/node_modules/inflight/node_modules/wrappy/wrappy.js",
-        "node_modules/archiver/node_modules/glob/node_modules/inflight/test.js",
         "node_modules/archiver/node_modules/glob/node_modules/inherits/inherits.js",
         "node_modules/archiver/node_modules/glob/node_modules/inherits/inherits_browser.js",
         "node_modules/archiver/node_modules/glob/node_modules/inherits/test.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/minimatch.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/example.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/index.js",
-        "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/example.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/example/map.js",
         "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/index.js",
@@ -1125,10 +1113,7 @@
         "node_modules/request/lib/tunnel.js",
         "node_modules/request/node_modules/aws-sign2/index.js",
         "node_modules/request/node_modules/aws4/aws4.js",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/lib/lru-cache.js",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/pseudomap/map.js",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/pseudomap/pseudomap.js",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/yallist/yallist.js",
+        "node_modules/request/node_modules/aws4/lru.js",
         "node_modules/request/node_modules/bl/bl.js",
         "node_modules/request/node_modules/bl/node_modules/readable-stream/duplex.js",
         "node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_duplex.js",
@@ -1255,12 +1240,13 @@
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/asn1/lib/index.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/asn1/tst/ber/reader.test.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/asn1/tst/ber/writer.test.js",
+        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/assert-plus/assert.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/lib/dashdash.js",
-        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/node_modules/assert-plus/assert.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/index.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/lib/ec.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/lib/sec.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/test.js",
+        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/getpass/lib/index.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/index.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/lib/core.js",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/lib/curve255.js",
@@ -1283,7 +1269,6 @@
         "node_modules/request/node_modules/node-uuid/benchmark/benchmark.js",
         "node_modules/request/node_modules/node-uuid/uuid.js",
         "node_modules/request/node_modules/oauth-sign/index.js",
-        "node_modules/request/node_modules/oauth-sign/test.js",
         "node_modules/request/node_modules/qs/dist/qs.js",
         "node_modules/request/node_modules/qs/lib/index.js",
         "node_modules/request/node_modules/qs/lib/parse.js",
@@ -1345,9 +1330,6 @@
         "node_modules/archiver/node_modules/zip-stream/package.json",
         "node_modules/archiver/package.json",
         "node_modules/request/node_modules/aws-sign2/package.json",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/pseudomap/package.json",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/node_modules/yallist/package.json",
-        "node_modules/request/node_modules/aws4/node_modules/lru-cache/package.json",
         "node_modules/request/node_modules/aws4/package.json",
         "node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/package.json",
         "node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/package.json",
@@ -1414,9 +1396,10 @@
         "node_modules/request/node_modules/http-signature/node_modules/jsprim/node_modules/verror/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/jsprim/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/asn1/package.json",
-        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/node_modules/assert-plus/package.json",
+        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/assert-plus/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/dashdash/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/ecc-jsbn/package.json",
+        "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/getpass/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/jsdoc.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/package.json",
         "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jsbn/package.json",
@@ -1540,7 +1523,7 @@
           "node_modules/archiver/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion"
         ],
         "dependencies": {
-          "balanced-match": "^0.3.0",
+          "balanced-match": "^0.4.1",
           "concat-map": "0.0.1"
         }
       },
@@ -1667,24 +1650,6 @@
           "stringstream": "~0.0.4",
           "tough-cookie": "~2.2.0",
           "tunnel-agent": "~0.4.1"
-        }
-      },
-      {
-        "paths": [
-          "node_modules/request/node_modules/aws4"
-        ],
-        "dependencies": {
-          "lru-cache": "^4.0.0"
-        }
-      },
-      {
-        "paths": [
-          "node_modules/request/node_modules/aws4/node_modules/lru-cache/lib",
-          "node_modules/request/node_modules/aws4/node_modules/lru-cache"
-        ],
-        "dependencies": {
-          "pseudomap": "^1.0.1",
-          "yallist": "^2.0.0"
         }
       },
       {
@@ -1895,13 +1860,14 @@
           "node_modules/request/node_modules/http-signature/node_modules/sshpk"
         ],
         "dependencies": {
-          "asn1": ">=0.2.3 <0.3.0",
-          "assert-plus": ">=0.2.0 <0.3.0",
-          "dashdash": ">=1.10.1 <2.0.0",
-          "jsbn": ">=0.1.0 <0.2.0",
-          "tweetnacl": ">=0.13.0 <1.0.0",
-          "jodid25519": ">=1.0.0 <2.0.0",
-          "ecc-jsbn": ">=0.0.1 <1.0.0"
+          "asn1": "~0.2.3",
+          "assert-plus": "^1.0.0",
+          "dashdash": "^1.12.0",
+          "getpass": "^0.1.1",
+          "jsbn": "~0.1.0",
+          "tweetnacl": "~0.13.0",
+          "jodid25519": "^1.0.0",
+          "ecc-jsbn": "~0.1.1"
         }
       },
       {
@@ -1924,6 +1890,15 @@
       },
       {
         "paths": [
+          "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/getpass/lib",
+          "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/getpass"
+        ],
+        "dependencies": {
+          "assert-plus": "^1.0.0"
+        }
+      },
+      {
+        "paths": [
           "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519",
           "node_modules/request/node_modules/http-signature/node_modules/sshpk/node_modules/jodid25519/lib"
         ],
@@ -1936,7 +1911,7 @@
           "node_modules/request/node_modules/mime-types"
         ],
         "dependencies": {
-          "mime-db": "~1.22.0"
+          "mime-db": "~1.23.0"
         }
       }
     ]

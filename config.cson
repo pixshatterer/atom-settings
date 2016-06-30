@@ -3,6 +3,7 @@
     general:
       _analyticsUserId: "68ac7b8a-4c34-4619-9f6b-6af3e0ae7590"
   core:
+    automaticallyUpdate: false
     disabledPackages: [
       "project-manager"
     ]
@@ -25,7 +26,7 @@
   "one-dark-ui": {}
   "roku-deploy":
     excludedPaths: "out,tools"
-    rokuAddress: "192.168.1.100"
+    rokuAddress: "172.16.3.23"
   "terminal-plus":
     core:
       mapTerminalsTo: "Folder"

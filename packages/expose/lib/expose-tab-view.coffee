@@ -3,15 +3,20 @@
 
 module.exports =
 class ExposeView extends View
-  @content: (title, color) ->
+  @content: (title, color, pending) ->
+    titleClass = 'title icon-file-text'
+    titleClass += ' pending' if pending
+
     @div click: 'activateTab', class: 'expose-tab', =>
       @div class: 'tab-header', =>
-        @div class: 'title icon-file-text', 'data-name': title, title
+        @div class: titleClass, 'data-name': title, title
         @div click: 'closeTab', class: 'close-icon icon-x'
       @div outlet: 'tabBody', class: 'tab-body', style: "border-color: #{color}"
 
   constructor: (@item = {}, @color = '#000') ->
-    super(@title = @getItemTitle(item), @color)
+    @title = @getItemTitle()
+    @pending = @isItemPending()
+    super(@title, @color, @pending)
 
   initialize: ->
     @disposables = new CompositeDisposable
@@ -59,20 +64,17 @@ class ExposeView extends View
       if minimapAPI.standAloneMinimapForEditor?
         minimap = minimapAPI.standAloneMinimapForEditor(@item)
         minimapElement = atom.views.getView(minimap)
-
-        # Override minimap scroll, remove controls and set custom style
-        minimapElement.controls?.remove()
         minimapElement.style.cssText = '''
           width: 190px;
           height: 130px;
           left: 10px;
           pointer-events: none;
-          // transform: scale3d(1.5, 1.5, 1) translate(-20px, 15px);
+          position: absolute;
         '''
 
-        minimap.setCharWidth(2)
-        minimap.setCharHeight(4)
-        minimap.setInterline(2)
+        minimap.setCharWidth?(2)
+        minimap.setCharHeight?(4)
+        minimap.setInterline?(2)
 
         @tabBody.html minimapElement
       else
@@ -101,10 +103,17 @@ class ExposeView extends View
     atom.workspace.paneForItem(@item).destroyItem(@item)
     @destroy()
 
-  getItemTitle: (item) ->
-    return 'untitled' unless title = item?.getTitle()
+  getItemTitle: ->
+    return 'untitled' unless title = @item.getTitle?()
 
-    for paneItem in atom.workspace.getPaneItems() when paneItem isnt item
-      if paneItem.getTitle() is title and item.getLongTitle?
-        title = item.getLongTitle()
+    for paneItem in atom.workspace.getPaneItems() when paneItem isnt @item
+      if paneItem.getTitle() is title and @item.getLongTitle?
+        title = @item.getLongTitle()
     title
+
+  isItemPending: ->
+    return false unless pane = atom.workspace.paneForItem(@item)
+    if pane.getPendingItem?
+      pane.getPendingItem() is @item
+    else if @item.isPending?
+      @item.isPending()
