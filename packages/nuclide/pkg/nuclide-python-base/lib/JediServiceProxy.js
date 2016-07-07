@@ -47,32 +47,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("get_completions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "JediService.js",
-        line: 81
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_completions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "JediService.js",
           line: 81
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "JediService.js",
             line: 81
           },
-          kind: "named",
-          name: "JediCompletion"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "JediService.js",
+              line: 81
+            },
+            kind: "named",
+            name: "JediCompletion"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.get_definitions = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -116,32 +120,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("get_definitions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "JediService.js",
-        line: 90
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_definitions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "JediService.js",
           line: 90
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "JediService.js",
             line: 90
           },
-          kind: "named",
-          name: "JediDefinition"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "JediService.js",
+              line: 90
+            },
+            kind: "named",
+            name: "JediDefinition"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.get_references = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -185,32 +193,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("get_references", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "JediService.js",
-        line: 99
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_references", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "JediService.js",
           line: 99
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "JediService.js",
             line: 99
           },
-          kind: "named",
-          name: "JediReference"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "JediService.js",
+              line: 99
+            },
+            kind: "named",
+            name: "JediReference"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.get_outline = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -234,32 +246,36 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("get_outline", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "JediService.js",
-        line: 106
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_outline", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "JediService.js",
           line: 106
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "JediService.js",
             line: 106
           },
-          kind: "named",
-          name: "JediOutlineItem"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "JediService.js",
+              line: 106
+            },
+            kind: "named",
+            name: "JediOutlineItem"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.add_paths = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -280,31 +296,35 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("add_paths", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "JediService.js",
-        line: 112
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("add_paths", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "JediService.js",
           line: 112
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "JediService.js",
             line: 112
           },
-          kind: "string"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "JediService.js",
+              line: 112
+            },
+            kind: "string"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   return remoteModule;
 };

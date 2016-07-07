@@ -28,6 +28,12 @@ function _assert() {
   return _assert2 = _interopRequireDefault(require('assert'));
 }
 
+var _commonsNodeCollection2;
+
+function _commonsNodeCollection() {
+  return _commonsNodeCollection2 = require('../../commons-node/collection');
+}
+
 var MarkerTracker = (function () {
   function MarkerTracker() {
     var _this = this;
@@ -35,7 +41,7 @@ var MarkerTracker = (function () {
     _classCallCheck(this, MarkerTracker);
 
     this._messageToMarker = new Map();
-    this._fileToMessages = new Map();
+    this._fileToMessages = new (_commonsNodeCollection2 || _commonsNodeCollection()).MultiMap();
     this._subscriptions = new (_atom2 || _atom()).CompositeDisposable();
     this._disposed = false;
 
@@ -45,9 +51,6 @@ var MarkerTracker = (function () {
         return;
       }
       var messagesForPath = _this._fileToMessages.get(path);
-      if (messagesForPath == null) {
-        return;
-      }
       for (var message of messagesForPath) {
         // There might already be a marker because there can be multiple TextEditors open for a
         // given file.
@@ -97,15 +100,7 @@ var MarkerTracker = (function () {
       });
 
       var _loop = function (message) {
-
-        // Add to _fileToMessages
-        var path = message.filePath;
-        var messageSet = _this2._fileToMessages.get(path);
-        if (messageSet == null) {
-          messageSet = new Set();
-          _this2._fileToMessages.set(path, messageSet);
-        }
-        messageSet.add(message);
+        _this2._fileToMessages.add(message.filePath, message);
 
         // If the file is currently open, create a marker.
 
@@ -134,13 +129,7 @@ var MarkerTracker = (function () {
       this._assertNotDisposed();
 
       for (var message of messages) {
-        var messageSet = this._fileToMessages.get(message.filePath);
-        if (messageSet != null) {
-          messageSet.delete(message);
-          if (messageSet.size === 0) {
-            this._fileToMessages.delete(message.filePath);
-          }
-        }
+        this._fileToMessages.delete(message.filePath, message);
 
         var marker = this._messageToMarker.get(message);
         if (marker != null) {
@@ -193,7 +182,6 @@ exports.MarkerTracker = MarkerTracker;
 /**
  * Stores all current FileDiagnosticMessages, indexed by file. Includes those for files that are
  * not open.
- * invariant: no empty sets (should be removed from the map)
  */
 
 /**

@@ -110,5 +110,5 @@ var WatchExpressionListStore = (function () {
 exports.WatchExpressionListStore = WatchExpressionListStore;
 
 /**
- * Treat the underlying WatchExpressionList as immutable.
+ * Treat the underlying EvaluatedExpressionList as immutable.
  */

@@ -1,6 +1,4 @@
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 /*
  * Copyright (c) 2015-present, Facebook, Inc.
@@ -9,8 +7,6 @@ Object.defineProperty(exports, '__esModule', {
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
  */
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
@@ -213,6 +209,11 @@ var Bridge = (function () {
       this._debuggerModel.getActions().updateCallstack(callstack);
     }
   }, {
+    key: '_handleLocalsUpdate',
+    value: function _handleLocalsUpdate(locals) {
+      this._debuggerModel.getActions().updateLocals(locals);
+    }
+  }, {
     key: '_handleResponseForPendingRequest',
     value: function _handleResponseForPendingRequest(pending, response, key) {
       var result = response.result;
@@ -279,6 +280,9 @@ var Bridge = (function () {
               break;
             case 'CallstackUpdate':
               this._handleCallstackUpdate(event.args[1]);
+              break;
+            case 'LocalsUpdate':
+              this._handleLocalsUpdate(event.args[1]);
               break;
           }
           break;
@@ -412,8 +416,6 @@ var Bridge = (function () {
 
 module.exports = Bridge;
 
-// Either:
-// Or:
 // Contains disposable items should be disposed by
 // cleanup() method.
 

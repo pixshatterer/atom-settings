@@ -2,6 +2,7 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.getAutocompleteArguments = getAutocompleteArguments;
+exports.getIncludeOptionalArguments = getIncludeOptionalArguments;
 exports.getPythonPath = getPythonPath;
 exports.getShowGlobalVariables = getShowGlobalVariables;
 
@@ -21,22 +22,18 @@ function _nuclideFeatureConfig() {
   return _nuclideFeatureConfig2 = _interopRequireDefault(require('../../nuclide-feature-config'));
 }
 
-// config can be null in tests.
-function getConfig() {
-  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python');
+function getAutocompleteArguments() {
+  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.autocompleteArguments');
 }
 
-function getAutocompleteArguments() {
-  var config = getConfig();
-  return config == null ? true : config.autocompleteArguments;
+function getIncludeOptionalArguments() {
+  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.includeOptionalArguments');
 }
 
 function getPythonPath() {
-  var config = getConfig();
-  return config == null ? 'python' : config.pathToPython;
+  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.pathToPython');
 }
 
 function getShowGlobalVariables() {
-  var config = getConfig();
-  return config == null ? true : config.showGlobalVariables;
+  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.showGlobalVariables');
 }

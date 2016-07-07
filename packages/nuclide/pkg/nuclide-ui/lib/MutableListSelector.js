@@ -129,7 +129,7 @@ var MutableListSelector = (function (_React$Component) {
         ),
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',
-          { className: 'text-right' },
+          { style: { display: 'flex', justifyContent: 'flex-end' } },
           (_reactForAtom2 || _reactForAtom()).React.createElement(
             (_ButtonGroup2 || _ButtonGroup()).ButtonGroup,
             null,

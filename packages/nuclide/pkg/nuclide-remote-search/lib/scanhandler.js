@@ -96,8 +96,8 @@ function search(directory, regex, subdirs) {
 // search$FileResult objects.
 function searchInSubdir(matchesByFile, directory, subdir, regex) {
   // Try running search commands, falling through to the next if there is an error.
-  var vcsargs = (regex.ignoreCase ? ['-i'] : []).concat(['-n', regex.source]);
-  var grepargs = (regex.ignoreCase ? ['-i'] : []).concat(['-rHn', '-e', regex.source, '.']);
+  var vcsargs = (regex.ignoreCase ? ['-i'] : []).concat(['-n', '-E', regex.source]);
+  var grepargs = (regex.ignoreCase ? ['-i'] : []).concat(['-rHn', '-E', '-e', regex.source, '.']);
   var cmdDir = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(directory, subdir);
   var linesSource = getLinesFromCommand('hg', ['wgrep'].concat(vcsargs), cmdDir).catch(function () {
     return getLinesFromCommand('git', ['grep'].concat(vcsargs), cmdDir);

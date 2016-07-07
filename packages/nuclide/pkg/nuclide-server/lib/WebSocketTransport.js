@@ -84,6 +84,15 @@ var WebSocketTransport = (function () {
         logger.error('Client #' + _this.id + ' error after close: ' + e.message);
       }
     });
+
+    socket.on('pong', function (data, flags) {
+      if (_this._socket != null) {
+        // data may be a Uint8Array
+        _this._emitter.emit('pong', data != null ? String(data) : data);
+      } else {
+        logger.error('Received socket pong after connection closed');
+      }
+    });
   }
 
   _createClass(WebSocketTransport, [{
@@ -131,6 +140,22 @@ var WebSocketTransport = (function () {
           }
         });
       });
+    }
+
+    // The WS socket automatically responds to pings with pongs.
+  }, {
+    key: 'ping',
+    value: function ping(data) {
+      if (this._socket != null) {
+        this._socket.ping(data);
+      } else {
+        logger.error('Attempted to send socket ping after connection closed');
+      }
+    }
+  }, {
+    key: 'onPong',
+    value: function onPong(callback) {
+      return this._emitter.on('pong', callback);
     }
   }, {
     key: 'close',

@@ -34,6 +34,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeStream2;
+
+function _commonsNodeStream() {
+  return _commonsNodeStream2 = require('../../commons-node/stream');
+}
+
 var PropTypes = (_reactForAtom2 || _reactForAtom()).React.PropTypes;
 
 // Stick this to the left of remote-projects (-99)
@@ -63,7 +69,7 @@ var StatusBarTile = (function () {
         warningCount: 0
       };
       this._diagnosticUpdaters.set(diagnosticUpdater, diagnosticCount);
-      this._subscriptions.add(diagnosticUpdater.onAllMessagesDidUpdate(this._onAllMessagesDidUpdate.bind(this, diagnosticUpdater)));
+      this._subscriptions.add(new (_commonsNodeStream2 || _commonsNodeStream()).DisposableSubscription(diagnosticUpdater.allMessageUpdates.subscribe(this._onAllMessagesDidUpdate.bind(this, diagnosticUpdater))));
     }
   }, {
     key: 'consumeStatusBar',

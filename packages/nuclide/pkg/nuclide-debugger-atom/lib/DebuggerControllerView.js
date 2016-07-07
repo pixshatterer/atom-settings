@@ -67,7 +67,9 @@ var DebuggerControllerView = (_reactForAtom2 || _reactForAtom()).React.createCla
     actions: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_DebuggerActions2 || _DebuggerActions()).default).isRequired,
     breakpointStore: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_BreakpointStoreJs2 || _BreakpointStoreJs()).default).isRequired,
     store: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_DebuggerStore2 || _DebuggerStore()).DebuggerStore).isRequired,
-    bridge: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_Bridge2 || _Bridge()).default).isRequired
+    bridge: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_Bridge2 || _Bridge()).default).isRequired,
+    toggleOldView: (_reactForAtom2 || _reactForAtom()).React.PropTypes.func.isRequired,
+    showOldView: (_reactForAtom2 || _reactForAtom()).React.PropTypes.bool.isRequired
   },
 
   getInitialState: function getInitialState() {
@@ -105,7 +107,9 @@ var DebuggerControllerView = (_reactForAtom2 || _reactForAtom()).React.createCla
         actions: this.props.actions,
         bridge: this.props.bridge,
         breakpointStore: this.props.breakpointStore,
-        socket: this.state.processSocket
+        socket: this.state.processSocket,
+        showOldView: this.props.showOldView,
+        toggleOldView: this.props.toggleOldView
       });
     }
     var closeButton = (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {

@@ -178,17 +178,23 @@ var Activation = (function () {
     key: 'consumeToolBar',
     value: function consumeToolBar(getToolBar) {
       var toolBar = getToolBar('nuclide-outline-view');
-      var toolBarButtonView = toolBar.addButton({
+
+      var _toolBar$addButton = toolBar.addButton({
         icon: 'list-unordered',
         callback: 'nuclide-outline-view:toggle',
         tooltip: 'Toggle Outline View',
         priority: 350 });
+
+      var element = _toolBar$addButton.element;
+
       // Class added is not defined elsewhere, and is just used to mark the toolbar button
       // Between diff view and test runner
-      toolBarButtonView.element.classList.add('nuclide-outline-view-toolbar-button');
-      this._disposables.add(new (_atom2 || _atom()).Disposable(function () {
+      element.classList.add('nuclide-outline-view-toolbar-button');
+      var disposable = new (_atom2 || _atom()).Disposable(function () {
         toolBar.removeItems();
-      }));
+      });
+      this._disposables.add(disposable);
+      return disposable;
     }
   }, {
     key: 'getDistractionFreeModeProvider',
@@ -252,7 +258,7 @@ function consumeOutlineProvider(provider) {
 
 function consumeToolBar(getToolBar) {
   (0, (_assert2 || _assert()).default)(activation != null);
-  activation.consumeToolBar(getToolBar);
+  return activation.consumeToolBar(getToolBar);
 }
 
 function getHomeFragments() {

@@ -72,14 +72,34 @@ var createEditorForNuclide = _asyncToGenerator(function* (uri) {
 );
 
 var reloadRemoteProjects = _asyncToGenerator(function* (remoteProjects) {
-  // This is intentionally serial.
-  // The 90% use case is to have multiple remote projects for a single connection;
-  // after the first one succeeds the rest should require no user action.
-  for (var config of remoteProjects) {
+  var _loop = function* (config) {
     /* eslint-disable babel/no-await-in-loop */
     var connection = yield createRemoteConnection(config);
     if (!connection) {
       logger.info('No RemoteConnection returned on restore state trial:', config.host, config.cwd);
+      atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-file-tree:force-refresh-roots');
+
+      // Atom restores remote files with a malformed URIs, which somewhat resemble local paths.
+      // If after an unsuccessful connection user modifies and saves them he's presented
+      // with a credential requesting dialog, as the file is attempted to be saved into
+      // /nuclide:/<hostname> folder. If the user will approve the elevation and actually save
+      // the file all kind of weird stuff happens (see t10842295) since the difference between the
+      // remote and the valid local path becomes less aparent.
+      // Anyway - these files better be closed.
+      atom.workspace.getTextEditors().forEach(function (textEditor) {
+        if (textEditor == null) {
+          return;
+        }
+
+        var path = textEditor.getPath();
+        if (path == null) {
+          return;
+        }
+
+        if (path.startsWith('nuclide:/' + config.host)) {
+          textEditor.destroy();
+        }
+      });
     } else {
       // It's fine the user connected to a different project on the same host:
       // we should still be able to restore this using the new connection.
@@ -92,6 +112,13 @@ var reloadRemoteProjects = _asyncToGenerator(function* (remoteProjects) {
       }
     }
     /* eslint-enable babel/no-await-in-loop */
+  };
+
+  // This is intentionally serial.
+  // The 90% use case is to have multiple remote projects for a single connection;
+  // after the first one succeeds the rest should require no user action.
+  for (var config of remoteProjects) {
+    yield* _loop(config);
   }
 });
 
@@ -326,7 +353,7 @@ function activate(state) {
     var config = connection.getConfig();
     var openInstances = (0, (_utils2 || _utils()).getOpenFileEditorForRemoteProject)(config);
 
-    var _loop = function (openInstance) {
+    var _loop2 = function (openInstance) {
       // Keep the original open editor item with a unique name until the remote buffer is loaded,
       // Then, we are ready to replace it with the remote tab in the same pane.
       var pane = openInstance.pane;
@@ -363,9 +390,9 @@ function activate(state) {
     };
 
     for (var openInstance of openInstances) {
-      var _ret = _loop(openInstance);
+      var _ret2 = _loop2(openInstance);
 
-      if (_ret === 'continue') continue;
+      if (_ret2 === 'continue') continue;
     }
   }));
 
@@ -396,7 +423,7 @@ function activate(state) {
       // On Atom restart, it tries to open the uri path as a file tab because it's not a local
       // directory. We can't let that create a file with the initial working directory path.
       if (connection != null && uri === connection.getUriForInitialWorkingDirectory()) {
-        var _ret2 = (function () {
+        var _ret3 = (function () {
           var blankEditor = atom.workspace.buildTextEditor({});
           // No matter what we do here, Atom is going to create a blank editor.
           // We don't want the user to see this, so destroy it as soon as possible.
@@ -408,7 +435,7 @@ function activate(state) {
           };
         })();
 
-        if (typeof _ret2 === 'object') return _ret2.v;
+        if (typeof _ret3 === 'object') return _ret3.v;
       }
       if (pendingFiles[uri]) {
         return pendingFiles[uri];

@@ -63,24 +63,28 @@ module.exports = _client => {
           }
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/compile", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 113
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/compile", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 113
         },
-        kind: "named",
-        name: "ClangCompileResult"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ClangService.js",
+            line: 113
+          },
+          kind: "named",
+          name: "ClangCompileResult"
+        }
+      });
+    });
+  };
 
   remoteModule.getCompletions = function (arg0, arg1, arg2, arg3, arg4, arg5, arg6) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -170,32 +174,36 @@ module.exports = _client => {
           }
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/getCompletions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 139
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/getCompletions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 139
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangService.js",
             line: 139
           },
-          kind: "named",
-          name: "ClangCompletion"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangService.js",
+              line: 139
+            },
+            kind: "named",
+            name: "ClangCompletion"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.getDeclaration = function (arg0, arg1, arg2, arg3, arg4) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -265,24 +273,28 @@ module.exports = _client => {
           }
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/getDeclaration", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 158
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/getDeclaration", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 158
         },
-        kind: "named",
-        name: "ClangDeclaration"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ClangService.js",
+            line: 158
+          },
+          kind: "named",
+          name: "ClangDeclaration"
+        }
+      });
+    });
+  };
 
   remoteModule.getDeclarationInfo = function (arg0, arg1, arg2, arg3, arg4) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -352,32 +364,36 @@ module.exports = _client => {
           }
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/getDeclarationInfo", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 178
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/getDeclarationInfo", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 178
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangService.js",
             line: 178
           },
-          kind: "named",
-          name: "ClangCursor"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangService.js",
+              line: 178
+            },
+            kind: "named",
+            name: "ClangCursor"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.getOutline = function (arg0, arg1, arg2) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -427,32 +443,36 @@ module.exports = _client => {
           }
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/getOutline", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 193
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/getOutline", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 193
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangService.js",
             line: 193
           },
-          kind: "named",
-          name: "ClangOutlineTree"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangService.js",
+              line: 193
+            },
+            kind: "named",
+            name: "ClangOutlineTree"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.formatCode = function (arg0, arg1, arg2, arg3, arg4) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -522,48 +542,52 @@ module.exports = _client => {
           kind: "number"
         }
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/formatCode", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangService.js",
-        line: 206
-      },
-      kind: "object",
-      fields: [{
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/formatCode", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangService.js",
           line: 206
         },
-        name: "newCursor",
-        type: {
+        kind: "object",
+        fields: [{
           location: {
             type: "source",
             fileName: "ClangService.js",
             line: 206
           },
-          kind: "number"
-        },
-        optional: false
-      }, {
-        location: {
-          type: "source",
-          fileName: "ClangService.js",
-          line: 206
-        },
-        name: "formatted",
-        type: {
+          name: "newCursor",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangService.js",
+              line: 206
+            },
+            kind: "number"
+          },
+          optional: false
+        }, {
           location: {
             type: "source",
             fileName: "ClangService.js",
             line: 206
           },
-          kind: "string"
-        },
-        optional: false
-      }]
-    }));
-  }
+          name: "formatted",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangService.js",
+              line: 206
+            },
+            kind: "string"
+          },
+          optional: false
+        }]
+      });
+    });
+  };
 
   remoteModule.reset = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -577,12 +601,16 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ClangService/reset", "void", args));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("ClangService/reset", "void", args);
+    });
+  };
 
   remoteModule.dispose = function () {
-    return _client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("ClangService/dispose", "void", args));
-  }
+    return _client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("ClangService/dispose", "void", args);
+    });
+  };
 
   return remoteModule;
 };

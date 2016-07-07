@@ -25,7 +25,8 @@ var FilePreview = (_reactForAtom2 || _reactForAtom()).React.createClass({
     grammar: (_reactForAtom2 || _reactForAtom()).React.PropTypes.object,
     references: (_reactForAtom2 || _reactForAtom()).React.PropTypes.arrayOf((_reactForAtom2 || _reactForAtom()).React.PropTypes.object /*Reference*/).isRequired,
     startLine: (_reactForAtom2 || _reactForAtom()).React.PropTypes.number.isRequired,
-    endLine: (_reactForAtom2 || _reactForAtom()).React.PropTypes.number.isRequired
+    endLine: (_reactForAtom2 || _reactForAtom()).React.PropTypes.number.isRequired,
+    onClick: (_reactForAtom2 || _reactForAtom()).React.PropTypes.func
   },
 
   componentDidMount: function componentDidMount() {
@@ -68,7 +69,8 @@ var FilePreview = (_reactForAtom2 || _reactForAtom()).React.createClass({
       (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibAtomInput2 || _nuclideUiLibAtomInput()).AtomInput, {
         ref: 'editor',
         initialValue: this.props.text,
-        disabled: true
+        disabled: true,
+        onClick: this.props.onClick
       })
     );
   }

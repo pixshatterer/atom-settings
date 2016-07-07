@@ -16,10 +16,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 var _nuclideAnalytics2;
 
 function _nuclideAnalytics() {
   return _nuclideAnalytics2 = require('../../nuclide-analytics');
+}
+
+var _nuclideFeatureConfig2;
+
+function _nuclideFeatureConfig() {
+  return _nuclideFeatureConfig2 = _interopRequireDefault(require('../../nuclide-feature-config'));
 }
 
 /**
@@ -115,16 +123,12 @@ var JumpToRelatedFile = (function () {
 
       return relatedFiles[(index + 1) % relatedFiles.length];
     })
-
-    /**
-     * Opens the path in the next pane, or the current one if there's only one.
-     *
-     * We navigate to a file if it's already open, instead of opening it in a new tab.
-     */
   }, {
     key: '_open',
     value: function _open(path) {
-      atom.workspace.activateNextPane();
+      if ((_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-related-files.openInNextPane')) {
+        atom.workspace.activateNextPane();
+      }
       atom.workspace.open(path, { searchAllPanes: true });
     }
   }]);

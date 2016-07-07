@@ -50,6 +50,12 @@ function _nuclideUiLibButtonGroup() {
   return _nuclideUiLibButtonGroup2 = require('../../nuclide-ui/lib/ButtonGroup');
 }
 
+var _nuclideUiLibHR2;
+
+function _nuclideUiLibHR() {
+  return _nuclideUiLibHR2 = require('../../nuclide-ui/lib/HR');
+}
+
 var WorkingSetSelectionComponent = (function (_React$Component) {
   _inherits(WorkingSetSelectionComponent, _React$Component);
 
@@ -162,7 +168,7 @@ var WorkingSetSelectionComponent = (function (_React$Component) {
         notApplicableSection = (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',
           null,
-          (_reactForAtom2 || _reactForAtom()).React.createElement('hr', { className: 'nuclide-file-tree-working-set-separator' }),
+          (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibHR2 || _nuclideUiLibHR()).HR, null),
           (_reactForAtom2 || _reactForAtom()).React.createElement(
             'span',
             null,

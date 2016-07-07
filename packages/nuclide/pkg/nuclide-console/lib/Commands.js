@@ -20,6 +20,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
+var _commonsNodeEvent2;
+
+function _commonsNodeEvent() {
+  return _commonsNodeEvent2 = require('../../commons-node/event');
+}
+
 var _ActionTypes2;
 
 function _ActionTypes() {
@@ -36,6 +42,12 @@ var _assert2;
 
 function _assert() {
   return _assert2 = _interopRequireDefault(require('assert'));
+}
+
+var _rxjsBundlesRxUmdMinJs2;
+
+function _rxjsBundlesRxUmdMinJs() {
+  return _rxjsBundlesRxUmdMinJs2 = require('rxjs/bundles/Rx.umd.min.js');
 }
 
 var Commands = (function () {
@@ -130,12 +142,25 @@ var Commands = (function () {
       // Transform the messages into actions and merge them into the action stream.
       // TODO: Add enabling/disabling of registered source and only subscribe when enabled. That
       //       way, we won't trigger cold observer side-effects when we don't need the results.
-      var subscription = recordProvider.records.map(function (record) {
+      var messageActions = recordProvider.records.map(function (record) {
         return {
           type: (_ActionTypes2 || _ActionTypes()).MESSAGE_RECEIVED,
           payload: { record: record }
         };
-      }).subscribe(function (action) {
+      });
+
+      // TODO: Can this be delayed until sometime after registration?
+      var statusActions = recordProvider.observeStatus == null ? (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty() : (0, (_commonsNodeEvent2 || _commonsNodeEvent()).observableFromSubscribeFunction)(recordProvider.observeStatus).map(function (status) {
+        return {
+          type: (_ActionTypes2 || _ActionTypes()).STATUS_UPDATED,
+          payload: {
+            providerId: recordProvider.id,
+            status: status
+          }
+        };
+      });
+
+      var subscription = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.merge(messageActions, statusActions).subscribe(function (action) {
         return _this._observer.next(action);
       });
 

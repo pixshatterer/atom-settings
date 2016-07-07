@@ -17,23 +17,27 @@ module.exports = _client => {
           kind: "named",
           name: "NuclideUri"
         }
-      }]).then(args => _client.callRemoteFunction("BuckProject/getRootForPath", "promise", args)).then(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 155
-        },
-        kind: "nullable",
-        type: {
+      }]).then(args => {
+        return _client.callRemoteFunction("BuckProject/getRootForPath", "promise", args);
+      }).then(value => {
+        return _client.unmarshal(value, {
           location: {
             type: "source",
             fileName: "BuckProject.js",
             line: 155
           },
-          kind: "named",
-          name: "NuclideUri"
-        }
-      }));
+          kind: "nullable",
+          type: {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 155
+            },
+            kind: "named",
+            name: "NuclideUri"
+          }
+        });
+      });
     }
     constructor(arg0) {
       _client.createRemoteObject("BuckProject", this, [arg0], [{
@@ -68,23 +72,29 @@ module.exports = _client => {
     }
     getPath() {
       return trackOperationTiming("BuckProject.getPath", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "getPath", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 147
-          },
-          kind: "named",
-          name: "NuclideUri"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getPath", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 147
+            },
+            kind: "named",
+            name: "NuclideUri"
+          });
+        });
       });
     }
     getBuildFile(arg0) {
@@ -99,30 +109,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "getBuildFile", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 162
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getBuildFile", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 162
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 162
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     getOwner(arg0) {
@@ -138,30 +154,36 @@ module.exports = _client => {
             kind: "named",
             name: "NuclideUri"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "getOwner", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 214
-          },
-          kind: "array",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getOwner", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 214
             },
-            kind: "string"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 214
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     getBuckConfig(arg0, arg1) {
@@ -186,30 +208,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "getBuckConfig", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 232
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getBuckConfig", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 232
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 232
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     build(arg0, arg1) {
@@ -251,22 +279,28 @@ module.exports = _client => {
               name: "BaseBuckBuildOptions"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "build", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 272
-          },
-          kind: "any"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "build", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 272
+            },
+            kind: "any"
+          });
+        });
       });
     }
     install(arg0, arg1, arg2) {
@@ -326,22 +360,28 @@ module.exports = _client => {
               name: "BuckRunOptions"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "install", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 293
-          },
-          kind: "any"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "install", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 293
+            },
+            kind: "any"
+          });
+        });
       });
     }
     buildWithOutput(arg0) {
@@ -363,23 +403,29 @@ module.exports = _client => {
             kind: "string"
           }
         }
-      }]).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 128
-        },
-        name: "BuckProject"
-      }).then(id => _client.callRemoteMethod(id, "buildWithOutput", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 342
-        },
-        kind: "named",
-        name: "ProcessMessage"
-      }));
+      }]).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 128
+          },
+          name: "BuckProject"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "buildWithOutput", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 342
+          },
+          kind: "named",
+          name: "ProcessMessage"
+        });
+      });
     }
     testWithOutput(arg0) {
       return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -400,23 +446,29 @@ module.exports = _client => {
             kind: "string"
           }
         }
-      }]).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 128
-        },
-        name: "BuckProject"
-      }).then(id => _client.callRemoteMethod(id, "testWithOutput", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 359
-        },
-        kind: "named",
-        name: "ProcessMessage"
-      }));
+      }]).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 128
+          },
+          name: "BuckProject"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "testWithOutput", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 359
+          },
+          kind: "named",
+          name: "ProcessMessage"
+        });
+      });
     }
     installWithOutput(arg0, arg1, arg2) {
       return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -474,27 +526,8 @@ module.exports = _client => {
             name: "BuckRunOptions"
           }
         }
-      }]).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 128
-        },
-        name: "BuckProject"
-      }).then(id => _client.callRemoteMethod(id, "installWithOutput", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 378
-        },
-        kind: "named",
-        name: "ProcessMessage"
-      }));
-    }
-    listAliases() {
-      return trackOperationTiming("BuckProject.listAliases", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
+      }]).then(args => {
+        return _client.marshal(this, {
           kind: "named",
           location: {
             type: "source",
@@ -502,22 +535,53 @@ module.exports = _client => {
             line: 128
           },
           name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "listAliases", "promise", args))).then(value => _client.unmarshal(value, {
+        }).then(id => {
+          return _client.callRemoteMethod(id, "installWithOutput", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
           location: {
             type: "source",
             fileName: "BuckProject.js",
-            line: 447
+            line: 378
           },
-          kind: "array",
-          type: {
+          kind: "named",
+          name: "ProcessMessage"
+        });
+      });
+    }
+    listAliases() {
+      return trackOperationTiming("BuckProject.listAliases", () => {
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "listAliases", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 447
             },
-            kind: "string"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 447
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     resolveAlias(arg0) {
@@ -532,22 +596,28 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "resolveAlias", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 457
-          },
-          kind: "string"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "resolveAlias", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 457
+            },
+            kind: "string"
+          });
+        });
       });
     }
     outputFileFor(arg0) {
@@ -562,30 +632,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "outputFileFor", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 468
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "outputFileFor", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 468
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 468
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     buildRuleTypeFor(arg0) {
@@ -600,42 +676,54 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "buildRuleTypeFor", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 480
-          },
-          kind: "string"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "buildRuleTypeFor", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 480
+            },
+            kind: "string"
+          });
+        });
       });
     }
     getHTTPServerPort() {
       return trackOperationTiming("BuckProject.getHTTPServerPort", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "getHTTPServerPort", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 505
-          },
-          kind: "number"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getHTTPServerPort", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 505
+            },
+            kind: "number"
+          });
+        });
       });
     }
     query(arg0) {
@@ -650,30 +738,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "query", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 513
-          },
-          kind: "array",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "query", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "BuckProject.js",
               line: 513
             },
-            kind: "string"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "BuckProject.js",
+                line: 513
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     queryWithArgs(arg0, arg1) {
@@ -706,23 +800,29 @@ module.exports = _client => {
               kind: "string"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 128
-          },
-          name: "BuckProject"
-        }).then(id => _client.callRemoteMethod(id, "queryWithArgs", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "BuckProject.js",
-            line: 532
-          },
-          kind: "object",
-          fields: []
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 128
+            },
+            name: "BuckProject"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "queryWithArgs", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "BuckProject.js",
+              line: 532
+            },
+            kind: "object",
+            fields: []
+          });
+        });
       });
     }
     getWebSocketStream(arg0) {
@@ -736,28 +836,34 @@ module.exports = _client => {
           },
           kind: "number"
         }
-      }]).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 128
-        },
-        name: "BuckProject"
-      }).then(id => _client.callRemoteMethod(id, "getWebSocketStream", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "BuckProject.js",
-          line: 549
-        },
-        kind: "named",
-        name: "Object"
-      }));
+      }]).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 128
+          },
+          name: "BuckProject"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getWebSocketStream", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "BuckProject.js",
+            line: 549
+          },
+          kind: "named",
+          name: "Object"
+        });
+      });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
   return remoteModule;
 };
 

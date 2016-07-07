@@ -10,42 +10,23 @@ Object.defineProperty(exports, '__esModule', {
  * the root directory of this source tree.
  */
 
-var HACK_GRAMMARS = ['text.html.hack', 'text.html.php'];
-
 /**
- * Constants here represent enums with the same values got from hh_client and the Hack web worker.
+ * Constants here represent enums with the same values got from hh_client.
  */
-module.exports = {
+var HACK_GRAMMARS = ['text.html.hack', 'text.html.php'];
+exports.HACK_GRAMMARS = HACK_GRAMMARS;
+var HACK_GRAMMARS_SET = new Set(HACK_GRAMMARS);
 
-  CompletionType: Object.freeze({
-    ID: 0,
-    NEW: 1,
-    TYPE: 2,
-    CLASS_GET: 3,
-    VAR: 4,
-    NONE: 5
-  }),
-
-  SymbolType: Object.freeze({
-    CLASS: 0,
-    FUNCTION: 1,
-    METHOD: 2,
-    LOCAL: 3,
-    UNKNOWN: 4
-  }),
-
-  SearchResultType: Object.freeze({
-    CLASS: 0,
-    TYPEDEF: 1,
-    METHOD: 2,
-    CLASS_VAR: 3,
-    FUNCTION: 4,
-    CONSTANT: 5,
-    INTERFACE: 6,
-    ABSTRACT_CLASS: 7,
-    TRAIT: 8
-  }),
-
-  HACK_GRAMMARS: HACK_GRAMMARS,
-  HACK_GRAMMARS_SET: new Set(HACK_GRAMMARS)
-};
+exports.HACK_GRAMMARS_SET = HACK_GRAMMARS_SET;
+var SearchResultType = Object.freeze({
+  CLASS: 0,
+  TYPEDEF: 1,
+  METHOD: 2,
+  CLASS_VAR: 3,
+  FUNCTION: 4,
+  CONSTANT: 5,
+  INTERFACE: 6,
+  ABSTRACT_CLASS: 7,
+  TRAIT: 8
+});
+exports.SearchResultType = SearchResultType;

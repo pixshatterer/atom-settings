@@ -6,46 +6,56 @@ module.exports = _client => {
   const remoteModule = {};
 
   remoteModule.getAttachTargetInfoList = function () {
-    return _client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("LLDBDebuggerRpcService/getAttachTargetInfoList", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "DebuggerRpcServiceInterface.js",
-        line: 36
-      },
-      kind: "array",
-      type: {
+    return _client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("LLDBDebuggerRpcService/getAttachTargetInfoList", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "DebuggerRpcServiceInterface.js",
           line: 36
         },
-        kind: "named",
-        name: "AttachTargetInfo"
-      }
-    }));
-  }
+        kind: "array",
+        type: {
+          location: {
+            type: "source",
+            fileName: "DebuggerRpcServiceInterface.js",
+            line: 36
+          },
+          kind: "named",
+          name: "AttachTargetInfo"
+        }
+      });
+    });
+  };
 
   remoteModule.DebuggerConnection = class {
     constructor() {
       _client.createRemoteObject("DebuggerConnection", this, [], [])
     }
     getServerMessageObservable() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "DebuggerRpcServiceInterface.js",
-          line: 40
-        },
-        name: "DebuggerConnection"
-      }).then(id => _client.callRemoteMethod(id, "getServerMessageObservable", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "DebuggerRpcServiceInterface.js",
-          line: 41
-        },
-        kind: "string"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "DebuggerRpcServiceInterface.js",
+            line: 40
+          },
+          name: "DebuggerConnection"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getServerMessageObservable", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "DebuggerRpcServiceInterface.js",
+            line: 41
+          },
+          kind: "string"
+        });
+      });
     }
     sendCommand(arg0) {
       return trackOperationTiming("DebuggerConnection.sendCommand", () => {
@@ -59,28 +69,34 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 40
-          },
-          name: "DebuggerConnection"
-        }).then(id => _client.callRemoteMethod(id, "sendCommand", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 44
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 40
+            },
+            name: "DebuggerConnection"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "sendCommand", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 44
+            },
+            kind: "void"
+          });
+        });
       });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
   remoteModule.DebuggerRpcService = class {
     constructor(arg0) {
       _client.createRemoteObject("DebuggerRpcService", this, [arg0], [{
@@ -97,22 +113,28 @@ module.exports = _client => {
       }])
     }
     getOutputWindowObservable() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "DebuggerRpcServiceInterface.js",
-          line: 52
-        },
-        name: "DebuggerRpcService"
-      }).then(id => _client.callRemoteMethod(id, "getOutputWindowObservable", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "DebuggerRpcServiceInterface.js",
-          line: 56
-        },
-        kind: "string"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "DebuggerRpcServiceInterface.js",
+            line: 52
+          },
+          name: "DebuggerRpcService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getOutputWindowObservable", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "DebuggerRpcServiceInterface.js",
+            line: 56
+          },
+          kind: "string"
+        });
+      });
     }
     attach(arg0) {
       return trackOperationTiming("DebuggerRpcService.attach", () => {
@@ -127,23 +149,29 @@ module.exports = _client => {
             kind: "named",
             name: "AttachTargetInfo"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 52
-          },
-          name: "DebuggerRpcService"
-        }).then(id => _client.callRemoteMethod(id, "attach", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 59
-          },
-          kind: "named",
-          name: "DebuggerConnection"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 52
+            },
+            name: "DebuggerRpcService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "attach", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 59
+            },
+            kind: "named",
+            name: "DebuggerConnection"
+          });
+        });
       });
     }
     launch(arg0) {
@@ -159,29 +187,35 @@ module.exports = _client => {
             kind: "named",
             name: "LaunchTargetInfo"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 52
-          },
-          name: "DebuggerRpcService"
-        }).then(id => _client.callRemoteMethod(id, "launch", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "DebuggerRpcServiceInterface.js",
-            line: 62
-          },
-          kind: "named",
-          name: "DebuggerConnection"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 52
+            },
+            name: "DebuggerRpcService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "launch", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "DebuggerRpcServiceInterface.js",
+              line: 62
+            },
+            kind: "named",
+            name: "DebuggerConnection"
+          });
+        });
       });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
   return remoteModule;
 };
 

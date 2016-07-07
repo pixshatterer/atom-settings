@@ -56,28 +56,31 @@ var Activation = (function () {
 
     var message$ = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.defer(function () {
       return (0, (_createMessageStream2 || _createMessageStream()).createMessageStream)((0, (_createProcessStream2 || _createProcessStream()).createProcessStream)());
-    }).do({
-      error: function error(err) {
-        if (err.code === 'ENOENT') {
-          var _ref = (0, (_commonsAtomFormatEnoentNotification2 || _commonsAtomFormatEnoentNotification()).default)({
-            feature: 'iOS Syslog tailing',
-            toolName: 'syslog',
-            pathSetting: 'nuclide-ios-simulator-logs.pathToSyslog'
-          });
+    }).catch(function (err) {
+      if (err.code === 'ENOENT') {
+        var _ref = (0, (_commonsAtomFormatEnoentNotification2 || _commonsAtomFormatEnoentNotification()).default)({
+          feature: 'iOS Syslog tailing',
+          toolName: 'syslog',
+          pathSetting: 'nuclide-ios-simulator-logs.pathToSyslog'
+        });
 
-          var message = _ref.message;
-          var meta = _ref.meta;
+        var message = _ref.message;
+        var meta = _ref.meta;
 
-          atom.notifications.addError(message, meta);
-        }
+        atom.notifications.addError(message, meta);
+        return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty();
       }
+      throw err;
     });
 
-    this._logTailer = new (_nuclideConsoleLibLogTailer2 || _nuclideConsoleLibLogTailer()).LogTailer(message$, {
-      start: 'ios-simulator-logs:start',
-      stop: 'ios-simulator-logs:stop',
-      restart: 'ios-simulator-logs:restart',
-      error: 'ios-simulator-logs:error'
+    this._logTailer = new (_nuclideConsoleLibLogTailer2 || _nuclideConsoleLibLogTailer()).LogTailer({
+      name: 'iOS Simultoar Logs',
+      messages: message$,
+      trackingEvents: {
+        start: 'ios-simulator-logs:start',
+        stop: 'ios-simulator-logs:stop',
+        restart: 'ios-simulator-logs:restart'
+      }
     });
 
     this._disposables = new (_atom2 || _atom()).CompositeDisposable(new (_atom2 || _atom()).Disposable(function () {
@@ -98,10 +101,21 @@ var Activation = (function () {
   _createClass(Activation, [{
     key: 'consumeOutputService',
     value: function consumeOutputService(api) {
-      return api.registerOutputProvider({
+      var _this2 = this;
+
+      this._disposables.add(api.registerOutputProvider({
         id: 'iOS Simulator Logs',
-        messages: this._logTailer.getMessages()
-      });
+        messages: this._logTailer.getMessages(),
+        observeStatus: function observeStatus(cb) {
+          return _this2._logTailer.observeStatus(cb);
+        },
+        start: function start() {
+          _this2._logTailer.start();
+        },
+        stop: function stop() {
+          _this2._logTailer.stop();
+        }
+      }));
     }
   }, {
     key: 'dispose',

@@ -118,7 +118,7 @@ var DefinitionPreviewView = (function (_React$Component) {
 
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
-        { className: 'nuclide-definition-preview-container' },
+        { className: 'nuclide-definition-preview-editor' },
         (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibAtomTextEditor2 || _nuclideUiLibAtomTextEditor()).AtomTextEditor, {
           ref: 'editor',
           gutterHidden: true,
@@ -126,12 +126,9 @@ var DefinitionPreviewView = (function (_React$Component) {
           path: path,
           readOnly: true,
           textBuffer: textBuffer,
-          syncTextContents: false,
-          autoGrow: true
+          syncTextContents: false
         })
       );
-      // TODO add this to AtomTextEditor:
-      // grammar={get grammar from somewhere}
     }
   }, {
     key: 'getEditor',

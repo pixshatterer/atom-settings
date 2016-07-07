@@ -45,7 +45,7 @@ var findReferences = _asyncToGenerator(function* (editor, line, column) {
   }
 
   var contents = editor.getText();
-  return yield hackLanguage.findReferences(filePath, contents, line, column);
+  return yield hackLanguage.findReferences(filePath, contents, line + 1, column + 1);
 });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }

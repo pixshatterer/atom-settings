@@ -72,6 +72,7 @@ var RemoteDirectorySearcher = (function () {
         seenFiles.add(next.filePath);
         options.didSearchPaths(seenFiles.size);
       }, function (error) {
+        options.didError(error);
         searchCompletion.error(error);
       }, function () {
         searchCompletion.complete();

@@ -12,6 +12,10 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === 'function') { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError('The decorator for method ' + descriptor.key + ' is of the invalid type ' + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 exports.activate = activate;
 exports.serialize = serialize;
 exports.deactivate = deactivate;
@@ -26,6 +30,8 @@ exports.consumeDatatipService = consumeDatatipService;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -45,6 +51,12 @@ var _assert2;
 
 function _assert() {
   return _assert2 = _interopRequireDefault(require('assert'));
+}
+
+var _classnames2;
+
+function _classnames() {
+  return _classnames2 = _interopRequireDefault(require('classnames'));
 }
 
 var _atom2;
@@ -107,6 +119,12 @@ function _commonsNodePassesGK() {
   return _commonsNodePassesGK2 = _interopRequireDefault(require('../../commons-node/passesGK'));
 }
 
+var _nuclideUiLibPanelComponent2;
+
+function _nuclideUiLibPanelComponent() {
+  return _nuclideUiLibPanelComponent2 = require('../../nuclide-ui/lib/PanelComponent');
+}
+
 var _DebuggerProcessInfo2;
 
 function _DebuggerProcessInfo() {
@@ -140,28 +158,70 @@ var GK_DEBUGGER_LAUNCH_ATTACH_UI = 'nuclide_debugger_launch_attach_ui';
 var GK_DEBUGGER_UI_REVAMP = 'nuclide_debugger_ui_revamp';
 var GK_TIMEOUT = 5000;
 
+var DebuggerView = (function (_React$Component) {
+  _inherits(DebuggerView, _React$Component);
+
+  function DebuggerView(props) {
+    _classCallCheck(this, DebuggerView);
+
+    _get(Object.getPrototypeOf(DebuggerView.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      showOldView: !props.useRevampedUi
+    };
+    this._toggleOldView = this._toggleOldView.bind(this);
+  }
+
+  _createClass(DebuggerView, [{
+    key: '_toggleOldView',
+    value: function _toggleOldView() {
+      this.setState({
+        showOldView: !this.state.showOldView
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var model = this.props.model;
+      var showOldView = this.state.showOldView;
+
+      var DebuggerControllerView = require('./DebuggerControllerView');
+      return (_reactForAtom2 || _reactForAtom()).React.createElement(
+        (_nuclideUiLibPanelComponent2 || _nuclideUiLibPanelComponent()).PanelComponent,
+        { initialLength: 500, dock: 'right' },
+        (_reactForAtom2 || _reactForAtom()).React.createElement(
+          'div',
+          { className: 'nuclide-debugger-root' },
+          (_reactForAtom2 || _reactForAtom()).React.createElement(
+            'div',
+            { className: (0, (_classnames2 || _classnames()).default)({ 'nuclide-debugger-container-old-enabled': showOldView }) },
+            (_reactForAtom2 || _reactForAtom()).React.createElement(DebuggerControllerView, {
+              store: model.getStore(),
+              bridge: model.getBridge(),
+              actions: model.getActions(),
+              breakpointStore: model.getBreakpointStore(),
+              showOldView: showOldView,
+              toggleOldView: this._toggleOldView
+            })
+          ),
+          !showOldView ? (_reactForAtom2 || _reactForAtom()).React.createElement((_NewDebuggerView2 || _NewDebuggerView()).NewDebuggerView, {
+            model: model,
+            watchExpressionListStore: model.getWatchExpressionListStore()
+          }) : null
+        )
+      );
+    }
+  }]);
+
+  return DebuggerView;
+})((_reactForAtom2 || _reactForAtom()).React.Component);
+
 function createDebuggerView(model, useRevampedUi) {
-  var DebuggerControllerView = require('./DebuggerControllerView');
   var elem = document.createElement('div');
   elem.className = 'nuclide-debugger-container';
-  (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement(
-    'div',
-    { className: 'nuclide-debugger-root' },
-    (_reactForAtom2 || _reactForAtom()).React.createElement(
-      'div',
-      { className: 'nuclide-debugger-container-old' },
-      (_reactForAtom2 || _reactForAtom()).React.createElement(DebuggerControllerView, {
-        store: model.getStore(),
-        bridge: model.getBridge(),
-        actions: model.getActions(),
-        breakpointStore: model.getBreakpointStore()
-      })
-    ),
-    useRevampedUi ? (_reactForAtom2 || _reactForAtom()).React.createElement((_NewDebuggerView2 || _NewDebuggerView()).NewDebuggerView, {
-      model: model,
-      watchExpressionListStore: model.getWatchExpressionListStore()
-    }) : null
-  ), elem);
+  (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement(DebuggerView, {
+    model: model,
+    useRevampedUi: useRevampedUi
+  }), elem);
   return elem;
 }
 
@@ -414,7 +474,6 @@ function createDatatipProvider() {
 }
 
 var activation = null;
-var toolBar = null;
 var datatipProvider = undefined;
 
 function activate(state) {
@@ -437,9 +496,6 @@ function deactivate() {
   if (activation) {
     activation.dispose();
     activation = null;
-  }
-  if (toolBar) {
-    toolBar.removeItems();
   }
 }
 
@@ -526,13 +582,19 @@ function consumeEvaluationExpressionProvider(provider) {
 }
 
 function consumeToolBar(getToolBar) {
-  toolBar = getToolBar('nuclide-debugger');
+  var toolBar = getToolBar('nuclide-debugger');
   toolBar.addButton({
     icon: 'plug',
     callback: 'nuclide-debugger:toggle',
     tooltip: 'Toggle Debugger',
     priority: 100
   });
+  var disposable = new (_atom2 || _atom()).Disposable(function () {
+    toolBar.removeItems();
+  });
+  (0, (_assert2 || _assert()).default)(activation);
+  activation._disposables.add(disposable);
+  return disposable;
 }
 
 function provideRemoteControlService() {

@@ -9,59 +9,77 @@ module.exports = _client => {
       _client.createRemoteObject("HhvmDebuggerProxyService", this, [], [])
     }
     getNotificationObservable() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 66
-        },
-        name: "HhvmDebuggerProxyService"
-      }).then(id => _client.callRemoteMethod(id, "getNotificationObservable", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 84
-        },
-        kind: "named",
-        name: "NotificationMessage"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 66
+          },
+          name: "HhvmDebuggerProxyService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getNotificationObservable", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 84
+          },
+          kind: "named",
+          name: "NotificationMessage"
+        });
+      });
     }
     getServerMessageObservable() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 66
-        },
-        name: "HhvmDebuggerProxyService"
-      }).then(id => _client.callRemoteMethod(id, "getServerMessageObservable", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 88
-        },
-        kind: "string"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 66
+          },
+          name: "HhvmDebuggerProxyService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getServerMessageObservable", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 88
+          },
+          kind: "string"
+        });
+      });
     }
     getOutputWindowObservable() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 66
-        },
-        name: "HhvmDebuggerProxyService"
-      }).then(id => _client.callRemoteMethod(id, "getOutputWindowObservable", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HhvmDebuggerProxyService.js",
-          line: 92
-        },
-        kind: "string"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 66
+          },
+          name: "HhvmDebuggerProxyService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "getOutputWindowObservable", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HhvmDebuggerProxyService.js",
+            line: 92
+          },
+          kind: "string"
+        });
+      });
     }
     debug(arg0) {
       return trackOperationTiming("HhvmDebuggerProxyService.debug", () => {
@@ -76,22 +94,28 @@ module.exports = _client => {
             kind: "named",
             name: "HhvmDebuggerSessionConfig"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HhvmDebuggerProxyService.js",
-            line: 66
-          },
-          name: "HhvmDebuggerProxyService"
-        }).then(id => _client.callRemoteMethod(id, "debug", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HhvmDebuggerProxyService.js",
-            line: 96
-          },
-          kind: "string"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HhvmDebuggerProxyService.js",
+              line: 66
+            },
+            name: "HhvmDebuggerProxyService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "debug", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HhvmDebuggerProxyService.js",
+              line: 96
+            },
+            kind: "string"
+          });
+        });
       });
     }
     sendCommand(arg0) {
@@ -106,28 +130,34 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HhvmDebuggerProxyService.js",
-            line: 66
-          },
-          name: "HhvmDebuggerProxyService"
-        }).then(id => _client.callRemoteMethod(id, "sendCommand", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HhvmDebuggerProxyService.js",
-            line: 116
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HhvmDebuggerProxyService.js",
+              line: 66
+            },
+            name: "HhvmDebuggerProxyService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "sendCommand", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HhvmDebuggerProxyService.js",
+              line: 116
+            },
+            kind: "void"
+          });
+        });
       });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
   return remoteModule;
 };
 

@@ -47,52 +47,58 @@ var Section = (function (_React$Component) {
     _classCallCheck(this, Section);
 
     _get(Object.getPrototypeOf(Section.prototype), 'constructor', this).call(this, props);
-
     var initialIsCollapsed = this.props.collapsable != null && this.props.collapsable && this.props.collapsedByDefault != null && this.props.collapsedByDefault;
-
     this.state = {
       isCollapsed: initialIsCollapsed
     };
+    this._toggleCollapsed = this._toggleCollapsed.bind(this);
   }
 
   _createClass(Section, [{
+    key: '_toggleCollapsed',
+    value: function _toggleCollapsed() {
+      if (this.props.collapsed == null) {
+        // uncontrolled mode
+        this.setState({ isCollapsed: !this.state.isCollapsed });
+      } else {
+        // controlled mode
+        if (typeof this.props.onChange === 'function') {
+          this.props.onChange(!this.props.collapsed);
+        }
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var collapsable = this.props.collapsable != null ? this.props.collapsable : false;
-      var isCollapsed = this.state.isCollapsed;
-      var chevronTooltip = isCollapsed ? 'Click to expand' : 'Click to collapse';
+      var collapsed = this.props.collapsed == null ? this.state.isCollapsed : this.props.collapsed;
       // Only include classes if the component is collapsable
       var iconClass = (0, (_classnames2 || _classnames()).default)({
         'icon': collapsable,
-        'icon-chevron-down': collapsable && !isCollapsed,
-        'icon-chevron-right': collapsable && isCollapsed,
+        'icon-chevron-down': collapsable && !collapsed,
+        'icon-chevron-right': collapsable && collapsed,
         'nuclide-ui-section-collapsable': collapsable
       });
       var conditionalProps = {};
       if (collapsable) {
-        conditionalProps.onClick = this._toggleCollapsed.bind(this);
-        conditionalProps.title = chevronTooltip;
+        conditionalProps.onClick = this._toggleCollapsed;
+        conditionalProps.title = collapsed ? 'Click to expand' : 'Click to collapse';
       }
-
+      var HeadlineComponent = this.props.size === 'small' ? 'h6' : 'h3';
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
-        null,
+        { className: this.props.className },
         (_reactForAtom2 || _reactForAtom()).React.createElement(
-          'h3',
+          HeadlineComponent,
           _extends({ className: iconClass }, conditionalProps),
           this.props.headline
         ),
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',
-          { style: isCollapsed ? { display: 'none' } : {} },
+          { style: collapsed ? { display: 'none' } : {} },
           this.props.children
         )
       );
-    }
-  }, {
-    key: '_toggleCollapsed',
-    value: function _toggleCollapsed() {
-      this.setState({ isCollapsed: !this.state.isCollapsed });
     }
   }]);
 
@@ -100,3 +106,9 @@ var Section = (function (_React$Component) {
 })((_reactForAtom2 || _reactForAtom()).React.Component);
 
 exports.Section = Section;
+
+// Option A: Specify just `collapsable` for uncontrolled toggle behavior.
+
+// `collapsable` overrides this when specified.
+
+// Option B: Also specify `collapsed` and `onChange` for controlled toggle behavior.

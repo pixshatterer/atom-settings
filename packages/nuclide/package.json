@@ -1,6 +1,6 @@
 {
   "name": "nuclide",
-  "version": "0.148.0",
+  "version": "0.150.0",
   "description": "A unified developer experience for web and mobile development, built as a suite of features on top of Atom to provide hackability and the support of an active community.",
   "keywords": [
     "arcanist",
@@ -105,7 +105,7 @@
   },
   "optionalDependencies": {},
   "engines": {
-    "atom": ">=1.7.4",
+    "atom": ">=1.8.0",
     "node": ">=5.1.1"
   },
   "atomTestRunner": "./lib/test-runner.js",
@@ -125,10 +125,10 @@
   "bugs": {
     "url": "https://github.com/facebook/nuclide/issues"
   },
-  "_id": "nuclide@0.148.0",
-  "_shasum": "e8bb0886abefcac0159d39b0686ee58441a38a84",
-  "_resolved": "file:../d-116530-66841-gj5gum/package.tgz",
-  "_from": "../d-116530-66841-gj5gum/package.tgz",
+  "_id": "nuclide@0.150.0",
+  "_shasum": "3f28524786977f2733337d2ab4f81a708460700e",
+  "_resolved": "file:../d-11667-3794-12foztw/package.tgz",
+  "_from": "../d-11667-3794-12foztw/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -8516,8 +8516,6 @@
           "pkg/nuclide-react-native-inspector/lib",
           "pkg/nuclide-react-native-inspector/lib/ui",
           "pkg/nuclide-react-native-inspector",
-          "pkg/nuclide-react-native-node-executor/lib",
-          "pkg/nuclide-react-native-node-executor",
           "pkg/nuclide-recent-files-provider/keymaps",
           "pkg/nuclide-recent-files-provider/lib",
           "pkg/nuclide-recent-files-provider",

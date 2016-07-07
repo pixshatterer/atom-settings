@@ -75,7 +75,8 @@ function _NoProvidersView() {
 var EDITOR_DEBOUNCE_INTERVAL = 500;
 var POSITION_DEBOUNCE_INTERVAL = 500;
 
-// Display name
+// Whether the context provider displays an AtomTextEditor. This flag
+// allows context view to display editor-based providers more nicely.
 
 var logger = (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)();
 
@@ -143,7 +144,6 @@ var ContextViewManager = (function () {
   }, {
     key: 'registerProvider',
     value: function registerProvider(newProvider) {
-
       // Ensure provider with given ID isn't already registered
       for (var i = 0; i < this._contextProviders.length; i++) {
         if (newProvider.id === this._contextProviders[i].id) {
@@ -198,7 +198,7 @@ var ContextViewManager = (function () {
           try {
             return yield _this._definitionService.getDefinition(editorPos.editor, editorPos.position);
           } catch (err) {
-            logger.error('nuclide-context-view: Error calling definition service: ', err);
+            logger.error('Error querying definition service: ', err);
             return null;
           }
         })).switchMap(function (queryResult) {
@@ -295,11 +295,11 @@ var ContextViewManager = (function () {
 
       // Create collection of provider React elements to render, and
 
-      var providerElements = this._contextProviders.map(function (provider, index) {
-        var createElementFn = provider.getElementFactory();
+      var providerElements = this._contextProviders.map(function (prov, index) {
+        var createElementFn = prov.getElementFactory();
         return (_reactForAtom2 || _reactForAtom()).React.createElement(
           (_ProviderContainer2 || _ProviderContainer()).ProviderContainer,
-          { title: provider.title, key: index },
+          { title: prov.title, key: index, isEditorBased: prov.isEditorBased },
           createElementFn({ definition: _this2.currentDefinition })
         );
       });
@@ -333,4 +333,5 @@ exports.ContextViewManager = ContextViewManager;
  * contains the currentDefinition) of each provider.
  */
 // Unique ID of the provider (suggested: use the package name of the provider)
+// Display name
 // display them in order

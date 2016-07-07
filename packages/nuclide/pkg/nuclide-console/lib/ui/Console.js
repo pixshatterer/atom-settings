@@ -54,9 +54,9 @@ var Console = (function (_React$Component) {
     this.state = {
       filterText: '',
       enableRegExpFilter: false,
-      selectedSourceId: props.initialSelectedSourceId
+      selectedSourceIds: props.initialSelectedSourceIds
     };
-    this._selectSource = this._selectSource.bind(this);
+    this._selectSources = this._selectSources.bind(this);
     this._getExecutor = this._getExecutor.bind(this);
     this._updateFilterText = this._updateFilterText.bind(this);
     this._toggleRegExpFilter = this._toggleRegExpFilter.bind(this);
@@ -89,23 +89,23 @@ var Console = (function (_React$Component) {
       var pattern = _getFilterPattern2.pattern;
       var isValid = _getFilterPattern2.isValid;
 
-      var records = filterRecords(this.props.records, this.state.selectedSourceId, pattern);
+      var records = filterRecords(this.props.records, this.state.selectedSourceIds, pattern, this.props.sources.length !== this.state.selectedSourceIds.length);
 
       return (_reactForAtom2 || _reactForAtom()).React.createElement((_ConsoleView2 || _ConsoleView()).default, _extends({}, this.props, {
         invalidFilterInput: !isValid,
         records: records,
         enableRegExpFilter: this.state.enableRegExpFilter,
         getProvider: this.props.getProvider,
-        selectedSourceId: this.state.selectedSourceId,
-        selectSource: this._selectSource,
+        selectedSourceIds: this.state.selectedSourceIds,
+        selectSources: this._selectSources,
         toggleRegExpFilter: this._toggleRegExpFilter,
         updateFilterText: this._updateFilterText
       }));
     }
   }, {
-    key: '_selectSource',
-    value: function _selectSource(sourceId) {
-      this.setState({ selectedSourceId: sourceId });
+    key: '_selectSources',
+    value: function _selectSources(sourceIds) {
+      this.setState({ selectedSourceIds: sourceIds });
     }
   }, {
     key: '_toggleRegExpFilter',
@@ -129,8 +129,8 @@ var Console = (function (_React$Component) {
 
 exports.default = Console;
 
-function filterRecords(records, selectedSourceId, filterPattern) {
-  if (selectedSourceId === '' && filterPattern == null) {
+function filterRecords(records, selectedSourceIds, filterPattern, filterSources) {
+  if (!filterSources && filterPattern == null) {
     return records;
   }
 
@@ -140,7 +140,7 @@ function filterRecords(records, selectedSourceId, filterPattern) {
       return true;
     }
 
-    var sourceMatches = selectedSourceId === '' || selectedSourceId === record.sourceId;
+    var sourceMatches = selectedSourceIds.indexOf(record.sourceId) !== -1;
     var filterMatches = filterPattern == null || filterPattern.test(record.text);
     return sourceMatches && filterMatches;
   });

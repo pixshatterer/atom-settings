@@ -71,38 +71,46 @@ function applyActionMiddleware(actions, getState) {
 
     return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.from(projectDirectories).flatMap(function (directory) {
       var repository = (0, (_nuclideHgGitBridge2 || _nuclideHgGitBridge()).repositoryForPath)(directory.getPath());
-      if (repository == null || repository.getType() !== 'hg') {
+      if (repository == null) {
         return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty();
       }
 
-      var repositoryAsync = repository.async;
-
-      // Type was checked with `getType`. Downcast to safely access members with Flow.
-      (0, (_assert2 || _assert()).default)(repositoryAsync instanceof (_nuclideHgRepositoryClient2 || _nuclideHgRepositoryClient()).HgRepositoryClientAsync);
-
-      return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.of({
+      var observable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.of({
         payload: {
           directory: directory,
           repository: repository
         },
         type: (_ActionType2 || _ActionType()).SET_DIRECTORY_REPOSITORY
-      }).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.merge((0, (_commonsNodeEvent2 || _commonsNodeEvent()).observableFromSubscribeFunction)(
-      // Re-fetch when the list of bookmarks changes.
-      repositoryAsync.onDidChangeBookmarks.bind(repositoryAsync)), (0, (_commonsNodeEvent2 || _commonsNodeEvent()).observableFromSubscribeFunction)(
-      // Re-fetch when the active bookmark changes (called "short head" to match
-      // Atom's Git API).
-      repositoryAsync.onDidChangeShortHead.bind(repositoryAsync))).startWith(null) // Kick it off the first time
-      .switchMap(function () {
-        return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.getBookmarks());
-      }).map(function (bookmarks) {
-        return {
-          payload: {
-            bookmarks: bookmarks,
-            repository: repository
-          },
-          type: (_ActionType2 || _ActionType()).SET_REPOSITORY_BOOKMARKS
-        };
-      }));
+      });
+
+      if (repository.getType() === 'hg') {
+        (function () {
+          var repositoryAsync = repository.async;
+
+          // Type was checked with `getType`. Downcast to safely access members with Flow.
+          (0, (_assert2 || _assert()).default)(repositoryAsync instanceof (_nuclideHgRepositoryClient2 || _nuclideHgRepositoryClient()).HgRepositoryClientAsync);
+
+          observable = observable.concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.merge((0, (_commonsNodeEvent2 || _commonsNodeEvent()).observableFromSubscribeFunction)(
+          // Re-fetch when the list of bookmarks changes.
+          repositoryAsync.onDidChangeBookmarks.bind(repositoryAsync)), (0, (_commonsNodeEvent2 || _commonsNodeEvent()).observableFromSubscribeFunction)(
+          // Re-fetch when the active bookmark changes (called "short head" to match
+          // Atom's Git API).
+          repositoryAsync.onDidChangeShortHead.bind(repositoryAsync))).startWith(null) // Kick it off the first time
+          .switchMap(function () {
+            return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.getBookmarks());
+          }).map(function (bookmarks) {
+            return {
+              payload: {
+                bookmarks: bookmarks,
+                repository: repository
+              },
+              type: (_ActionType2 || _ActionType()).SET_REPOSITORY_BOOKMARKS
+            };
+          }));
+        })();
+      }
+
+      return observable;
     });
   }), actions.filter(function (action) {
     return action.type === (_ActionType2 || _ActionType()).UPDATE_TO_BOOKMARK;
@@ -114,7 +122,7 @@ function applyActionMiddleware(actions, getState) {
     var bookmark = _action$payload.bookmark;
     var repository = _action$payload.repository;
 
-    return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repository.async.checkoutReference(bookmark.bookmark, false)).flatMap((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty).catch(function (error) {
+    return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repository.async.checkoutReference(bookmark.bookmark, false)).ignoreElements().catch(function (error) {
       atom.notifications.addWarning('Failed Updating to Bookmark', {
         description: 'Revert or commit uncommitted changes before changing bookmarks.',
         detail: error,
@@ -158,7 +166,7 @@ function applyActionMiddleware(actions, getState) {
           repository: repository
         },
         type: (_ActionType2 || _ActionType()).SET_BOOKMARK_IS_LOADING
-      }).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.renameBookmark(bookmark.bookmark, nextName)).flatMap((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty).catch(function (error) {
+      }).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.renameBookmark(bookmark.bookmark, nextName)).ignoreElements().catch(function (error) {
         atom.notifications.addWarning('Failed Renaming Bookmark', {
           detail: error,
           dismissable: true
@@ -206,7 +214,7 @@ function applyActionMiddleware(actions, getState) {
           repository: repository
         },
         type: (_ActionType2 || _ActionType()).SET_BOOKMARK_IS_LOADING
-      }).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.deleteBookmark(bookmark.bookmark)).flatMap((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty).catch(function (error) {
+      }).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(repositoryAsync.deleteBookmark(bookmark.bookmark)).ignoreElements().catch(function (error) {
         atom.notifications.addWarning('Failed Deleting Bookmark', {
           detail: error,
           dismissable: true

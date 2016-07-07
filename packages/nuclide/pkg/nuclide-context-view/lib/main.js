@@ -79,18 +79,19 @@ var Service = {
     (0, (_assert2 || _assert()).default)(manager != null, 'Cannot register context provider with null ContextViewManager');
     (0, (_assert2 || _assert()).default)(provider != null, 'Cannot register null context provider');
     manager.registerProvider(provider);
-  },
-  deregisterProvider: function deregisterProvider(providerId) {
-    (0, (_assert2 || _assert()).default)(manager != null, 'Cannot deregister context provider from null ContextViewManager');
-    (0, (_assert2 || _assert()).default)(providerId != null || providerId === '', 'Cannot deregister context provider given null/empty providerId');
-    manager.deregisterProvider(providerId);
+    return new (_atom2 || _atom()).Disposable(function () {
+      if (manager != null) {
+        manager.deregisterProvider(provider.id);
+      }
+    });
   }
 };
 
 function consumeDefinitionService(service) {
-  (0, (_assert2 || _assert()).default)(currentService == null);
-  currentService = service;
-  updateService();
+  if (service !== currentService) {
+    currentService = service;
+    updateService();
+  }
   return new (_atom2 || _atom()).Disposable(function () {
     (0, (_assert2 || _assert()).default)(currentService === service);
     currentService = null;

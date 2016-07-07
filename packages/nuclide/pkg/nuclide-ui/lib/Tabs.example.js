@@ -126,7 +126,6 @@ var TabExamples = {
   description: '',
   examples: [{
     title: '',
-    // $FlowIssue
     component: TabExample
   }]
 };

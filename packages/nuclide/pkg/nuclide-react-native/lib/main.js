@@ -14,6 +14,7 @@ exports.activate = activate;
 exports.deactivate = deactivate;
 exports.provideNuclideDebugger = provideNuclideDebugger;
 exports.createDebuggerProvider = createDebuggerProvider;
+exports.consumeOutputService = consumeOutputService;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -68,4 +69,9 @@ function createDebuggerProvider() {
       return null;
     }
   };
+}
+
+function consumeOutputService(api) {
+  (0, (_assert2 || _assert()).default)(activation != null);
+  return activation.consumeOutputService(api);
 }

@@ -74,6 +74,9 @@ function _commonsNodeEvent() {
 
 var logger = require('../../nuclide-logging').getLogger();
 
+var PING_SEND_INTERVAL = 5000;
+var PING_WAIT_INTERVAL = 5000;
+
 var INITIAL_RECONNECT_TIME_MS = 10;
 var MAX_RECONNECT_TIME_MS = 5000;
 
@@ -106,6 +109,7 @@ var NuclideSocket = (function () {
     this._serverUri = serverUri;
     this._options = options;
     this.id = (_uuid2 || _uuid()).default.v4();
+    this._pingTimer = null;
     this._reconnectTime = INITIAL_RECONNECT_TIME_MS;
     this._reconnectTimer = null;
     this._previouslyConnected = false;
@@ -198,9 +202,21 @@ var NuclideSocket = (function () {
             if (_this3.isDisconnected()) {
               (function () {
                 var ws = new (_WebSocketTransport2 || _WebSocketTransport()).WebSocketTransport(_this3.id, websocket);
+                var pingId = (_uuid2 || _uuid()).default.v4();
+                ws.onClose(function () {
+                  _this3._clearPingTimer();
+                });
                 ws.onError(function (error) {
                   ws.close();
                 });
+                ws.onPong(function (data) {
+                  if (pingId === data) {
+                    _this3._schedulePing(pingId, ws);
+                  } else {
+                    logger.error('pingId mismatch');
+                  }
+                });
+                _this3._schedulePing(pingId, ws);
                 (0, (_assert2 || _assert()).default)(_this3._transport != null);
                 _this3._transport.reconnect(ws);
                 websocket.removeListener('error', onSocketError);
@@ -222,18 +238,40 @@ var NuclideSocket = (function () {
       websocket.on('open', onSocketOpen);
     }
   }, {
+    key: '_schedulePing',
+    value: function _schedulePing(data, ws) {
+      var _this4 = this;
+
+      this._clearPingTimer();
+      this._pingTimer = setTimeout(function () {
+        ws.ping(data);
+        _this4._pingTimer = setTimeout(function () {
+          logger.error('Failed to receive pong in response to ping');
+          ws.close();
+        }, PING_WAIT_INTERVAL);
+      }, PING_SEND_INTERVAL);
+    }
+  }, {
+    key: '_clearPingTimer',
+    value: function _clearPingTimer() {
+      if (this._pingTimer != null) {
+        clearTimeout(this._pingTimer);
+        this._pingTimer = null;
+      }
+    }
+  }, {
     key: '_scheduleReconnect',
     value: function _scheduleReconnect() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._reconnectTimer) {
         return;
       }
       // Exponential reconnect time trials.
       this._reconnectTimer = setTimeout(function () {
-        _this4._reconnectTimer = null;
-        if (_this4.isDisconnected()) {
-          _this4._reconnect();
+        _this5._reconnectTimer = null;
+        if (_this5.isDisconnected()) {
+          _this5._reconnect();
         }
       }, this._reconnectTime);
       this._reconnectTime = this._reconnectTime * 2;

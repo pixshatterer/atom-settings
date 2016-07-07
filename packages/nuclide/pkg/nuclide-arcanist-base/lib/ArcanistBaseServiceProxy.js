@@ -17,24 +17,28 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/findArcConfigDirectory", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 55
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/findArcConfigDirectory", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 55
         },
-        kind: "named",
-        name: "NuclideUri"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ArcanistBaseService.js",
+            line: 55
+          },
+          kind: "named",
+          name: "NuclideUri"
+        }
+      });
+    });
+  };
 
   remoteModule.readArcConfig = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -48,23 +52,27 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/readArcConfig", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 63
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/readArcConfig", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 63
         },
-        kind: "any"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ArcanistBaseService.js",
+            line: 63
+          },
+          kind: "any"
+        }
+      });
+    });
+  };
 
   remoteModule.findArcProjectIdOfPath = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -78,23 +86,27 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/findArcProjectIdOfPath", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 78
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/findArcProjectIdOfPath", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 78
         },
-        kind: "string"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ArcanistBaseService.js",
+            line: 78
+          },
+          kind: "string"
+        }
+      });
+    });
+  };
 
   remoteModule.getProjectRelativePath = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -108,23 +120,27 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/getProjectRelativePath", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 83
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/getProjectRelativePath", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 83
         },
-        kind: "string"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ArcanistBaseService.js",
+            line: 83
+          },
+          kind: "string"
+        }
+      });
+    });
+  };
 
   remoteModule.findDiagnostics = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -164,24 +180,28 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/findDiagnostics", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 89
-      },
-      kind: "array",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/findDiagnostics", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 89
         },
-        kind: "named",
-        name: "ArcDiagnostic"
-      }
-    }));
-  }
+        kind: "array",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ArcanistBaseService.js",
+            line: 89
+          },
+          kind: "named",
+          name: "ArcDiagnostic"
+        }
+      });
+    });
+  };
 
   remoteModule.createPhabricatorRevision = function (arg0) {
     return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -195,48 +215,52 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/createPhabricatorRevision", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 167
-      },
-      kind: "object",
-      fields: [{
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/createPhabricatorRevision", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 167
         },
-        name: "stderr",
-        type: {
+        kind: "object",
+        fields: [{
           location: {
             type: "source",
             fileName: "ArcanistBaseService.js",
             line: 167
           },
-          kind: "string"
-        },
-        optional: true
-      }, {
-        location: {
-          type: "source",
-          fileName: "ArcanistBaseService.js",
-          line: 167
-        },
-        name: "stdout",
-        type: {
+          name: "stderr",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ArcanistBaseService.js",
+              line: 167
+            },
+            kind: "string"
+          },
+          optional: true
+        }, {
           location: {
             type: "source",
             fileName: "ArcanistBaseService.js",
             line: 167
           },
-          kind: "string"
-        },
-        optional: true
-      }]
-    }));
-  }
+          name: "stdout",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ArcanistBaseService.js",
+              line: 167
+            },
+            kind: "string"
+          },
+          optional: true
+        }]
+      });
+    });
+  };
 
   remoteModule.updatePhabricatorRevision = function (arg0, arg1, arg2) {
     return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -270,48 +294,52 @@ module.exports = _client => {
         },
         kind: "boolean"
       }
-    }]).then(args => _client.callRemoteFunction("ArcanistBaseService/updatePhabricatorRevision", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ArcanistBaseService.js",
-        line: 175
-      },
-      kind: "object",
-      fields: [{
+    }]).then(args => {
+      return _client.callRemoteFunction("ArcanistBaseService/updatePhabricatorRevision", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ArcanistBaseService.js",
           line: 175
         },
-        name: "stderr",
-        type: {
+        kind: "object",
+        fields: [{
           location: {
             type: "source",
             fileName: "ArcanistBaseService.js",
             line: 175
           },
-          kind: "string"
-        },
-        optional: true
-      }, {
-        location: {
-          type: "source",
-          fileName: "ArcanistBaseService.js",
-          line: 175
-        },
-        name: "stdout",
-        type: {
+          name: "stderr",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ArcanistBaseService.js",
+              line: 175
+            },
+            kind: "string"
+          },
+          optional: true
+        }, {
           location: {
             type: "source",
             fileName: "ArcanistBaseService.js",
             line: 175
           },
-          kind: "string"
-        },
-        optional: true
-      }]
-    }));
-  }
+          name: "stdout",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ArcanistBaseService.js",
+              line: 175
+            },
+            kind: "string"
+          },
+          optional: true
+        }]
+      });
+    });
+  };
 
   return remoteModule;
 };

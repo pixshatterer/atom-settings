@@ -42,10 +42,10 @@ function _nuclideDebuggerAtom() {
   return _nuclideDebuggerAtom2 = require('../../../nuclide-debugger-atom');
 }
 
-var _nuclideReactNativeNodeExecutorLibDebuggerProxyClient2;
+var _DebuggerProxyClient2;
 
-function _nuclideReactNativeNodeExecutorLibDebuggerProxyClient() {
-  return _nuclideReactNativeNodeExecutorLibDebuggerProxyClient2 = require('../../../nuclide-react-native-node-executor/lib/DebuggerProxyClient');
+function _DebuggerProxyClient() {
+  return _DebuggerProxyClient2 = require('./DebuggerProxyClient');
 }
 
 var _rxjsBundlesRxUmdMinJs2;
@@ -138,7 +138,7 @@ var ReactNativeDebuggerInstance = (function (_DebuggerInstance) {
 
 exports.ReactNativeDebuggerInstance = ReactNativeDebuggerInstance;
 var pid$ = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.using(function () {
-  var client = new (_nuclideReactNativeNodeExecutorLibDebuggerProxyClient2 || _nuclideReactNativeNodeExecutorLibDebuggerProxyClient()).DebuggerProxyClient();
+  var client = new (_DebuggerProxyClient2 || _DebuggerProxyClient()).DebuggerProxyClient();
   client.connect();
   return {
     client: client,

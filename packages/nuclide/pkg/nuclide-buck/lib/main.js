@@ -13,6 +13,7 @@ Object.defineProperty(exports, '__esModule', {
 exports.activate = activate;
 exports.deactivate = deactivate;
 exports.consumeBuildSystemRegistry = consumeBuildSystemRegistry;
+exports.consumeCurrentWorkingDirectory = consumeCurrentWorkingDirectory;
 exports.consumeOutputService = consumeOutputService;
 exports.serialize = serialize;
 exports.getHyperclickProvider = getHyperclickProvider;
@@ -84,6 +85,15 @@ function getBuildSystem() {
     disposables.add(buildSystem);
   }
   return buildSystem;
+}
+
+function consumeCurrentWorkingDirectory(service) {
+  (0, (_assert2 || _assert()).default)(disposables != null);
+  disposables.add(service.observeCwd(function (cwd) {
+    if (cwd != null) {
+      getBuildSystem().updateCwd(cwd.getPath());
+    }
+  }));
 }
 
 function consumeOutputService(service) {

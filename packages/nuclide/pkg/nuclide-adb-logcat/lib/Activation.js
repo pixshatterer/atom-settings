@@ -64,31 +64,33 @@ var Activation = (function () {
           }
           return errCount + 1;
         }, 0);
-      }).do({
-        error: function error(err) {
-          if (isNoEntError(err)) {
-            var _ref = (0, (_commonsAtomFormatEnoentNotification2 || _commonsAtomFormatEnoentNotification()).default)({
-              feature: 'Tailing Android (adb) logs',
-              toolName: 'adb',
-              pathSetting: 'nuclide-adb-logcat.pathToAdb'
-            });
+      }).catch(function (err) {
+        if (isNoEntError(err)) {
+          var _ref = (0, (_commonsAtomFormatEnoentNotification2 || _commonsAtomFormatEnoentNotification()).default)({
+            feature: 'Tailing Android (adb) logs',
+            toolName: 'adb',
+            pathSetting: 'nuclide-adb-logcat.pathToAdb'
+          });
 
-            var message = _ref.message;
-            var meta = _ref.meta;
+          var message = _ref.message;
+          var meta = _ref.meta;
 
-            atom.notifications.addError(message, meta);
-            return;
-          }
-          atom.notifications.addError('adb logcat has crashed 3 times.' + ' You can manually restart it using the "Nuclide Adb Logcat: Start" command.');
+          atom.notifications.addError(message, meta);
+          return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.empty();
         }
+
+        throw err;
       }));
     });
 
-    this._logTailer = new (_nuclideConsoleLibLogTailer2 || _nuclideConsoleLibLogTailer()).LogTailer(message$, {
-      start: 'adb-logcat:start',
-      stop: 'adb-logcat:stop',
-      restart: 'adb-logcat:restart',
-      error: 'adb-logcat:crash'
+    this._logTailer = new (_nuclideConsoleLibLogTailer2 || _nuclideConsoleLibLogTailer()).LogTailer({
+      name: 'adb Logcat',
+      messages: message$,
+      trackingEvents: {
+        start: 'adb-logcat:start',
+        stop: 'adb-logcat:stop',
+        restart: 'adb-logcat:restart'
+      }
     });
 
     this._disposables = new (_atom2 || _atom()).CompositeDisposable(new (_atom2 || _atom()).Disposable(function () {
@@ -109,10 +111,21 @@ var Activation = (function () {
   _createClass(Activation, [{
     key: 'consumeOutputService',
     value: function consumeOutputService(api) {
-      return api.registerOutputProvider({
+      var _this2 = this;
+
+      this._disposables.add(api.registerOutputProvider({
         id: 'adb logcat',
-        messages: this._logTailer.getMessages()
-      });
+        messages: this._logTailer.getMessages(),
+        observeStatus: function observeStatus(cb) {
+          return _this2._logTailer.observeStatus(cb);
+        },
+        start: function start() {
+          _this2._logTailer.start();
+        },
+        stop: function stop() {
+          _this2._logTailer.stop();
+        }
+      }));
     }
   }, {
     key: 'dispose',

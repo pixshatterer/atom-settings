@@ -58,14 +58,9 @@ var BuckToolbarActions = (function () {
   }
 
   _createClass(BuckToolbarActions, [{
-    key: 'updateProjectFor',
-    value: _asyncToGenerator(function* (editor) {
-      var nuclideUri = editor.getPath();
-      if (!nuclideUri) {
-        return;
-      }
-
-      var buckProject = yield (0, (_nuclideBuckBase2 || _nuclideBuckBase()).getBuckProject)(nuclideUri);
+    key: 'updateProjectPath',
+    value: _asyncToGenerator(function* (path) {
+      var buckProject = yield (0, (_nuclideBuckBase2 || _nuclideBuckBase()).getBuckProject)(path);
       if (buckProject != null && buckProject !== this._store.getMostRecentBuckProject()) {
         this._dispatcher.dispatch({
           actionType: BuckToolbarActions.ActionType.UPDATE_PROJECT,

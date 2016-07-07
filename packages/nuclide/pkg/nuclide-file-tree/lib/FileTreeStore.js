@@ -106,6 +106,12 @@ function _nuclideAnalytics() {
   return _nuclideAnalytics2 = require('../../nuclide-analytics');
 }
 
+var _nuclideRemoteUri2;
+
+function _nuclideRemoteUri() {
+  return _nuclideRemoteUri2 = _interopRequireDefault(require('../../nuclide-remote-uri'));
+}
+
 // Used to ensure the version we serialized is the same version we are deserializing.
 var VERSION = 1;
 
@@ -286,7 +292,11 @@ var FileTreeStore = (function () {
         this.openFilesExpanded = data.openFilesExpanded;
       }
 
-      this._setRoots(new (_immutable2 || _immutable()).default.OrderedMap(data.rootKeys.map(function (rootUri) {
+      var normalizedPaths = atom.project.getPaths().map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator);
+      this._setRoots(new (_immutable2 || _immutable()).default.OrderedMap(data.rootKeys.filter(function (rootUri) {
+        var normalizedRootUri = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator(rootUri);
+        return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(rootUri) || normalizedPaths.indexOf(normalizedRootUri) >= 0;
+      }).map(function (rootUri) {
         return [rootUri, buildNode(rootUri, rootUri)];
       })));
     }
@@ -1043,10 +1053,6 @@ var FileTreeStore = (function () {
   }, {
     key: 'clearFilter',
     value: function clearFilter() {
-      // Don't waste time if the filter is already clear.
-      if (this._filter === '') {
-        return;
-      }
       this._filter = '';
       this._updateRoots(function (root) {
         return root.setRecursive(function (node) {
@@ -1061,8 +1067,9 @@ var FileTreeStore = (function () {
     value: function removeFilterLetter() {
       var _this11 = this;
 
+      var oldLength = this._filter.length;
       this._filter = this._filter.substr(0, this._filter.length - 1);
-      if (this._filter.length) {
+      if (oldLength > 1) {
         this._updateRoots(function (root) {
           return root.setRecursive(function (node) {
             return null;
@@ -1074,7 +1081,7 @@ var FileTreeStore = (function () {
           });
         });
         this._emitChange();
-      } else {
+      } else if (oldLength === 1) {
         this.clearFilter();
       }
     }

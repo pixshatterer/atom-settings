@@ -89,8 +89,6 @@ var PUBLISH_FILE_TREE_CONTEXT_MENU_PRIORITY = 1300;
 var uiProviders = [];
 
 var subscriptions = null;
-var toolBar = null;
-var changeCountElement = null;
 var cwdApi = null;
 
 function formatDiffViewUrl(diffEntityOptions) {
@@ -182,21 +180,6 @@ function projectsContainPath(checkPath) {
     }
     return true;
   });
-}
-
-function updateToolbarCount(diffViewButton, count) {
-  if (!changeCountElement) {
-    changeCountElement = document.createElement('span');
-    changeCountElement.className = 'diff-view-count';
-    diffViewButton.appendChild(changeCountElement);
-  }
-  if (count > 0) {
-    diffViewButton.classList.add('positive-count');
-  } else {
-    diffViewButton.classList.remove('positive-count');
-  }
-  var DiffCountComponent = require('./DiffCountComponent');
-  (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement(DiffCountComponent, { count: count }), changeCountElement);
 }
 
 function diffActivePath(diffOptions) {
@@ -392,19 +375,36 @@ module.exports = Object.defineProperties({
   },
 
   consumeToolBar: function consumeToolBar(getToolBar) {
-    toolBar = getToolBar('nuclide-diff-view');
+    var toolBar = getToolBar('nuclide-diff-view');
     var button = toolBar.addButton({
       icon: 'git-branch',
       callback: 'nuclide-diff-view:open',
       tooltip: 'Open Diff View',
       priority: 300
-    })[0];
+    }).element;
+    button.classList.add('diff-view-count');
+
     var diffModel = getDiffViewModel();
-    updateToolbarCount(button, diffModel.getState().dirtyFileChanges.size);
-    (0, (_assert2 || _assert()).default)(subscriptions);
-    subscriptions.add(diffModel.onDidUpdateState(function () {
-      updateToolbarCount(button, diffModel.getState().dirtyFileChanges.size);
+    var lastCount = null;
+    var updateToolbarCount = function updateToolbarCount() {
+      var count = diffModel.getState().dirtyFileChanges.size;
+      if (count !== lastCount) {
+        button.classList.toggle('positive-count', count > 0);
+        button.classList.toggle('max-count', count > 99);
+        button.dataset.count = count === 0 ? '' : count > 99 ? '99+' : String(count);
+        lastCount = count;
+      }
+    };
+    updateToolbarCount();
+
+    var toolBarSubscriptions = new (_atom2 || _atom()).CompositeDisposable(diffModel.onDidUpdateState(function () {
+      updateToolbarCount();
+    }), new (_atom2 || _atom()).Disposable(function () {
+      toolBar.removeItems();
     }));
+    (0, (_assert2 || _assert()).default)(subscriptions);
+    subscriptions.add(toolBarSubscriptions);
+    return toolBarSubscriptions;
   },
 
   getHomeFragments: function getHomeFragments() {
@@ -448,10 +448,6 @@ module.exports = Object.defineProperties({
   },
 
   deactivate: function deactivate() {
-    if (changeCountElement != null) {
-      (_reactForAtom2 || _reactForAtom()).ReactDOM.unmountComponentAtNode(changeCountElement);
-      changeCountElement = null;
-    }
     uiProviders.splice(0);
     if (subscriptions != null) {
       subscriptions.dispose();
@@ -462,10 +458,6 @@ module.exports = Object.defineProperties({
       diffViewModel = null;
     }
     activeDiffView = null;
-    if (toolBar != null) {
-      toolBar.removeItems();
-      toolBar = null;
-    }
   },
 
   /**

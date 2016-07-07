@@ -153,6 +153,22 @@ var Activation = (function () {
       });
     }
   }, {
+    key: 'addToolBar',
+    value: function addToolBar(getToolBar) {
+      var toolBar = getToolBar('nuclide-test-runner');
+      toolBar.addButton({
+        icon: 'checklist',
+        callback: 'nuclide-test-runner:toggle-panel',
+        tooltip: 'Toggle Test Runner',
+        priority: 400
+      });
+      var disposable = new (_atom2 || _atom()).Disposable(function () {
+        toolBar.removeItems();
+      });
+      this._disposables.add(disposable);
+      return disposable;
+    }
+  }, {
     key: 'getDistractionFreeModeProvider',
     value: function getDistractionFreeModeProvider() {
       var _this4 = this;
@@ -256,7 +272,6 @@ var Activation = (function () {
 })();
 
 var activation = undefined;
-var toolBar = null;
 
 function activate(state) {
   if (!activation) {
@@ -268,9 +283,6 @@ function deactivate() {
   if (activation) {
     activation.dispose();
     activation = null;
-  }
-  if (toolBar) {
-    toolBar.removeItems();
   }
 }
 
@@ -290,13 +302,8 @@ function addItemsToFileTreeContextMenu(contextMenu) {
 }
 
 function consumeToolBar(getToolBar) {
-  toolBar = getToolBar('nuclide-test-runner');
-  toolBar.addButton({
-    icon: 'checklist',
-    callback: 'nuclide-test-runner:toggle-panel',
-    tooltip: 'Toggle Test Runner',
-    priority: 400
-  });
+  (0, (_assert2 || _assert()).default)(activation);
+  return activation.addToolBar(getToolBar);
 }
 
 function getHomeFragments() {

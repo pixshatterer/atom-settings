@@ -46,16 +46,20 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("FindInProjectService/findInProjectSearch", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FindInProjectService.js",
-        line: 32
-      },
-      kind: "named",
-      name: "search$FileResult"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FindInProjectService/findInProjectSearch", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FindInProjectService.js",
+          line: 32
+        },
+        kind: "named",
+        name: "search$FileResult"
+      });
+    });
+  };
 
   return remoteModule;
 };

@@ -16,24 +16,28 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("SourceControlService/getHgRepository", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "SourceControlService.js",
-        line: 23
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("SourceControlService/getHgRepository", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "SourceControlService.js",
           line: 23
         },
-        kind: "named",
-        name: "HgRepositoryDescription"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "SourceControlService.js",
+            line: 23
+          },
+          kind: "named",
+          name: "HgRepositoryDescription"
+        }
+      });
+    });
+  };
 
   return remoteModule;
 };

@@ -449,6 +449,16 @@ var DebuggerActions = (function () {
       });
     }
   }, {
+    key: 'updateLocals',
+    value: function updateLocals(locals) {
+      this._dispatcher.dispatch({
+        actionType: (_Constants2 || _Constants()).default.Actions.UPDATE_LOCALS,
+        data: {
+          locals: locals
+        }
+      });
+    }
+  }, {
     key: 'dispose',
     value: function dispose() {
       (0, (_AnalyticsHelper2 || _AnalyticsHelper()).endTimerTracking)();

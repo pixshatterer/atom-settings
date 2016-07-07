@@ -6,15 +6,19 @@ module.exports = _client => {
   const remoteModule = {};
 
   remoteModule.getServerVersion = function () {
-    return _client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("InfoService/getServerVersion", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "InfoService.js",
-        line: 18
-      },
-      kind: "string"
-    }));
-  }
+    return _client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("InfoService/getServerVersion", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "InfoService.js",
+          line: 18
+        },
+        kind: "string"
+      });
+    });
+  };
 
   remoteModule.closeConnection = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -27,15 +31,19 @@ module.exports = _client => {
         },
         kind: "boolean"
       }
-    }]).then(args => _client.callRemoteFunction("InfoService/closeConnection", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "InfoService.js",
-        line: 25
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("InfoService/closeConnection", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "InfoService.js",
+          line: 25
+        },
+        kind: "void"
+      });
+    });
+  };
 
   return remoteModule;
 };

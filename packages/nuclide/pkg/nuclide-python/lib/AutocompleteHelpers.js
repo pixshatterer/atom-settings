@@ -43,15 +43,31 @@ function _config() {
 var VALID_EMPTY_SUFFIX = /(\.|\()$/;
 var TRIGGER_COMPLETION_REGEX = /([\. ]|[a-zA-Z_][a-zA-Z0-9_]*)$/;
 
+/**
+ * Generate a function-signature line string if completion is a function.
+ * Otherwise just return the completion text.
+ * @param  completion           The completion object to get text of.
+ * @param  includeOptionalArgs  Whether or not to skip optional python arguments,
+ *   including keyword args with default values, and star args (*, *args, **kwargs)
+ * @param  createPlaceholders   Create snippet placeholders for the arguments
+ *   instead of plain text.
+ * @return string               Textual representation of the completion.
+ */
 function getText(completion) {
-  // Generate a snippet if completion is a function. Otherwise just return the
-  // completion text.
+  var includeOptionalArgs = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+  var createPlaceholders = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
   if (completion.params) {
-    var placeholders = completion.params.map(function (param, index) {
-      return '${' + (index + 1) + ':' + param + '}';
+    var params = includeOptionalArgs ? completion.params : completion.params.filter(function (param) {
+      return param.indexOf('=') < 0 && param.indexOf('*') < 0;
     });
-    return completion.text + '(' + placeholders.join(', ') + ')';
+
+    var paramTexts = params.map(function (param, index) {
+      return createPlaceholders ? '${' + (index + 1) + ':' + param + '}' : param;
+    });
+    return completion.text + '(' + paramTexts.join(', ') + ')';
   }
+
   return completion.text;
 }
 
@@ -90,8 +106,13 @@ var AutocompleteHelpers = (function () {
       }
 
       return result.map(function (completion) {
+        // Always display optional arguments in the UI.
+        var displayText = getText(completion);
+        // Only autocomplete arguments if the include optional arguments setting is on.
+        var snippet = (0, (_config2 || _config()).getAutocompleteArguments)() ? getText(completion, (0, (_config2 || _config()).getIncludeOptionalArguments)(), true /* createPlaceholders */) : completion.text;
         return {
-          snippet: (0, (_config2 || _config()).getAutocompleteArguments)() ? getText(completion) : completion.text,
+          displayText: displayText,
+          snippet: snippet,
           type: (_constants2 || _constants()).TYPES[completion.type],
           description: completion.description
         };

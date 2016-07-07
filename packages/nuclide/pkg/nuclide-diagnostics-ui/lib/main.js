@@ -12,7 +12,6 @@ Object.defineProperty(exports, '__esModule', {
 
 exports.activate = activate;
 exports.consumeDiagnosticUpdates = consumeDiagnosticUpdates;
-exports.consumeObservableDiagnosticUpdates = consumeObservableDiagnosticUpdates;
 exports.consumeStatusBar = consumeStatusBar;
 exports.consumeToolBar = consumeToolBar;
 exports.deactivate = deactivate;
@@ -40,6 +39,12 @@ function _nuclideAnalytics() {
   return _nuclideAnalytics2 = require('../../nuclide-analytics');
 }
 
+var _commonsNodeStream2;
+
+function _commonsNodeStream() {
+  return _commonsNodeStream2 = require('../../commons-node/stream');
+}
+
 var DEFAULT_HIDE_DIAGNOSTICS_PANEL = true;
 var DEFAULT_TABLE_HEIGHT = 200;
 var DEFAULT_FILTER_BY_ACTIVE_EDITOR = false;
@@ -53,7 +58,6 @@ var statusBarTile = undefined;
 var activationState = null;
 
 var consumeUpdatesCalled = false;
-var consumeObservableUpdatesCalled = false;
 
 function createPanel(diagnosticUpdater, disposables) {
   (0, (_assert2 || _assert()).default)(activationState);
@@ -119,8 +123,6 @@ function tryRecordActivationState() {
   }
 }
 
-var toolBar = null;
-
 function activate(state) {
   if (subscriptions) {
     return;
@@ -152,14 +154,6 @@ function consumeDiagnosticUpdates(diagnosticUpdater) {
     return;
   }
   consumeUpdatesCalled = true;
-}
-
-function consumeObservableDiagnosticUpdates(diagnosticUpdater) {
-  // TODO migrate things from consumeDiagnosticUpdates above
-  if (consumeObservableUpdatesCalled) {
-    return;
-  }
-  consumeObservableUpdatesCalled = true;
 
   tableConsumeDiagnosticUpdates(diagnosticUpdater);
   addAtomCommands(diagnosticUpdater);
@@ -182,7 +176,7 @@ function gutterConsumeDiagnosticUpdates(diagnosticUpdater) {
     var callback = function callback(update) {
       applyUpdateToEditor(editor, update, fixer);
     };
-    var disposable = diagnosticUpdater.onFileMessagesDidUpdate(callback, filePath);
+    var disposable = new (_commonsNodeStream2 || _commonsNodeStream()).DisposableSubscription(diagnosticUpdater.getFileMessageUpdates(filePath).subscribe(callback));
 
     // Be sure to remove the subscription on the DiagnosticStore once the editor is closed.
     editor.onDidDestroy(function () {
@@ -248,13 +242,19 @@ function consumeStatusBar(statusBar) {
 }
 
 function consumeToolBar(getToolBar) {
-  toolBar = getToolBar('nuclide-diagnostics-ui');
+  var toolBar = getToolBar('nuclide-diagnostics-ui');
   toolBar.addButton({
     icon: 'law',
     callback: 'nuclide-diagnostics-ui:toggle-table',
     tooltip: 'Toggle Diagnostics Table',
     priority: 200
   });
+  var disposable = new (_atom2 || _atom()).Disposable(function () {
+    toolBar.removeItems();
+  });
+  (0, (_assert2 || _assert()).default)(subscriptions != null);
+  subscriptions.add(disposable);
+  return disposable;
 }
 
 function deactivate() {
@@ -273,9 +273,7 @@ function deactivate() {
     statusBarTile = null;
   }
 
-  if (toolBar) {
-    toolBar.removeItems();
-  }
+  consumeUpdatesCalled = false;
 }
 
 function serialize() {

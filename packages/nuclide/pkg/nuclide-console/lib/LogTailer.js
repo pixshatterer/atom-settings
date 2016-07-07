@@ -14,7 +14,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _commonsNodeStream2;
+
+function _commonsNodeStream() {
+  return _commonsNodeStream2 = require('../../commons-node/stream');
+}
 
 var _nuclideAnalytics2;
 
@@ -22,10 +26,16 @@ function _nuclideAnalytics() {
   return _nuclideAnalytics2 = require('../../nuclide-analytics');
 }
 
+var _nuclideLogging2;
+
+function _nuclideLogging() {
+  return _nuclideLogging2 = require('../../nuclide-logging');
+}
+
 var _rxjsBundlesRxUmdMinJs2;
 
 function _rxjsBundlesRxUmdMinJs() {
-  return _rxjsBundlesRxUmdMinJs2 = _interopRequireDefault(require('rxjs/bundles/Rx.umd.min.js'));
+  return _rxjsBundlesRxUmdMinJs2 = require('rxjs/bundles/Rx.umd.min.js');
 }
 
 /**
@@ -34,13 +44,36 @@ function _rxjsBundlesRxUmdMinJs() {
  */
 
 var LogTailer = (function () {
-  function LogTailer(input$, eventNames) {
+  function LogTailer(options) {
+    var _this = this;
+
     _classCallCheck(this, LogTailer);
 
-    this._input$ = input$;
-    this._eventNames = eventNames;
-    this._message$ = new (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Subject();
-    this._running = false;
+    this._name = options.name;
+    this._eventNames = options.trackingEvents;
+    this._messages = options.messages.do({
+      complete: function complete() {
+        _this._stop();
+      }
+    }).catch(function (err) {
+      _this._stop(false);
+      (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)().error('Error with ' + _this._name + ' tailer.', err);
+      var message = 'An unexpected error occurred while running the ' + _this._name + ' process' + (err.message ? ':\n\n**' + err.message + '**' : '.');
+      var notification = atom.notifications.addError(message, {
+        dismissable: true,
+        detail: err.stack == null ? '' : err.stack.toString(),
+        buttons: [{
+          text: 'Restart ' + _this._name,
+          className: 'icon icon-sync',
+          onDidClick: function onDidClick() {
+            notification.dismiss();
+            _this.restart();
+          }
+        }]
+      });
+      return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
+    }).share().publish();
+    this._running = new (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).BehaviorSubject(false);
   }
 
   _createClass(LogTailer, [{
@@ -61,56 +94,56 @@ var LogTailer = (function () {
       this._start(false);
     }
   }, {
+    key: 'observeStatus',
+    value: function observeStatus(cb) {
+      return new (_commonsNodeStream2 || _commonsNodeStream()).DisposableSubscription(this._running.map(function (isRunning) {
+        return isRunning ? 'running' : 'stopped';
+      }).subscribe(cb));
+    }
+  }, {
     key: '_start',
     value: function _start() {
-      var _this = this;
-
       var trackCall = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
       atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-console:show');
 
-      if (this._running) {
+      if (this._running.getValue()) {
         return;
       }
       if (trackCall) {
         (0, (_nuclideAnalytics2 || _nuclideAnalytics()).track)(this._eventNames.start);
       }
 
-      this._running = true;
+      this._running.next(true);
 
       if (this._subscription != null) {
         this._subscription.unsubscribe();
       }
 
-      this._subscription = this._input$.subscribe(function (message) {
-        _this._message$.next(message);
-      }, function (err) {
-        _this._stop(false);
-        (0, (_nuclideAnalytics2 || _nuclideAnalytics()).track)(_this._eventNames.error, { message: err.message });
-      });
+      this._subscription = this._messages.connect();
     }
   }, {
     key: '_stop',
     value: function _stop() {
       var trackCall = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
-      if (!this._running) {
+      if (this._subscription != null) {
+        this._subscription.unsubscribe();
+      }
+
+      if (!this._running.getValue()) {
         return;
       }
       if (trackCall) {
         (0, (_nuclideAnalytics2 || _nuclideAnalytics()).track)(this._eventNames.stop);
       }
 
-      this._running = false;
-
-      if (this._subscription != null) {
-        this._subscription.unsubscribe();
-      }
+      this._running.next(false);
     }
   }, {
     key: 'getMessages',
     value: function getMessages() {
-      return this._message$.asObservable();
+      return this._messages;
     }
   }]);
 

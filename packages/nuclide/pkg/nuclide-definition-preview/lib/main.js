@@ -57,7 +57,8 @@ var Activation = (function () {
         return (_reactForAtom2 || _reactForAtom()).React.createFactory((_DefinitionPreviewView2 || _DefinitionPreviewView()).DefinitionPreviewView);
       },
       id: PROVIDER_ID,
-      title: PROVIDER_TITLE
+      title: PROVIDER_TITLE,
+      isEditorBased: true
     };
   }
 
@@ -67,22 +68,15 @@ var Activation = (function () {
       return this.provider;
     }
   }, {
-    key: 'dispose',
-    value: function dispose() {
-      if (this.contextViewService != null) {
-        // Remove definition preview from context view's list of registered providers
-        this.contextViewService.deregisterProvider(PROVIDER_ID);
-      }
+    key: 'setContextViewRegistration',
+    value: function setContextViewRegistration(registration) {
+      this.contextViewRegistration = registration;
     }
   }, {
-    key: 'updateContextViewService',
-    value: function updateContextViewService(newService) {
-      if (this.contextViewService !== newService) {
-        this.contextViewService = newService;
-
-        if (this.contextViewService != null) {
-          this.contextViewService.registerProvider(this.provider);
-        }
+    key: 'dispose',
+    value: function dispose() {
+      if (this.contextViewRegistration != null) {
+        this.contextViewRegistration.dispose();
       }
     }
   }]);
@@ -107,10 +101,6 @@ function deactivate() {
 
 function consumeNuclideContextView(contextView) {
   (0, (_assert2 || _assert()).default)(activation != null);
-  activation.updateContextViewService(contextView);
-  return new (_atom2 || _atom()).Disposable(function () {
-    if (activation != null) {
-      activation.updateContextViewService(null);
-    }
-  });
+  var registration = contextView.registerProvider(activation.getContextProvider());
+  activation.setContextViewRegistration(registration);
 }

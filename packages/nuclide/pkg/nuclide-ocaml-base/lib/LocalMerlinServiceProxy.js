@@ -17,23 +17,27 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/pushDotMerlinPath", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 36
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/pushDotMerlinPath", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "LocalMerlinService.js",
           line: 36
         },
-        kind: "any"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "LocalMerlinService.js",
+            line: 36
+          },
+          kind: "any"
+        }
+      });
+    });
+  };
 
   remoteModule.pushNewBuffer = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -57,23 +61,27 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/pushNewBuffer", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 41
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/pushNewBuffer", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "LocalMerlinService.js",
           line: 41
         },
-        kind: "any"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "LocalMerlinService.js",
+            line: 41
+          },
+          kind: "any"
+        }
+      });
+    });
+  };
 
   remoteModule.locate = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -117,90 +125,94 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/locate", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 51
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/locate", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "LocalMerlinService.js",
           line: 51
         },
-        kind: "object",
-        fields: [{
+        kind: "nullable",
+        type: {
           location: {
             type: "source",
             fileName: "LocalMerlinService.js",
-            line: 52
+            line: 51
           },
-          name: "file",
-          type: {
+          kind: "object",
+          fields: [{
             location: {
               type: "source",
               fileName: "LocalMerlinService.js",
               line: 52
             },
-            kind: "named",
-            name: "NuclideUri"
-          },
-          optional: false
-        }, {
-          location: {
-            type: "source",
-            fileName: "LocalMerlinService.js",
-            line: 53
-          },
-          name: "pos",
-          type: {
+            name: "file",
+            type: {
+              location: {
+                type: "source",
+                fileName: "LocalMerlinService.js",
+                line: 52
+              },
+              kind: "named",
+              name: "NuclideUri"
+            },
+            optional: false
+          }, {
             location: {
               type: "source",
               fileName: "LocalMerlinService.js",
               line: 53
             },
-            kind: "object",
-            fields: [{
+            name: "pos",
+            type: {
               location: {
                 type: "source",
                 fileName: "LocalMerlinService.js",
-                line: 54
+                line: 53
               },
-              name: "line",
-              type: {
+              kind: "object",
+              fields: [{
                 location: {
                   type: "source",
                   fileName: "LocalMerlinService.js",
                   line: 54
                 },
-                kind: "number"
-              },
-              optional: false
-            }, {
-              location: {
-                type: "source",
-                fileName: "LocalMerlinService.js",
-                line: 55
-              },
-              name: "col",
-              type: {
+                name: "line",
+                type: {
+                  location: {
+                    type: "source",
+                    fileName: "LocalMerlinService.js",
+                    line: 54
+                  },
+                  kind: "number"
+                },
+                optional: false
+              }, {
                 location: {
                   type: "source",
                   fileName: "LocalMerlinService.js",
                   line: 55
                 },
-                kind: "number"
-              },
-              optional: false
-            }]
-          },
-          optional: false
-        }]
-      }
-    }));
-  }
+                name: "col",
+                type: {
+                  location: {
+                    type: "source",
+                    fileName: "LocalMerlinService.js",
+                    line: 55
+                  },
+                  kind: "number"
+                },
+                optional: false
+              }]
+            },
+            optional: false
+          }]
+        }
+      });
+    });
+  };
 
   remoteModule.enclosingType = function (arg0, arg1, arg2) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -234,32 +246,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/enclosingType", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 70
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/enclosingType", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "LocalMerlinService.js",
           line: 70
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "LocalMerlinService.js",
             line: 70
           },
-          kind: "named",
-          name: "MerlinType"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "LocalMerlinService.js",
+              line: 70
+            },
+            kind: "named",
+            name: "MerlinType"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.complete = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -303,15 +319,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/complete", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 80
-      },
-      kind: "any"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/complete", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "LocalMerlinService.js",
+          line: 80
+        },
+        kind: "any"
+      });
+    });
+  };
 
   remoteModule.errors = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -325,32 +345,36 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/errors", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 87
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/errors", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "LocalMerlinService.js",
           line: 87
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "LocalMerlinService.js",
             line: 87
           },
-          kind: "named",
-          name: "MerlinError"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "LocalMerlinService.js",
+              line: 87
+            },
+            kind: "named",
+            name: "MerlinError"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.runSingleCommand = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -374,15 +398,19 @@ module.exports = _client => {
         },
         kind: "mixed"
       }
-    }]).then(args => _client.callRemoteFunction("MerlinService/runSingleCommand", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "LocalMerlinService.js",
-        line: 99
-      },
-      kind: "any"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("MerlinService/runSingleCommand", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "LocalMerlinService.js",
+          line: 99
+        },
+        kind: "any"
+      });
+    });
+  };
 
   return remoteModule;
 };

@@ -72,13 +72,14 @@ var NuxView = (function () {
    * @param {?(() => boolean)} completePredicate - Will be used when determining whether
    * the NUX has been completed/viewed. The NUX will only be completed if this returns true.
    * If null, the predicate used will always return true.
+   * @param {number} indexInTour - The index of the NuxView in the associated NuxTour
    *
    * @throws Errors if both `selectorString` and `selectorFunction` are null.
    */
 
-  function NuxView(tourId, selectorString, selectorFunction, position, content) {
-    var customContent = arguments.length <= 5 || arguments[5] === undefined ? false : arguments[5];
-    var completePredicate = arguments.length <= 6 || arguments[6] === undefined ? null : arguments[6];
+  function NuxView(tourId, selectorString, selectorFunction, position, content, customContent, completePredicate, indexInTour) {
+    if (customContent === undefined) customContent = false;
+    if (completePredicate === undefined) completePredicate = null;
 
     _classCallCheck(this, NuxView);
 
@@ -99,6 +100,7 @@ var NuxView = (function () {
     this._completePredicate = completePredicate || function () {
       return true;
     };
+    this._index = indexInTour;
 
     this._disposables = new (_atom2 || _atom()).CompositeDisposable();
   }
@@ -111,10 +113,10 @@ var NuxView = (function () {
       var creationAttempt = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
       if (creationAttempt > ATTACHMENT_ATTEMPT_THRESHOLD) {
-        var error = 'The NuxView failed to succesfully query and attach to the DOM.';
         this._onNuxComplete(false);
         // An error is logged and tracked instead of simply throwing an error since this function
         // will execute outside of the parent scope's execution and cannot be caught.
+        var error = 'NuxView #' + this._index + ' for "' + this._tourId + '" ' + 'failed to succesfully attach to the DOM.';
         logger.error('ERROR: ' + error);
         this._track(error, error);
         return;

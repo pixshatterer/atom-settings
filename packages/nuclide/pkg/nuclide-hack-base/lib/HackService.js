@@ -66,28 +66,6 @@ var getCompletions = _asyncToGenerator(function* (file, markedContents) {
 
 exports.getCompletions = getCompletions;
 
-var getIdentifierDefinition = _asyncToGenerator(function* (file, contents, line, column) {
-  var hhResult = yield (0, (_HackHelpers2 || _HackHelpers()).callHHClient)(
-  // The `indetify-function` result is text, but passing --json option
-  // will eliminate any hh status messages that's irrelevant.
-  /*args*/['--json', '--identify-function', formatLineColumn(line, column)],
-  /*errorStream*/false,
-  /*outputJson*/false,
-  /*processInput*/contents,
-  /*cwd*/file);
-  if (!hhResult) {
-    return null;
-  }
-  var identifier = (hhResult.result || '').trim();
-  if (!identifier) {
-    return null;
-  }
-  var searchResponse = yield (0, (_HackHelpers2 || _HackHelpers()).getSearchResults)(file, identifier);
-  return selectDefinitionSearchResults(searchResponse, identifier);
-});
-
-exports.getIdentifierDefinition = getIdentifierDefinition;
-
 var getDefinition = _asyncToGenerator(function* (file, contents, line, column) {
   var hhResult = yield (0, (_HackHelpers2 || _HackHelpers()).callHHClient)(
   /*args*/['--ide-get-definition', formatLineColumn(line, column)],
@@ -124,31 +102,28 @@ var getDefinition = _asyncToGenerator(function* (file, contents, line, column) {
 
 exports.getDefinition = getDefinition;
 
-var getReferences = _asyncToGenerator(function* (filePath, symbolName, symbolType) {
-  var cmd = '--find-refs';
-  if (symbolType === (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.CLASS) {
-    cmd = '--find-class-refs';
-  }
+var findReferences = _asyncToGenerator(function* (file, contents, line, column) {
   var hhResult = yield (0, (_HackHelpers2 || _HackHelpers()).callHHClient)(
-  /*args*/[cmd, symbolName],
+  /*args*/['--ide-find-refs', formatLineColumn(line, column)],
   /*errorStream*/false,
   /*outputJson*/true,
-  /*processInput*/null,
-  /*file*/filePath);
-  if (!hhResult) {
+  /*processInput*/contents,
+  /*cwd*/file);
+  if (hhResult == null) {
     return null;
   }
-  var hackRoot = hhResult.hackRoot;
-  var result = hhResult.result;
 
-  var references = result;
+  var references = hhResult.result;
+  if (references == null) {
+    return null;
+  }
   return {
-    hackRoot: hackRoot,
+    hackRoot: hhResult.hackRoot,
     references: references
   };
 });
 
-exports.getReferences = getReferences;
+exports.findReferences = findReferences;
 exports.getHackEnvironmentDetails = getHackEnvironmentDetails;
 
 /**
@@ -260,27 +235,6 @@ var formatSource = _asyncToGenerator(function* (filePath, contents, startOffset,
   var result = hhResult.result;
 
   return result;
-});
-
-exports.formatSource = formatSource;
-
-var getMethodName = _asyncToGenerator(function* (filePath, contents, line, column) {
-  var hhResult = yield (0, (_HackHelpers2 || _HackHelpers()).callHHClient)(
-  /*args*/['--get-method-name', formatLineColumn(line, column)],
-  /*errorStream*/false,
-  /*outputJson*/true,
-  /*processInput*/contents,
-  /*file*/filePath);
-  if (!hhResult) {
-    return null;
-  }
-  var result = hhResult.result;
-
-  var name = result.name;
-  if (name == null || name === '') {
-    return null;
-  }
-  return result;
 }
 
 /**
@@ -290,7 +244,7 @@ var getMethodName = _asyncToGenerator(function* (filePath, contents, line, colum
  */
 );
 
-exports.getMethodName = getMethodName;
+exports.formatSource = formatSource;
 
 var isAvailableForDirectoryHack = _asyncToGenerator(function* (rootDirectory) {
   var hackOptions = yield (0, (_hackConfig2 || _hackConfig()).getHackExecOptions)(rootDirectory);
@@ -327,12 +281,6 @@ var _commonsNodePromise2;
 
 function _commonsNodePromise() {
   return _commonsNodePromise2 = require('../../commons-node/promise');
-}
-
-var _nuclideHackCommon2;
-
-function _nuclideHackCommon() {
-  return _nuclideHackCommon2 = require('../../nuclide-hack-common');
 }
 
 var _HackHelpers2;
@@ -377,28 +325,6 @@ function getHackEnvironmentDetails(localFile, hackCommand, useIdeConnection, log
   (0, (_hackConfig2 || _hackConfig()).setUseIde)(useIdeConnection);
   (_hackConfig4 || _hackConfig3()).logger.setLogLevel(logLevel);
   return (0, (_hackConfig2 || _hackConfig()).getHackExecOptions)(localFile);
-}
-
-function selectDefinitionSearchResults(searchReposnse, query) {
-  if (!searchReposnse) {
-    return null;
-  }
-  var searchResults = searchReposnse.result;
-  var hackRoot = searchReposnse.hackRoot;
-
-  var matchingResults = searchResults.filter(function (result) {
-    // If the request had a :: in it, it's a full name, so we should compare to
-    // the name of the result in that format.
-    var fullName = result.name;
-    if (query.indexOf('::') !== -1 && result.scope) {
-      fullName = result.scope + '::' + fullName;
-    }
-    return fullName === query;
-  });
-  return {
-    hackRoot: hackRoot,
-    definitions: matchingResults
-  };
 }
 
 function formatLineColumn(line, column) {

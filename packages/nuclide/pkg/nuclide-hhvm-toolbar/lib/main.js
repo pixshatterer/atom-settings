@@ -91,11 +91,15 @@ var Activation = (function () {
     key: 'consumeToolBar',
     value: function consumeToolBar(getToolBar) {
       var toolBar = getToolBar('nuclide-buck-toolbar');
-      var toolBarButton = toolBar.addButton({
+
+      var _toolBar$addButton = toolBar.addButton({
         callback: 'nuclide-hhvm-toolbar:toggle',
         tooltip: 'Toggle HHVM Toolbar',
         priority: 500
-      })[0];
+      });
+
+      var element = _toolBar$addButton.element;
+
       toolBar.addSpacer({
         priority: 501
       });
@@ -103,11 +107,13 @@ var Activation = (function () {
         'div',
         { className: 'hhvm-toolbar-icon-container' },
         (_reactForAtom2 || _reactForAtom()).React.createElement((_uiHhvmIcon2 || _uiHhvmIcon()).default, { width: '37%' })
-      ), toolBarButton);
-      this._disposables.add(new (_atom2 || _atom()).Disposable(function () {
-        (_reactForAtom2 || _reactForAtom()).ReactDOM.unmountComponentAtNode(toolBarButton);
+      ), element);
+      var disposable = new (_atom2 || _atom()).Disposable(function () {
+        (_reactForAtom2 || _reactForAtom()).ReactDOM.unmountComponentAtNode(element);
         toolBar.removeItems();
-      }));
+      });
+      this._disposables.add(disposable);
+      return disposable;
     }
   }, {
     key: 'consumeBuildSystemRegistry',

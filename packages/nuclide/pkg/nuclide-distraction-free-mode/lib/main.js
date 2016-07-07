@@ -91,9 +91,11 @@ var Activation = (function () {
         tooltip: 'Toggle distraction-free mode',
         priority: 600
       });
-      this._disposables.add(new (_atom2 || _atom()).Disposable(function () {
+      var disposable = new (_atom2 || _atom()).Disposable(function () {
         toolBar.removeItems();
-      }));
+      });
+      this._disposables.add(disposable);
+      return disposable;
     }
   }]);
 
@@ -130,7 +132,7 @@ function consumeDistractionFreeModeProvider(provider) {
 
 function consumeToolBar(getToolBar) {
   (0, (_assert2 || _assert()).default)(activation != null);
-  activation.consumeToolBar(getToolBar);
+  return activation.consumeToolBar(getToolBar);
 }
 
 // Should be the unique to all providers. Recommended to be the package name. This string is not

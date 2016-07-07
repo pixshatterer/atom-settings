@@ -42,7 +42,7 @@ var Activation = (function () {
   function Activation(state) {
     _classCallCheck(this, Activation);
 
-    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._debuggingActivation = new (_debuggingDebuggingActivation2 || _debuggingDebuggingActivation()).DebuggingActivation(), new (_packagerPackagerActivation2 || _packagerPackagerActivation()).PackagerActivation(), new (_shellShellActivation2 || _shellShellActivation()).ShellActivation());
+    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._debuggingActivation = new (_debuggingDebuggingActivation2 || _debuggingDebuggingActivation()).DebuggingActivation(), this._packagerActivation = new (_packagerPackagerActivation2 || _packagerPackagerActivation()).PackagerActivation(), new (_shellShellActivation2 || _shellShellActivation()).ShellActivation());
   }
 
   _createClass(Activation, [{
@@ -54,6 +54,11 @@ var Activation = (function () {
     key: 'provideNuclideDebugger',
     value: function provideNuclideDebugger() {
       return this._debuggingActivation.provideNuclideDebugger();
+    }
+  }, {
+    key: 'consumeOutputService',
+    value: function consumeOutputService(api) {
+      return this._packagerActivation.consumeOutputService(api);
     }
   }]);
 

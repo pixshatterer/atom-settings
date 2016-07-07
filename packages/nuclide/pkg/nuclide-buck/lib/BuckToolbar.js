@@ -10,6 +10,8 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
  * the root directory of this source tree.
  */
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
@@ -76,16 +78,7 @@ function _nuclideUiLibAddTooltip() {
   return _nuclideUiLibAddTooltip2 = _interopRequireDefault(require('../../nuclide-ui/lib/add-tooltip'));
 }
 
-var _commonsAtomDebounced2;
-
-function _commonsAtomDebounced() {
-  return _commonsAtomDebounced2 = require('../../commons-atom/debounced');
-}
-
 var BUCK_TARGET_INPUT_WIDTH = 400;
-var formatRequestOptionsErrorMessage = function formatRequestOptionsErrorMessage() {
-  return 'Failed to get targets from Buck';
-};
 
 var BuckToolbar = (function (_React$Component) {
   _inherits(BuckToolbar, _React$Component);
@@ -113,10 +106,8 @@ var BuckToolbar = (function (_React$Component) {
     this._buckToolbarActions = this.props.actions;
     this._buckToolbarStore = this.props.store;
     this._projectAliasesCache = new WeakMap();
-    this._onActivePaneItemChanged(atom.workspace.getActivePaneItem());
 
     this._disposables = new (_atom2 || _atom()).CompositeDisposable();
-    this._disposables.add((0, (_commonsAtomDebounced2 || _commonsAtomDebounced()).onWorkspaceDidStopChangingActivePaneItem)(this._onActivePaneItemChanged.bind(this)));
 
     // Re-render whenever the data in the store changes.
     this._disposables.add(this._buckToolbarStore.subscribe(function () {
@@ -130,20 +121,11 @@ var BuckToolbar = (function (_React$Component) {
       this._disposables.dispose();
     }
   }, {
-    key: '_onActivePaneItemChanged',
-    value: function _onActivePaneItemChanged(item) {
-      if (!atom.workspace.isTextEditor(item)) {
-        return;
-      }
-      var textEditor = item;
-      this._buckToolbarActions.updateProjectFor(textEditor);
-    }
-  }, {
     key: '_requestOptions',
-    value: function _requestOptions(inputText) {
+    value: _asyncToGenerator(function* (inputText) {
       var project = this._buckToolbarStore.getMostRecentBuckProject();
       if (project == null) {
-        return Promise.resolve([]);
+        throw new Error('No active Buck project.');
       }
 
       var aliases = this._projectAliasesCache.get(project);
@@ -152,8 +134,12 @@ var BuckToolbar = (function (_React$Component) {
         this._projectAliasesCache.set(project, aliases);
       }
 
-      return aliases;
-    }
+      var result = (yield aliases).slice();
+      if (inputText.trim() && result.indexOf(inputText) === -1) {
+        result.splice(0, 0, inputText);
+      }
+      return result;
+    })
   }, {
     key: 'render',
     value: function render() {
@@ -213,7 +199,9 @@ var BuckToolbar = (function (_React$Component) {
         (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibCombobox2 || _nuclideUiLibCombobox()).Combobox, {
           className: 'inline-block nuclide-buck-target-combobox',
           ref: 'buildTarget',
-          formatRequestOptionsErrorMessage: formatRequestOptionsErrorMessage,
+          formatRequestOptionsErrorMessage: function (err) {
+            return err.message;
+          },
           requestOptions: this._requestOptions,
           size: 'sm',
           loadingMessage: 'Updating target names...',

@@ -115,7 +115,9 @@ var FileReferencesView = (_reactForAtom2 || _reactForAtom()).React.createClass({
         (_reactForAtom2 || _reactForAtom()).React.createElement((_FilePreview2 || _FilePreview()).default, _extends({
           grammar: _this.props.grammar,
           text: previewText
-        }, group))
+        }, group, {
+          onClick: _this._onRefClick.bind(_this, group.references[0])
+        }))
       );
     });
     var outerClassName = (0, (_classnames2 || _classnames()).default)('nuclide-find-references-file list-nested-item', {

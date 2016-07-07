@@ -38,5 +38,5 @@ function deactivate() {
 
 function consumeOutputService(api) {
   (0, (_assert2 || _assert()).default)(activation);
-  return activation.consumeOutputService(api);
+  activation.consumeOutputService(api);
 }

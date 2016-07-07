@@ -61,6 +61,7 @@ function createConsoleGadget(state$, commands) {
       this.state = {
         currentExecutor: null,
         providers: new Map(),
+        providerStatuses: new Map(),
         executors: new Map(),
         records: []
       };
@@ -88,6 +89,7 @@ function createConsoleGadget(state$, commands) {
             currentExecutor: currentExecutor,
             executors: state.executors,
             providers: state.providers,
+            providerStatuses: state.providerStatuses,
             records: state.records
           });
         });
@@ -105,7 +107,10 @@ function createConsoleGadget(state$, commands) {
         var sources = Array.from(this.state.providers.values()).map(function (source) {
           return {
             id: source.id,
-            name: source.id
+            name: source.id,
+            status: _this2.state.providerStatuses.get(source.id),
+            start: source.start,
+            stop: source.stop
           };
         });
         // TODO(matthewwithanm): serialize and restore `initialSelectedSourceId`
@@ -116,7 +121,9 @@ function createConsoleGadget(state$, commands) {
           selectExecutor: commands.selectExecutor.bind(commands),
           clearRecords: commands.clearRecords.bind(commands),
           currentExecutor: this.state.currentExecutor,
-          initialSelectedSourceId: '',
+          initialSelectedSourceIds: sources.map(function (source) {
+            return source.id;
+          }),
           records: this.state.records,
           sources: sources,
           executors: this.state.executors,

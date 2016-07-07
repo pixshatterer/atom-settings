@@ -48,6 +48,12 @@ function _WatchExpressionComponent() {
   return _WatchExpressionComponent2 = require('./WatchExpressionComponent');
 }
 
+var _LocalsComponent2;
+
+function _LocalsComponent() {
+  return _LocalsComponent2 = require('./LocalsComponent');
+}
+
 var _BreakpointListComponent2;
 
 function _BreakpointListComponent() {
@@ -88,9 +94,12 @@ var NewDebuggerView = (function (_React$Component) {
     _classCallCheck(this, NewDebuggerView);
 
     _get(Object.getPrototypeOf(NewDebuggerView.prototype), 'constructor', this).call(this, props);
-    this._wrappedComponent = (0, (_nuclideUiLibBindObservableAsProps2 || _nuclideUiLibBindObservableAsProps()).bindObservableAsProps)(props.watchExpressionListStore.getWatchExpressions().map(function (watchExpressions) {
+    this._watchExpressionComponentWrapped = (0, (_nuclideUiLibBindObservableAsProps2 || _nuclideUiLibBindObservableAsProps()).bindObservableAsProps)(props.model.getWatchExpressionListStore().getWatchExpressions().map(function (watchExpressions) {
       return { watchExpressions: watchExpressions };
     }), (_WatchExpressionComponent2 || _WatchExpressionComponent()).WatchExpressionComponent);
+    this._localsComponentWrapped = (0, (_nuclideUiLibBindObservableAsProps2 || _nuclideUiLibBindObservableAsProps()).bindObservableAsProps)(props.model.getLocalsStore().getLocals().map(function (locals) {
+      return { locals: locals };
+    }), (_LocalsComponent2 || _LocalsComponent()).LocalsComponent);
     this._disposables = new (_atom2 || _atom()).CompositeDisposable();
     this.state = {
       debuggerMode: props.model.getStore().getDebuggerMode(),
@@ -134,7 +143,8 @@ var NewDebuggerView = (function (_React$Component) {
       var model = this.props.model;
 
       var actions = model.getActions();
-      var WatchExpressionComponentWrapped = this._wrappedComponent;
+      var WatchExpressionComponentWrapped = this._watchExpressionComponentWrapped;
+      var LocalsComponentWrapped = this._localsComponentWrapped;
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
         { className: 'nuclide-debugger-container-new' },
@@ -158,7 +168,15 @@ var NewDebuggerView = (function (_React$Component) {
           (_nuclideUiLibSection2 || _nuclideUiLibSection()).Section,
           { collapsable: true, headline: 'Breakpoints' },
           (_reactForAtom2 || _reactForAtom()).React.createElement((_BreakpointListComponent2 || _BreakpointListComponent()).BreakpointListComponent, {
+            actions: actions,
             breakpoints: this.state.breakpoints
+          })
+        ),
+        (_reactForAtom2 || _reactForAtom()).React.createElement(
+          (_nuclideUiLibSection2 || _nuclideUiLibSection()).Section,
+          { collapsable: true, headline: 'Locals' },
+          (_reactForAtom2 || _reactForAtom()).React.createElement(LocalsComponentWrapped, {
+            watchExpressionStore: model.getWatchExpressionStore()
           })
         ),
         (_reactForAtom2 || _reactForAtom()).React.createElement(

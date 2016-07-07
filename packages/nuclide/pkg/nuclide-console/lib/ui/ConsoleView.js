@@ -164,11 +164,11 @@ var ConsoleView = (function (_React$Component) {
           clear: this.props.clearRecords,
           invalidFilterInput: this.props.invalidFilterInput,
           enableRegExpFilter: this.props.enableRegExpFilter,
-          selectedSourceId: this.props.selectedSourceId,
+          selectedSourceIds: this.props.selectedSourceIds,
           sources: this.props.sources,
           toggleRegExpFilter: this.props.toggleRegExpFilter,
           onFilterTextChange: this.props.updateFilterText,
-          onSelectedSourceChange: this.props.selectSource
+          onSelectedSourcesChange: this.props.selectSources
         }),
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',
@@ -181,7 +181,7 @@ var ConsoleView = (function (_React$Component) {
               onScroll: this._handleScroll },
             (_reactForAtom2 || _reactForAtom()).React.createElement((_OutputTable2 || _OutputTable()).default, {
               records: this.props.records,
-              showSourceLabels: !this.props.selectedSourceId,
+              showSourceLabels: this.props.selectedSourceIds.length > 1,
               getExecutor: function (id) {
                 return _this.props.executors.get(id);
               },

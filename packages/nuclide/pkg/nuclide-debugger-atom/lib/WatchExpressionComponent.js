@@ -169,12 +169,12 @@ var WatchExpressionComponent = (function (_React$Component) {
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
         {
-          className: 'nuclide-debugger-atom-watch-expression-row',
+          className: (0, (_classnames2 || _classnames()).default)('nuclide-debugger-atom-expression-value-row', 'nuclide-debugger-atom-watch-expression-row'),
           key: index },
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',
           {
-            className: 'nuclide-debugger-atom-watch-expression-row-content',
+            className: 'nuclide-debugger-atom-expression-value-content',
             onDoubleClick: this._setRowBeingEdited.bind(this, index) },
           (_reactForAtom2 || _reactForAtom()).React.createElement(ValueComponent, {
             expression: expression,
@@ -206,7 +206,7 @@ var WatchExpressionComponent = (function (_React$Component) {
       });
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
-        { className: 'nuclide-debugger-atom-watch-expression-list' },
+        { className: 'nuclide-debugger-atom-expression-value-list' },
         expressions,
         addNewExpressionInput
       );

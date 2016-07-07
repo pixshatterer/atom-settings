@@ -83,6 +83,10 @@ var Activation = (function () {
       } else if (_this._canHideBlame()) {
         _this._hideBlame();
       }
+    }), atom.commands.add('atom-text-editor', 'nuclide-blame:hide-blame', function () {
+      if (_this._canHideBlame()) {
+        _this._hideBlame();
+      }
     }));
   }
 

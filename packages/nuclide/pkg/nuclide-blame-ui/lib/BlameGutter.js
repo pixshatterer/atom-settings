@@ -147,6 +147,7 @@ var _default = (function () {
         newBlame = yield this._blameProvider.getBlameForEditor(this._editor);
       } catch (error) {
         atom.notifications.addError('Failed to fetch blame to display. ' + 'The file is empty or untracked or the repository cannot be reached.', error);
+        atom.commands.dispatch(atom.views.getView(this._editor), 'nuclide-blame:hide-blame');
         return;
       }
       // The BlameGutter could have been destroyed while blame was being fetched.

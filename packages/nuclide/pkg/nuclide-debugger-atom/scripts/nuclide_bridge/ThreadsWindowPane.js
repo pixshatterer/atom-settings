@@ -47,6 +47,7 @@ var ThreadsWindowComponent = (function (_default$Component) {
     this.state = {
       threadData: null
     };
+    this._stoppedThread = null;
     this._handleThreadsUpdated = this._handleThreadsUpdated.bind(this);
     this._handleClearInterface = this._handleClearInterface.bind(this);
   }
@@ -55,6 +56,15 @@ var ThreadsWindowComponent = (function (_default$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this._unregisterUpdate();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      // We can currently scroll to the stopped thread after each render
+      // because we are only rendering when we update the threads. If we
+      // add more UI functionality and state changes then we may need to add
+      // flags so that we are only scrolling at the correct times.
+      this._scrollToStoppedThread();
     }
   }, {
     key: '_handleThreadsUpdated',
@@ -107,8 +117,22 @@ var ThreadsWindowComponent = (function (_default$Component) {
       return thread.id === stopThreadId ? '>' : thread.id === selectedThreadId ? '*' : ' ';
     }
   }, {
+    key: '_setStoppedThread',
+    value: function _setStoppedThread(ref) {
+      this._stoppedThread = ref;
+    }
+  }, {
+    key: '_scrollToStoppedThread',
+    value: function _scrollToStoppedThread() {
+      if (this._stoppedThread != null) {
+        this._stoppedThread.scrollIntoView();
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this = this;
+
       var children = [];
       var threadData = this.state.threadData;
 
@@ -119,33 +143,66 @@ var ThreadsWindowComponent = (function (_default$Component) {
           if (thread.id === threadData.selectedThreadId) {
             rowStyle.backgroundColor = '#cfcfcf';
           }
-          children.push((_react2 || _react()).default.createElement(
-            'tr',
-            {
-              align: 'center',
-              onDoubleClick: this._handleDoubleClick.bind(this, thread),
-              style: rowStyle },
-            (_react2 || _react()).default.createElement(
-              'td',
-              null,
-              indicator
-            ),
-            (_react2 || _react()).default.createElement(
-              'td',
-              null,
-              thread.id
-            ),
-            (_react2 || _react()).default.createElement(
-              'td',
-              null,
-              thread.address
-            ),
-            (_react2 || _react()).default.createElement(
-              'td',
-              null,
-              thread.stopReason
-            )
-          ));
+          if (indicator === '>') {
+            children.push((_react2 || _react()).default.createElement(
+              'tr',
+              {
+                align: 'center',
+                onDoubleClick: this._handleDoubleClick.bind(this, thread),
+                style: rowStyle,
+                ref: function (ref) {
+                  return _this._setStoppedThread(ref);
+                } },
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                indicator
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.id
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.address
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.stopReason
+              )
+            ));
+          } else {
+            children.push((_react2 || _react()).default.createElement(
+              'tr',
+              {
+                align: 'center',
+                onDoubleClick: this._handleDoubleClick.bind(this, thread),
+                style: rowStyle },
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                indicator
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.id
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.address
+              ),
+              (_react2 || _react()).default.createElement(
+                'td',
+                null,
+                thread.stopReason
+              )
+            ));
+          }
         }
       }
 

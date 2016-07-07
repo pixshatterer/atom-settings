@@ -127,6 +127,7 @@ var NuclideBridge = (function () {
             return;
           }
           this.updateProperties(properties, internalProperties);
+          (_ipc2 || _ipc()).default.sendToHost('notification', 'LocalsUpdate', properties);
         }
         // $FlowFixMe.
         WebInspector.RemoteObject.loadFromObject(this.object, Boolean(this.ignoreHasOwnProperty), callback.bind(this));

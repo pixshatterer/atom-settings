@@ -6,20 +6,26 @@ module.exports = _client => {
   const remoteModule = {};
 
   remoteModule.dispose = function () {
-    return _client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("FlowService/dispose", "void", args));
-  }
+    return _client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("FlowService/dispose", "void", args);
+    });
+  };
 
   remoteModule.getServerStatusUpdates = function () {
-    return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("FlowService/getServerStatusUpdates", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 129
-      },
-      kind: "named",
-      name: "ServerStatusUpdate"
-    }));
-  }
+    return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("FlowService/getServerStatusUpdates", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FlowService.js",
+          line: 129
+        },
+        kind: "named",
+        name: "ServerStatusUpdate"
+      });
+    });
+  };
 
   remoteModule.flowFindDefinition = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -63,24 +69,28 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowFindDefinition", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 138
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowFindDefinition", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FlowService.js",
           line: 138
         },
-        kind: "named",
-        name: "Loc"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FlowService.js",
+            line: 138
+          },
+          kind: "named",
+          name: "Loc"
+        }
+      });
+    });
+  };
 
   remoteModule.flowFindDiagnostics = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -112,24 +122,28 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowFindDiagnostics", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 153
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowFindDiagnostics", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FlowService.js",
           line: 153
         },
-        kind: "named",
-        name: "Diagnostics"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FlowService.js",
+            line: 153
+          },
+          kind: "named",
+          name: "Diagnostics"
+        }
+      });
+    });
+  };
 
   remoteModule.flowGetAutocompleteSuggestions = function (arg0, arg1, arg2, arg3, arg4, arg5) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -193,15 +207,19 @@ module.exports = _client => {
         },
         kind: "boolean"
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowGetAutocompleteSuggestions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 170
-      },
-      kind: "any"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowGetAutocompleteSuggestions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FlowService.js",
+          line: 170
+        },
+        kind: "any"
+      });
+    });
+  };
 
   remoteModule.flowGetType = function (arg0, arg1, arg2, arg3, arg4) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -255,50 +273,30 @@ module.exports = _client => {
         },
         kind: "boolean"
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowGetType", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 190
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowGetType", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FlowService.js",
           line: 190
         },
-        kind: "object",
-        fields: [{
+        kind: "nullable",
+        type: {
           location: {
             type: "source",
             fileName: "FlowService.js",
             line: 190
           },
-          name: "type",
-          type: {
+          kind: "object",
+          fields: [{
             location: {
               type: "source",
               fileName: "FlowService.js",
               line: 190
             },
-            kind: "string"
-          },
-          optional: false
-        }, {
-          location: {
-            type: "source",
-            fileName: "FlowService.js",
-            line: 190
-          },
-          name: "rawType",
-          type: {
-            location: {
-              type: "source",
-              fileName: "FlowService.js",
-              line: 190
-            },
-            kind: "nullable",
+            name: "type",
             type: {
               location: {
                 type: "source",
@@ -306,13 +304,37 @@ module.exports = _client => {
                 line: 190
               },
               kind: "string"
-            }
-          },
-          optional: false
-        }]
-      }
-    }));
-  }
+            },
+            optional: false
+          }, {
+            location: {
+              type: "source",
+              fileName: "FlowService.js",
+              line: 190
+            },
+            name: "rawType",
+            type: {
+              location: {
+                type: "source",
+                fileName: "FlowService.js",
+                line: 190
+              },
+              kind: "nullable",
+              type: {
+                location: {
+                  type: "source",
+                  fileName: "FlowService.js",
+                  line: 190
+                },
+                kind: "string"
+              }
+            },
+            optional: false
+          }]
+        }
+      });
+    });
+  };
 
   remoteModule.flowGetCoverage = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -326,24 +348,28 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowGetCoverage", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 205
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowGetCoverage", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FlowService.js",
           line: 205
         },
-        kind: "named",
-        name: "FlowCoverageResult"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FlowService.js",
+            line: 205
+          },
+          kind: "named",
+          name: "FlowCoverageResult"
+        }
+      });
+    });
+  };
 
   remoteModule.flowGetOutline = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -356,36 +382,42 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FlowService/flowGetOutline", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FlowService.js",
-        line: 214
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FlowService/flowGetOutline", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FlowService.js",
           line: 214
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "FlowService.js",
             line: 214
           },
-          kind: "named",
-          name: "FlowOutlineTree"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "FlowService.js",
+              line: 214
+            },
+            kind: "named",
+            name: "FlowOutlineTree"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.allowServerRestart = function () {
-    return _client.marshalArguments(Array.from(arguments), []).then(args => _client.callRemoteFunction("FlowService/allowServerRestart", "void", args));
-  }
+    return _client.marshalArguments(Array.from(arguments), []).then(args => {
+      return _client.callRemoteFunction("FlowService/allowServerRestart", "void", args);
+    });
+  };
 
   return remoteModule;
 };

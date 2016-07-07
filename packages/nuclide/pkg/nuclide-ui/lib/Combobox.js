@@ -121,7 +121,7 @@ var Combobox = (function (_React$Component) {
       var node = (_reactForAtom2 || _reactForAtom()).ReactDOM.findDOMNode(this);
       var _subscriptions = this._subscriptions = new (_atom2 || _atom()).CompositeDisposable();
       _subscriptions.add(atom.commands.add(node, 'core:move-up', this._handleMoveUp), atom.commands.add(node, 'core:move-down', this._handleMoveDown), atom.commands.add(node, 'core:cancel', this._handleCancel), atom.commands.add(node, 'core:confirm', this._handleConfirm), this.refs.freeformInput.onDidChange(this._handleTextInputChange));
-      this.requestUpdate();
+      this.requestUpdate(this.state.textInput);
     }
   }, {
     key: 'componentWillUnmount',
@@ -135,7 +135,7 @@ var Combobox = (function (_React$Component) {
     }
   }, {
     key: 'requestUpdate',
-    value: function requestUpdate() {
+    value: function requestUpdate(textInput) {
       var _this = this;
 
       // Cancel pending update.
@@ -145,7 +145,7 @@ var Combobox = (function (_React$Component) {
 
       this.setState({ error: null, loadingOptions: true });
 
-      this._updateSubscription = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(this.props.requestOptions(this.state.textInput)).subscribe(function (options) {
+      this._updateSubscription = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).default.Observable.fromPromise(this.props.requestOptions(textInput)).subscribe(function (options) {
         return _this.receiveUpdate(options);
       }, function (err) {
         _this.setState({
@@ -212,7 +212,7 @@ var Combobox = (function (_React$Component) {
       if (newText === this.state.textInput) {
         return;
       }
-      this.requestUpdate();
+      this.requestUpdate(newText);
       var filteredOptions = this._getFilteredOptions(this.state.options, newText);
       var selectedIndex = undefined;
       if (filteredOptions.length === 0) {
@@ -236,7 +236,7 @@ var Combobox = (function (_React$Component) {
   }, {
     key: '_handleInputFocus',
     value: function _handleInputFocus() {
-      this.requestUpdate();
+      this.requestUpdate(this.state.textInput);
       this.setState({ optionsVisible: true });
     }
   }, {

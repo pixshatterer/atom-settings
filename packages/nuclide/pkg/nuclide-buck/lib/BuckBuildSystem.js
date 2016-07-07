@@ -44,12 +44,6 @@ function _flux() {
   return _flux2 = require('flux');
 }
 
-var _nuclideRemoteUri2;
-
-function _nuclideRemoteUri() {
-  return _nuclideRemoteUri2 = _interopRequireDefault(require('../../nuclide-remote-uri'));
-}
-
 var _commonsNodeStream2;
 
 function _commonsNodeStream() {
@@ -110,20 +104,7 @@ function _BuckEventStream() {
   return _BuckEventStream2 = require('./BuckEventStream');
 }
 
-var _ReactNativeServerManager2;
-
-function _ReactNativeServerManager() {
-  return _ReactNativeServerManager2 = _interopRequireDefault(require('./ReactNativeServerManager'));
-}
-
-var _ReactNativeServerActions2;
-
-function _ReactNativeServerActions() {
-  return _ReactNativeServerActions2 = _interopRequireDefault(require('./ReactNativeServerActions'));
-}
-
 var LLDB_PROCESS_ID_REGEX = /lldb -p ([0-9]+)/;
-var REACT_NATIVE_APP_FLAGS = ['-executor-override', 'RCTWebSocketExecutor', '-websocket-executor-name', 'Nuclide', '-websocket-executor-port', '8090'];
 
 var BuckBuildSystem = (function () {
   function BuckBuildSystem(initialState) {
@@ -193,6 +174,11 @@ var BuckBuildSystem = (function () {
     key: 'getOutputMessages',
     value: function getOutputMessages() {
       return this._outputMessages;
+    }
+  }, {
+    key: 'updateCwd',
+    value: function updateCwd(path) {
+      this._getFlux().actions.updateProjectPath(path);
     }
   }, {
     key: '_logOutput',
@@ -340,8 +326,6 @@ var BuckBuildSystem = (function () {
   }, {
     key: '_runBuckCommand',
     value: function _runBuckCommand(buckProject, buildTarget, subcommand, debug, logOutput) {
-      var _this4 = this;
-
       var _getFlux6 = this._getFlux();
 
       var store = _getFlux6.store;
@@ -354,19 +338,20 @@ var BuckBuildSystem = (function () {
 
       var buckObservable = undefined;
       if (subcommand === 'install') {
-        var appArgs = [];
         var rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
-        if (store.isReactNativeServerMode()) {
-          rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.fromPromise(this._getReactNativeServerCommand(buckProject)).map(function (serverCommand) {
-            if (serverCommand) {
-              var rnActions = _this4._getReactNativeServerActions();
-              rnActions.startServer(serverCommand);
-              rnActions.startNodeExecutorServer();
-              appArgs = REACT_NATIVE_APP_FLAGS;
-            }
-          }).ignoreElements();
+        var isReactNativeServerMode = store.isReactNativeServerMode();
+        if (isReactNativeServerMode) {
+          rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.defer(function () {
+            atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-react-native:start-packager');
+            atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-react-native:start-debugging');
+            return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
+          });
         }
-        buckObservable = rnObservable.concat(buckProject.installWithOutput([buildTarget], store.getSimulator(), { run: true, debug: debug, appArgs: appArgs }));
+        buckObservable = rnObservable.concat(buckProject.installWithOutput([buildTarget], store.getSimulator(), {
+          run: true,
+          debug: debug,
+          appArgs: isReactNativeServerMode ? ['-executor-override', 'RCTWebSocketExecutor'] : []
+        }));
       } else if (subcommand === 'build') {
         buckObservable = buckProject.buildWithOutput([buildTarget]);
       } else if (subcommand === 'test') {
@@ -396,33 +381,6 @@ var BuckBuildSystem = (function () {
           }
         })
       }).share();
-    }
-  }, {
-    key: '_getReactNativeServerCommand',
-    value: _asyncToGenerator(function* (buckProject) {
-      var serverCommand = yield buckProject.getBuckConfig('react-native', 'server');
-      if (serverCommand == null) {
-        return null;
-      }
-      var repoRoot = yield buckProject.getPath();
-      if (repoRoot == null) {
-        return null;
-      }
-      return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(repoRoot, serverCommand);
-    })
-  }, {
-    key: '_getReactNativeServerActions',
-    value: function _getReactNativeServerActions() {
-      if (this._reactNativeServerActions != null) {
-        return this._reactNativeServerActions;
-      }
-
-      var dispatcher = new (_flux2 || _flux()).Dispatcher();
-      var actions = new (_ReactNativeServerActions2 || _ReactNativeServerActions()).default(dispatcher);
-      this._reactNativeServerActions = actions;
-      this._reactNativeServerManager = new (_ReactNativeServerManager2 || _ReactNativeServerManager()).default(dispatcher, actions);
-      this._disposables.add(this._reactNativeServerManager);
-      return actions;
     }
   }]);
 
@@ -456,5 +414,3 @@ var TASKS = [{
   enabled: true,
   icon: 'plug'
 }];
-
-// React Native server state.

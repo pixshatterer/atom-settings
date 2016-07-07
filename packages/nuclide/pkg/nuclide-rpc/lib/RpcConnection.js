@@ -114,21 +114,27 @@ var Subscription = (function () {
 })();
 
 var Call = (function () {
-  function Call(message, timeoutMessage, resolve, reject) {
+  function Call(message, timeoutMessage, resolve, reject, cleanup) {
+    var _this = this;
+
     _classCallCheck(this, Call);
 
     this._message = message;
     this._timeoutMessage = timeoutMessage;
     this._resolve = resolve;
     this._reject = reject;
+    this._cleanup = cleanup;
     this._complete = false;
+    this._timerId = setTimeout(function () {
+      _this._timeout();
+    }, SERVICE_FRAMEWORK_RPC_TIMEOUT_MS);
   }
 
   _createClass(Call, [{
     key: 'reject',
     value: function reject(error) {
       if (!this._complete) {
-        this._complete = true;
+        this.cleanup();
         this._reject((0, (_messages2 || _messages()).decodeError)(this._message, error));
       }
     }
@@ -136,15 +142,25 @@ var Call = (function () {
     key: 'resolve',
     value: function resolve(result) {
       if (!this._complete) {
-        this._complete = true;
+        this.cleanup();
         this._resolve(result);
       }
     }
   }, {
-    key: 'timeout',
-    value: function timeout() {
+    key: 'cleanup',
+    value: function cleanup() {
       if (!this._complete) {
         this._complete = true;
+        clearTimeout(this._timerId);
+        this._timerId = null;
+        this._cleanup();
+      }
+    }
+  }, {
+    key: '_timeout',
+    value: function _timeout() {
+      if (!this._complete) {
+        this.cleanup();
         this._reject(new Error('Timeout after ' + SERVICE_FRAMEWORK_RPC_TIMEOUT_MS + ' for id: ' + (this._message.id + ', ' + this._timeoutMessage + '.')));
       }
     }
@@ -158,7 +174,7 @@ var RpcConnection = (function () {
   // Do not call this directly, use factory methods below.
 
   function RpcConnection(kind, serviceRegistry, transport) {
-    var _this = this;
+    var _this2 = this;
 
     _classCallCheck(this, RpcConnection);
 
@@ -167,7 +183,7 @@ var RpcConnection = (function () {
     this._serviceRegistry = serviceRegistry;
     this._objectRegistry = new (_ObjectRegistry2 || _ObjectRegistry()).ObjectRegistry(kind, this._serviceRegistry, this);
     this._transport.onMessage().subscribe(function (message) {
-      _this._handleMessage(message);
+      _this2._handleMessage(message);
     });
     this._subscriptions = new Map();
     this._calls = new Map();
@@ -253,11 +269,11 @@ var RpcConnection = (function () {
   }, {
     key: 'createRemoteObject',
     value: function createRemoteObject(interfaceName, thisArg, unmarshalledArgs, argTypes) {
-      var _this2 = this;
+      var _this3 = this;
 
       var idPromise = _asyncToGenerator(function* () {
-        var marshalledArgs = yield _this2._getTypeRegistry().marshalArguments(_this2._objectRegistry, unmarshalledArgs, argTypes);
-        return _this2._sendMessageAndListenForResult((0, (_messages2 || _messages()).createNewObjectMessage)(interfaceName, _this2._generateRequestId(), marshalledArgs), 'promise', 'Creating instance of ' + interfaceName);
+        var marshalledArgs = yield _this3._getTypeRegistry().marshalArguments(_this3._objectRegistry, unmarshalledArgs, argTypes);
+        return _this3._sendMessageAndListenForResult((0, (_messages2 || _messages()).createNewObjectMessage)(interfaceName, _this3._generateRequestId(), marshalledArgs), 'promise', 'Creating instance of ' + interfaceName);
       })();
       this._objectRegistry.addProxy(thisArg, idPromise);
     }
@@ -290,7 +306,7 @@ var RpcConnection = (function () {
   }, {
     key: '_sendMessageAndListenForResult',
     value: function _sendMessageAndListenForResult(message, returnType, timeoutMessage) {
-      var _this3 = this;
+      var _this4 = this;
 
       switch (returnType) {
         case 'void':
@@ -299,16 +315,10 @@ var RpcConnection = (function () {
         case 'promise':
           // Listen for a single message, and resolve or reject a promise on that message.
           return new Promise(function (resolve, reject) {
-            _this3._transport.send(JSON.stringify(message));
-            _this3._calls.set(message.id, new Call(message, timeoutMessage, resolve, reject));
-
-            setTimeout(function () {
-              var call = _this3._calls.get(message.id);
-              if (call != null) {
-                _this3._calls.delete(message.id);
-                call.timeout();
-              }
-            }, SERVICE_FRAMEWORK_RPC_TIMEOUT_MS);
+            _this4._transport.send(JSON.stringify(message));
+            _this4._calls.set(message.id, new Call(message, timeoutMessage, resolve, reject, function () {
+              _this4._calls.delete(message.id);
+            }));
           });
         case 'observable':
           var subscriptions = this._subscriptions.get(message.id);
@@ -320,7 +330,7 @@ var RpcConnection = (function () {
             var subscription = new Subscription(message, observer);
             (0, (_assert2 || _assert()).default)(subscriptions != null);
             subscriptions.add(subscription);
-            _this3._transport.send(JSON.stringify(message));
+            _this4._transport.send(JSON.stringify(message));
 
             // Observable dispose function, which is called on subscription dispose, on stream
             // completion, and on stream error.
@@ -332,7 +342,7 @@ var RpcConnection = (function () {
                 if (subscriptions.size === 0) {
                   // Send a message to server to call the dispose function of
                   // the remote Observable subscription.
-                  _this3._transport.send(JSON.stringify((0, (_messages2 || _messages()).createUnsubscribeMessage)(message.id)));
+                  _this4._transport.send(JSON.stringify((0, (_messages2 || _messages()).createUnsubscribeMessage)(message.id)));
                 }
               }
             };
@@ -346,7 +356,7 @@ var RpcConnection = (function () {
   }, {
     key: '_returnPromise',
     value: function _returnPromise(id, timingTracker, candidate, type) {
-      var _this4 = this;
+      var _this5 = this;
 
       var returnVal = candidate;
       // Ensure that the return value is a promise.
@@ -357,22 +367,22 @@ var RpcConnection = (function () {
       // Marshal the result, to send over the network.
       (0, (_assert2 || _assert()).default)(returnVal != null);
       returnVal = returnVal.then(function (value) {
-        return _this4._getTypeRegistry().marshal(_this4._objectRegistry, value, type);
+        return _this5._getTypeRegistry().marshal(_this5._objectRegistry, value, type);
       });
 
       // Send the result of the promise across the socket.
       returnVal.then(function (result) {
-        _this4._transport.send(JSON.stringify((0, (_messages2 || _messages()).createPromiseMessage)(id, result)));
+        _this5._transport.send(JSON.stringify((0, (_messages2 || _messages()).createPromiseMessage)(id, result)));
         timingTracker.onSuccess();
       }, function (error) {
-        _this4._transport.send(JSON.stringify((0, (_messages2 || _messages()).createErrorResponseMessage)(id, error)));
+        _this5._transport.send(JSON.stringify((0, (_messages2 || _messages()).createErrorResponseMessage)(id, error)));
         timingTracker.onError(error == null ? new Error() : error);
       });
     }
   }, {
     key: '_returnObservable',
     value: function _returnObservable(id, returnVal, elementType) {
-      var _this5 = this;
+      var _this6 = this;
 
       var result = undefined;
       // Ensure that the return value is an observable.
@@ -384,18 +394,18 @@ var RpcConnection = (function () {
 
       // Marshal the result, to send over the network.
       result = result.concatMap(function (value) {
-        return _this5._getTypeRegistry().marshal(_this5._objectRegistry, value, elementType);
+        return _this6._getTypeRegistry().marshal(_this6._objectRegistry, value, elementType);
       });
 
       // Send the next, error, and completion events of the observable across the socket.
       var subscription = result.subscribe(function (data) {
-        _this5._transport.send(JSON.stringify((0, (_messages2 || _messages()).createNextMessage)(id, data)));
+        _this6._transport.send(JSON.stringify((0, (_messages2 || _messages()).createNextMessage)(id, data)));
       }, function (error) {
-        _this5._transport.send(JSON.stringify((0, (_messages2 || _messages()).createObserveErrorMessage)(id, error)));
-        _this5._objectRegistry.removeSubscription(id);
+        _this6._transport.send(JSON.stringify((0, (_messages2 || _messages()).createObserveErrorMessage)(id, error)));
+        _this6._objectRegistry.removeSubscription(id);
       }, function (completed) {
-        _this5._transport.send(JSON.stringify((0, (_messages2 || _messages()).createCompleteMessage)(id)));
-        _this5._objectRegistry.removeSubscription(id);
+        _this6._transport.send(JSON.stringify((0, (_messages2 || _messages()).createCompleteMessage)(id)));
+        _this6._objectRegistry.removeSubscription(id);
       });
       this._objectRegistry.addSubscription(id, subscription);
     }
@@ -505,25 +515,34 @@ var RpcConnection = (function () {
   }, {
     key: '_handleResponseMessage',
     value: function _handleResponseMessage(message) {
-      var _this6 = this;
+      var _this7 = this;
 
       var id = message.id;
       switch (message.type) {
         case 'response':
           {
-            var _result = message.result;
-
             var call = this._calls.get(id);
             if (call != null) {
-              this._calls.delete(id);
+              var _result = message.result;
+
               call.resolve(_result);
+            }
+            break;
+          }
+        case 'error-response':
+          {
+            var call = this._calls.get(id);
+            if (call != null) {
+              var _error2 = message.error;
+
+              call.reject(_error2);
             }
             break;
           }
         case 'next':
           {
             var _ret = (function () {
-              var subscriptions = _this6._subscriptions.get(id);
+              var subscriptions = _this7._subscriptions.get(id);
               (0, (_assert2 || _assert()).default)(subscriptions != null);
               var value = message.value;
 
@@ -548,7 +567,7 @@ var RpcConnection = (function () {
         case 'error':
           {
             var _ret2 = (function () {
-              var subscriptions = _this6._subscriptions.get(id);
+              var subscriptions = _this7._subscriptions.get(id);
               (0, (_assert2 || _assert()).default)(subscriptions != null);
               var error = message.error;
 
@@ -560,17 +579,6 @@ var RpcConnection = (function () {
             })();
 
             if (_ret2 === 'break') break;
-          }
-        case 'error-response':
-          {
-            var errorCall = this._calls.get(id);
-            if (errorCall != null) {
-              this._calls.delete(id);
-              var _error2 = message.error;
-
-              errorCall.reject(_error2);
-            }
-            break;
           }
         default:
           throw new Error('Unexpected message type ' + JSON.stringify(message));

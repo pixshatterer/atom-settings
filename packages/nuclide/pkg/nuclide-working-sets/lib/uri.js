@@ -20,17 +20,19 @@ function _nuclideRemoteUri() {
 }
 
 function dedupeUris(uris) {
-  var dedepped = uris.map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.trimTrailingSeparator);
-  dedepped.sort();
+  var deduped = uris.map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator);
+  deduped.sort();
 
-  var lastOKPrefix = '';
+  var lastOKPrefix = null;
 
-  return dedepped.filter(function (u, i) {
-    if (i !== 0 && u.startsWith(lastOKPrefix)) {
+  return deduped.filter(function (pathName) {
+    // Since we've sorted the paths, we know that children will be grouped directly after their
+    // parent.
+    if (lastOKPrefix != null && pathName.startsWith(lastOKPrefix)) {
       return false;
     }
 
-    lastOKPrefix = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator(dedepped[i]);
+    lastOKPrefix = pathName;
     return true;
-  });
+  }).map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.trimTrailingSeparator);
 }

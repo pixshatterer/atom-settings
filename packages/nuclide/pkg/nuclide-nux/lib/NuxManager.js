@@ -34,6 +34,12 @@ function _commonsNodeCollection() {
   return _commonsNodeCollection2 = require('../../commons-node/collection');
 }
 
+var _nuclideLogging2;
+
+function _nuclideLogging() {
+  return _nuclideLogging2 = require('../../nuclide-logging');
+}
+
 var _nuclideAnalytics2;
 
 function _nuclideAnalytics() {
@@ -62,6 +68,8 @@ var GK_NUX = 'nuclide_all_nuxes';
 exports.GK_NUX = GK_NUX;
 // Limits the number of NUXes displayed every session
 var NUX_PER_SESSION_LIMIT = 3;
+
+var logger = (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)();
 
 var NuxManager = (function () {
   function NuxManager(nuxStore) {
@@ -130,11 +138,13 @@ var NuxManager = (function () {
         return;
       }
 
-      var nuxViews = (0, (_commonsNodeCollection2 || _commonsNodeCollection()).arrayCompact)(nuxTourModel.nuxList.map(function (model) {
+      var nuxViews = (0, (_commonsNodeCollection2 || _commonsNodeCollection()).arrayCompact)(nuxTourModel.nuxList.map(function (model, index) {
         try {
-          return new (_NuxView2 || _NuxView()).NuxView(nuxTourModel.id, model.selector, model.selectorFunction, model.position, model.content, model.isCustomContent, model.completionPredicate);
+          return new (_NuxView2 || _NuxView()).NuxView(nuxTourModel.id, model.selector, model.selectorFunction, model.position, model.content, model.isCustomContent, model.completionPredicate, index);
         } catch (err) {
-          _this2._track(nuxTourModel.id, 'NuxView failed to instantiate.', err.toString());
+          var error = 'NuxView #' + index + ' for "' + nuxTourModel.id + '" failed to instantiate.';
+          logger.error('ERROR: ' + error);
+          _this2._track(nuxTourModel.id, 'NuxView #' + (index + 1) + ' failed to instantiate.', err.toString());
           return null;
         }
       }));

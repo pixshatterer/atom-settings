@@ -16,15 +16,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/exists", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 43
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/exists", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 43
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   remoteModule.findNearestFile = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -47,23 +51,27 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/findNearestFile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 47
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/findNearestFile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FileSystemService.js",
           line: 47
         },
-        kind: "string"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FileSystemService.js",
+            line: 47
+          },
+          kind: "string"
+        }
+      });
+    });
+  };
 
   remoteModule.lstat = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -76,16 +84,20 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/lstat", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 55
-      },
-      kind: "named",
-      name: "fs.Stats"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/lstat", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 55
+        },
+        kind: "named",
+        name: "fs.Stats"
+      });
+    });
+  };
 
   remoteModule.mkdir = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -98,15 +110,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/mkdir", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 64
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/mkdir", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 64
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.mkdirp = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -119,15 +135,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/mkdirp", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 75
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/mkdirp", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 75
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   remoteModule.chmod = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -150,15 +170,19 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/chmod", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 82
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/chmod", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 82
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.newFile = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -171,15 +195,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/newFile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 93
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/newFile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 93
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   remoteModule.readdir = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -192,24 +220,28 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/readdir", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 112
-      },
-      kind: "array",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/readdir", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FileSystemService.js",
           line: 112
         },
-        kind: "named",
-        name: "FileWithStats"
-      }
-    }));
-  }
+        kind: "array",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FileSystemService.js",
+            line: 112
+          },
+          kind: "named",
+          name: "FileWithStats"
+        }
+      });
+    });
+  };
 
   remoteModule.realpath = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -222,15 +254,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/realpath", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 141
-      },
-      kind: "string"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/realpath", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 141
+        },
+        kind: "string"
+      });
+    });
+  };
 
   remoteModule.resolveRealPath = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -243,15 +279,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/resolveRealPath", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 149
-      },
-      kind: "string"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/resolveRealPath", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 149
+        },
+        kind: "string"
+      });
+    });
+  };
 
   remoteModule.rename = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -274,15 +314,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/rename", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 156
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/rename", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 156
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.move = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -313,15 +357,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/move", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 163
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/move", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 163
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.copy = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -344,15 +392,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/copy", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 174
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/copy", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 174
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   remoteModule.rmdir = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -365,15 +417,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/rmdir", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 191
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/rmdir", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 191
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.rmdirAll = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -394,15 +450,19 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/rmdirAll", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 195
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/rmdirAll", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 195
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.stat = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -415,16 +475,20 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/stat", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 223
-      },
-      kind: "named",
-      name: "fs.Stats"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/stat", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 223
+        },
+        kind: "named",
+        name: "fs.Stats"
+      });
+    });
+  };
 
   remoteModule.unlink = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -437,15 +501,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/unlink", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 230
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/unlink", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 230
+        },
+        kind: "void"
+      });
+    });
+  };
 
   remoteModule.readFile = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -493,16 +561,20 @@ module.exports = _client => {
           }]
         }
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/readFile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 247
-      },
-      kind: "named",
-      name: "Buffer"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/readFile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 247
+        },
+        kind: "named",
+        name: "Buffer"
+      });
+    });
+  };
 
   remoteModule.isNfs = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -515,15 +587,19 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/isNfs", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 258
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/isNfs", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 258
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   remoteModule.writeFile = function (arg0, arg1, arg2) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -613,15 +689,19 @@ module.exports = _client => {
           }]
         }
       }
-    }]).then(args => _client.callRemoteFunction("FileSystemService/writeFile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileSystemService.js",
-        line: 300
-      },
-      kind: "void"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileSystemService/writeFile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileSystemService.js",
+          line: 300
+        },
+        kind: "void"
+      });
+    });
+  };
 
   return remoteModule;
 };

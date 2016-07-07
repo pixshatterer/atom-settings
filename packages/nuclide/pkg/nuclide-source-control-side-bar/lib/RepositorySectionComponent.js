@@ -32,6 +32,12 @@ function _classnames() {
   return _classnames2 = _interopRequireDefault(require('classnames'));
 }
 
+var _nuclideUiLibHR2;
+
+function _nuclideUiLibHR() {
+  return _nuclideUiLibHR2 = require('../../nuclide-ui/lib/HR');
+}
+
 var _assert2;
 
 function _assert() {
@@ -204,7 +210,7 @@ var RepositorySectionComponent = (function (_React$Component) {
 
       var separator = undefined;
       if (this.props.hasSeparator) {
-        separator = (_reactForAtom2 || _reactForAtom()).React.createElement('hr', { className: 'nuclide-source-control-side-bar--repo-separator' });
+        separator = (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibHR2 || _nuclideUiLibHR()).HR, null);
       }
 
       var uncommittedChangesClassName = (0, (_classnames2 || _classnames()).default)('list-item nuclide-source-control-side-bar--list-item', {

@@ -99,12 +99,25 @@ function accumulateState(state, action) {
         var _source = action.payload.source;
 
         var providers = new Map(state.providers);
+        var providerStatuses = new Map(state.providerStatuses);
         var providerSubscriptions = new Map(state.providerSubscriptions);
         providers.delete(_source);
+        providerStatuses.delete(_source);
         providerSubscriptions.delete(_source);
         return _extends({}, state, {
           providers: providers,
+          providerStatuses: providerStatuses,
           providerSubscriptions: providerSubscriptions
+        });
+      }
+    case (_ActionTypes2 || _ActionTypes()).STATUS_UPDATED:
+      {
+        var _action$payload2 = action.payload;
+        var _status = _action$payload2.status;
+        var providerId = _action$payload2.providerId;
+
+        return _extends({}, state, {
+          providerStatuses: new Map(state.providerStatuses).set(providerId, _status)
         });
       }
     case (_ActionTypes2 || _ActionTypes()).UNREGISTER_EXECUTOR:

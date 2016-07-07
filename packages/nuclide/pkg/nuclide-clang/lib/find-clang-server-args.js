@@ -49,6 +49,14 @@ exports.default = _asyncToGenerator(function* () {
     }
   }
 
+  // TODO(asuarez): Fix this when we have server-side settings.
+  if (global.atom) {
+    var path = atom.config.get('nuclide.nuclide-clang-atom.libclangPath');
+    if (path) {
+      libClangLibraryFile = path.trim();
+    }
+  }
+
   var clangServerArgs = {
     libClangLibraryFile: libClangLibraryFile,
     pythonExecutable: 'python',

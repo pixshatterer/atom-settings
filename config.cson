@@ -4,8 +4,21 @@
       _analyticsUserId: "68ac7b8a-4c34-4619-9f6b-6af3e0ae7590"
   core:
     automaticallyUpdate: false
+    customFileTypes:
+      "source.ini": [
+        ".buckconfig"
+        ".flowconfig"
+      ]
+      "source.json": [
+        ".arcconfig"
+        "BUCK.autodeps"
+      ]
+      "source.python": [
+        "BUCK"
+      ]
     disabledPackages: [
       "project-manager"
+      "tree-view"
     ]
     themes: [
       "one-dark-ui"
@@ -18,11 +31,31 @@
     tabType: "soft"
   "exception-reporting":
     userId: "66b06d99-09fe-dd4b-9af9-e9dfa274c62f"
+  "file-watcher":
+    promptWhenFileHasChangedOnDisk: false
   "imdone-atom":
     openIn: {}
     todaysJournal: {}
+  linter:
+    lintOnFly: false
+    showErrorPanel: false
   "linter-eslint": {}
   minimap: {}
+  nuclide:
+    installRecommendedPackages: true
+    "nuclide-distraction-free-mode": {}
+    "nuclide-home":
+      showHome: false
+    "nuclide-working-sets":
+      workingSets: [
+        {
+          name: "Todo project"
+          uris: [
+            "/Users/germangalvis/apacheDocs/r-native/Todo"
+          ]
+          active: true
+        }
+      ]
   "one-dark-ui": {}
   "roku-deploy":
     excludedPaths: "out,tools"
@@ -36,6 +69,8 @@
   "todo-show":
     sortAscending: false
     sortBy: "Type"
+  "tool-bar":
+    visible: false
   "tree-view":
     hideVcsIgnoredFiles: true
   welcome:

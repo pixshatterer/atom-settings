@@ -47,32 +47,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("PythonService/getCompletions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "PythonService.js",
-        line: 105
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("PythonService/getCompletions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "PythonService.js",
           line: 105
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "PythonService.js",
             line: 105
           },
-          kind: "named",
-          name: "PythonCompletion"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "PythonService.js",
+              line: 105
+            },
+            kind: "named",
+            name: "PythonCompletion"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.getDefinitions = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -116,32 +120,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("PythonService/getDefinitions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "PythonService.js",
-        line: 120
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("PythonService/getDefinitions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "PythonService.js",
           line: 120
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "PythonService.js",
             line: 120
           },
-          kind: "named",
-          name: "PythonDefinition"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "PythonService.js",
+              line: 120
+            },
+            kind: "named",
+            name: "PythonDefinition"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.getReferences = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -185,32 +193,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("PythonService/getReferences", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "PythonService.js",
-        line: 135
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("PythonService/getReferences", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "PythonService.js",
           line: 135
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "PythonService.js",
             line: 135
           },
-          kind: "named",
-          name: "PythonReference"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "PythonService.js",
+              line: 135
+            },
+            kind: "named",
+            name: "PythonReference"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.getOutline = function (arg0, arg1) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -234,32 +246,36 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("PythonService/getOutline", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "PythonService.js",
-        line: 148
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("PythonService/getOutline", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "PythonService.js",
           line: 148
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "PythonService.js",
             line: 148
           },
-          kind: "named",
-          name: "PythonOutlineItem"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "PythonService.js",
+              line: 148
+            },
+            kind: "named",
+            name: "PythonOutlineItem"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.formatCode = function (arg0, arg1, arg2, arg3) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -303,15 +319,19 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("PythonService/formatCode", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "PythonService.js",
-        line: 158
-      },
-      kind: "string"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("PythonService/formatCode", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "PythonService.js",
+          line: 158
+        },
+        kind: "string"
+      });
+    });
+  };
 
   return remoteModule;
 };

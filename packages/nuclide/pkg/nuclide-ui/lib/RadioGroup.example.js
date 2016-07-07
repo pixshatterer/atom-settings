@@ -81,7 +81,6 @@ var RadioGroupExamples = {
   description: '',
   examples: [{
     title: '',
-    // $FlowIssue
     component: RadioGroupExample
   }]
 };

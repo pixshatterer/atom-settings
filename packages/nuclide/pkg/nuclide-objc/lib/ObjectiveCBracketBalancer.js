@@ -105,11 +105,6 @@ var ObjectiveCBracketBalancer = (function () {
   }], [{
     key: 'getOpenBracketInsertPosition',
     value: function getOpenBracketInsertPosition(buffer, closeBracketPosition) {
-      var closeBracketText = buffer.getTextInRange((_atom2 || _atom()).Range.fromObject([closeBracketPosition, closeBracketPosition.translate([0, 1])]));
-      if (closeBracketText !== ']') {
-        throw new Error('The close bracket position must contain a close bracket');
-      }
-
       var startingLine = buffer.lineForRow(closeBracketPosition.row);
       var singleQuoteCount = 0;
       var doubleQuoteCount = 0;

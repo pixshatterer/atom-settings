@@ -58,6 +58,12 @@ function _CallstackStore() {
   return _CallstackStore2 = _interopRequireDefault(require('./CallstackStore'));
 }
 
+var _LocalsStore2;
+
+function _LocalsStore() {
+  return _LocalsStore2 = _interopRequireDefault(require('./LocalsStore'));
+}
+
 var _WatchExpressionListStore2;
 
 function _WatchExpressionListStore() {
@@ -104,8 +110,9 @@ var DebuggerModel = (function () {
     this._watchExpressionListStore = new (_WatchExpressionListStore2 || _WatchExpressionListStore()).WatchExpressionListStore(this._watchExpressionStore, this._dispatcher);
     this._debuggerActionStore = new (_DebuggerActionsStore2 || _DebuggerActionsStore()).default(this._dispatcher, this._bridge);
     this._callstackStore = new (_CallstackStore2 || _CallstackStore()).default(this._dispatcher);
+    this._localsStore = new (_LocalsStore2 || _LocalsStore()).default(this._dispatcher);
 
-    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._store, this._actions, this._breakpointStore, this._breakpointManager, this._bridge, this._debuggerProviderStore, this._watchExpressionStore, this._debuggerActionStore, this._callstackStore);
+    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._store, this._actions, this._breakpointStore, this._breakpointManager, this._bridge, this._debuggerProviderStore, this._watchExpressionStore, this._debuggerActionStore, this._callstackStore, this._localsStore);
   }
 
   _createClass(DebuggerModel, [{
@@ -147,6 +154,11 @@ var DebuggerModel = (function () {
     key: 'getCallstackStore',
     value: function getCallstackStore() {
       return this._callstackStore;
+    }
+  }, {
+    key: 'getLocalsStore',
+    value: function getLocalsStore() {
+      return this._localsStore;
     }
   }, {
     key: 'getBridge',

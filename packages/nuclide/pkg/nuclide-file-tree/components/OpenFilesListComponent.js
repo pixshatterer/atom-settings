@@ -70,9 +70,9 @@ var OpenFilesListComponent = (function (_React$Component) {
     }
   }, {
     key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
+    value: function componentDidUpdate(prevProps) {
       var selectedRow = this.refs.selectedRow;
-      if (selectedRow != null) {
+      if (selectedRow != null && prevProps.activeUri !== this.props.activeUri) {
         selectedRow.scrollIntoViewIfNeeded();
       }
     }

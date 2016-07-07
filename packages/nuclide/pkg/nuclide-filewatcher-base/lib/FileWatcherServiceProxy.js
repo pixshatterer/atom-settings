@@ -17,16 +17,20 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("FileWatcherService/watchFile", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileWatcherService.js",
-        line: 45
-      },
-      kind: "named",
-      name: "WatchResult"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileWatcherService/watchFile", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileWatcherService.js",
+          line: 45
+        },
+        kind: "named",
+        name: "WatchResult"
+      });
+    });
+  };
 
   remoteModule.watchDirectory = function (arg0) {
     return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -40,16 +44,20 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("FileWatcherService/watchDirectory", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileWatcherService.js",
-        line: 49
-      },
-      kind: "named",
-      name: "WatchResult"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileWatcherService/watchDirectory", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileWatcherService.js",
+          line: 49
+        },
+        kind: "named",
+        name: "WatchResult"
+      });
+    });
+  };
 
   remoteModule.watchDirectoryRecursive = function (arg0) {
     return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), [{
@@ -63,15 +71,19 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("FileWatcherService/watchDirectoryRecursive", "observable", args))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FileWatcherService.js",
-        line: 95
-      },
-      kind: "string"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FileWatcherService/watchDirectoryRecursive", "observable", args);
+    })).concatMap(id => id).concatMap(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FileWatcherService.js",
+          line: 95
+        },
+        kind: "string"
+      });
+    });
+  };
 
   return remoteModule;
 };

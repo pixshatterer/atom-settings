@@ -218,4 +218,5 @@ function deactivate() {
     diagnosticStore = null;
   }
   diagnosticUpdater = null;
+  observableDiagnosticUpdater = null;
 }

@@ -45,24 +45,28 @@ module.exports = _client => {
           kind: "string"
         }
       }
-    }]).then(args => _client.callRemoteFunction("FuzzyFileSearchService/queryFuzzyFile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FuzzyFileSearchService.js",
-        line: 30
-      },
-      kind: "array",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("FuzzyFileSearchService/queryFuzzyFile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "FuzzyFileSearchService.js",
           line: 30
         },
-        kind: "named",
-        name: "FileSearchResult"
-      }
-    }));
-  }
+        kind: "array",
+        type: {
+          location: {
+            type: "source",
+            fileName: "FuzzyFileSearchService.js",
+            line: 30
+          },
+          kind: "named",
+          name: "FileSearchResult"
+        }
+      });
+    });
+  };
 
   remoteModule.isFuzzySearchAvailableFor = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -76,15 +80,19 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("FuzzyFileSearchService/isFuzzySearchAvailableFor", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "FuzzyFileSearchService.js",
-        line: 41
-      },
-      kind: "boolean"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("FuzzyFileSearchService/isFuzzySearchAvailableFor", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "FuzzyFileSearchService.js",
+          line: 41
+        },
+        kind: "boolean"
+      });
+    });
+  };
 
   return remoteModule;
 };

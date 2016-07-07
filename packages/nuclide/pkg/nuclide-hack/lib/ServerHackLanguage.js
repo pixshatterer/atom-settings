@@ -10,8 +10,6 @@ Object.defineProperty(exports, '__esModule', {
  * the root directory of this source tree.
  */
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
@@ -36,12 +34,6 @@ var _TypedRegions2;
 
 function _TypedRegions() {
   return _TypedRegions2 = require('./TypedRegions');
-}
-
-var _nuclideHackCommon2;
-
-function _nuclideHackCommon() {
-  return _nuclideHackCommon2 = require('../../nuclide-hack-common');
 }
 
 var _assert2;
@@ -136,13 +128,6 @@ var ServerHackLanguage = (function () {
       return this._hackService.getIdeOutline(filePath, contents);
     }
   }, {
-    key: 'getDefinition',
-    value: _asyncToGenerator(function* (filePath, contents, lineNumber, column, lineText) {
-      var definitionResult = yield this._hackService.getIdentifierDefinition(filePath, contents, lineNumber, column);
-      var identifierResult = processDefinitionsForXhp(definitionResult, column, lineText);
-      return identifierResult.length === 1 ? identifierResult : [];
-    })
-  }, {
     key: 'getIdeDefinition',
     value: _asyncToGenerator(function* (filePath, contents, lineNumber, column) {
       var definitions = yield this._hackService.getDefinition(filePath, contents, lineNumber, column);
@@ -175,25 +160,17 @@ var ServerHackLanguage = (function () {
   }, {
     key: 'findReferences',
     value: _asyncToGenerator(function* (filePath, contents, line, column) {
-      var getMethodNameResult = yield this._hackService.getMethodName(filePath, contents, line + 1, column + 1);
-      if (getMethodNameResult == null) {
-        return null;
-      }
-      var symbolName = getMethodNameResult.name;
-      var symbolType = getSymbolType(getMethodNameResult.result_type);
-
-      if (!SYMBOL_TYPES_WITH_REFERENCES.has(symbolType)) {
-        return null;
-      }
-
-      var referencesResult = yield this._hackService.getReferences(filePath, symbolName, symbolType);
+      var referencesResult = yield this._hackService.findReferences(filePath, contents, line, column);
       if (!referencesResult) {
         return null;
       }
       var hackRoot = referencesResult.hackRoot;
       var references = referencesResult.references;
 
-      return { baseUri: hackRoot, symbolName: symbolName, references: references };
+      if (references == null || references.length === 0) {
+        return null;
+      }
+      return { baseUri: hackRoot, symbolName: references[0].name, references: references };
     })
   }, {
     key: 'getBasePath',
@@ -214,27 +191,6 @@ exports.ServerHackLanguage = ServerHackLanguage;
 
 function hackRangeToAtomRange(position) {
   return new (_atom2 || _atom()).Range([position.line - 1, position.char_start - 1], [position.line - 1, position.char_end]);
-}
-
-// The xhp char regex include : and - to match xhp tags like <ui:button-group>.
-var xhpCharRegex = /[\w:-]/;
-
-var stringToSymbolType = {
-  'class': (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.CLASS,
-  'function': (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.FUNCTION,
-  method: (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.METHOD,
-  local: (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.LOCAL
-};
-
-// Symbol types we can get references for.
-var SYMBOL_TYPES_WITH_REFERENCES = new Set([(_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.CLASS, (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.FUNCTION, (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.METHOD]);
-
-function getSymbolType(input) {
-  var symbolType = stringToSymbolType[input];
-  if (typeof symbolType === 'undefined') {
-    symbolType = (_nuclideHackCommon2 || _nuclideHackCommon()).SymbolType.METHOD;
-  }
-  return symbolType;
 }
 
 function processCompletions(completionsResponse) {
@@ -268,29 +224,4 @@ function processCompletions(completionsResponse) {
 // Then insert AUTO332 in at this offset. (Hack uses this as a marker.)
 function markFileForCompletion(contents, offset) {
   return contents.substring(0, offset) + 'AUTO332' + contents.substring(offset, contents.length);
-}
-
-function processDefinitionsForXhp(definitionResult, column, lineText) {
-  if (!definitionResult) {
-    return [];
-  }
-  var definitions = definitionResult.definitions;
-
-  return definitions.map(function (definition) {
-    var name = definition.name;
-
-    if (name.startsWith(':')) {
-      // XHP class name, usages omit the leading ':'.
-      name = name.substring(1);
-    }
-    var definitionIndex = lineText.indexOf(name);
-    if (definitionIndex === -1 || definitionIndex >= column || !xhpCharRegex.test(lineText.substring(definitionIndex, column))) {
-      return _extends({}, definition);
-    } else {
-      return _extends({}, definition, {
-        searchStartColumn: definitionIndex,
-        searchEndColumn: definitionIndex + definition.name.length
-      });
-    }
-  });
 }

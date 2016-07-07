@@ -132,7 +132,7 @@ var execArcLint = _asyncToGenerator(function* (cwd, filePaths, skip) {
     try {
       json = JSON.parse(_line);
     } catch (error) {
-      logger.error('Error parsing `arc lint` JSON output', _line);
+      logger.warn('Error parsing `arc lint` JSON output', _line);
       continue;
     }
     for (var file of Object.keys(json)) {

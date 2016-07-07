@@ -21,23 +21,29 @@ module.exports = _client => {
     }
     getTagsPath() {
       return trackOperationTiming("CtagsService.getTagsPath", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "CtagsService.js",
-            line: 32
-          },
-          name: "CtagsService"
-        }).then(id => _client.callRemoteMethod(id, "getTagsPath", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "CtagsService.js",
-            line: 39
-          },
-          kind: "named",
-          name: "NuclideUri"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "CtagsService.js",
+              line: 32
+            },
+            name: "CtagsService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getTagsPath", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "CtagsService.js",
+              line: 39
+            },
+            kind: "named",
+            name: "NuclideUri"
+          });
+        });
       });
     }
     findTags(arg0, arg1) {
@@ -119,37 +125,43 @@ module.exports = _client => {
               }]
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "CtagsService.js",
-            line: 32
-          },
-          name: "CtagsService"
-        }).then(id => _client.callRemoteMethod(id, "findTags", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "CtagsService.js",
-            line: 46
-          },
-          kind: "array",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "CtagsService.js",
+              line: 32
+            },
+            name: "CtagsService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "findTags", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "CtagsService.js",
               line: 46
             },
-            kind: "named",
-            name: "CtagsResult"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "CtagsService.js",
+                line: 46
+              },
+              kind: "named",
+              name: "CtagsResult"
+            }
+          });
+        });
       });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
 
   remoteModule.getCtagsService = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -163,24 +175,28 @@ module.exports = _client => {
         kind: "named",
         name: "NuclideUri"
       }
-    }]).then(args => _client.callRemoteFunction("CtagsService/getCtagsService", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "CtagsService.js",
-        line: 88
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("CtagsService/getCtagsService", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "CtagsService.js",
           line: 88
         },
-        kind: "named",
-        name: "CtagsService"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "CtagsService.js",
+            line: 88
+          },
+          kind: "named",
+          name: "CtagsService"
+        }
+      });
+    });
+  };
 
   return remoteModule;
 };

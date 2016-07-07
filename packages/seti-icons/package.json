@@ -1,6 +1,6 @@
 {
   "name": "seti-icons",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "The awesome icons provided by Seti UI theme.",
   "license": "MIT",
   "repository": {
@@ -27,16 +27,16 @@
       "description": "Display icons without color."
     }
   },
-  "readme": "# Seti Icons\n\n[![apm][apm-image]][apm-url]\n[![apmi][apmi-image]][apmi-url]\n\n> The awesome icons provided by Seti UI theme.\n\n![Seti UI](https://github.com/jesseweed/seti-ui/raw/master/screenshot-icons.png)\n\n## Settings\n\n| Name | Type | Default | Description |\n|---|---|---|---|\n| No Color | Boolean | false | Enables/disable color icons. |\n\n## Change Log\n\n[Full Change Log](changelog.md)\n\n### v1.3.1 (06/24/2016)\n- Fix `No Color` setting, again ([4251edb](https://github.com/wyze/atom-seti-icons/commit/4251edb)), closes [#32](https://github.com/wyze/atom-seti-icons/issues/32)\n\n## Credits\n\nThank you to [Jesse Weed](//github.com/jesseweed) for making the original Seti UI theme.\n\n## License\n\nCopyright © 2015-2016 [Neil Kistner](//github.com/wyze)\n\nReleased under the MIT license. See [license](license) for details.\n\n[apm-image]: https://img.shields.io/apm/v/seti-icons.svg?style=flat-square\n[apm-url]: https://atom.io/packages/seti-icons\n\n[apmi-image]: https://img.shields.io/apm/dm/seti-icons.svg?style=flat-square\n[apmi-url]: https://atom.io/packages/seti-icons\n",
+  "readme": "# Seti Icons\n\n[![apm][apm-image]][apm-url]\n[![apmi][apmi-image]][apmi-url]\n\n> The awesome icons provided by Seti UI theme.\n\n![Seti UI](https://github.com/jesseweed/seti-ui/raw/master/screenshot-icons.png)\n\n## Settings\n\n| Name | Type | Default | Description |\n|---|---|---|---|\n| No Color | Boolean | false | Enables/disable color icons. |\n\n## Change Log\n\n[Full Change Log](changelog.md)\n\n### v1.3.2 (07/05/2016)\n- Add override in sidebar for Atom Dark/Light ([d9f18ec](https://github.com/wyze/atom-seti-icons/commit/d9f18ec)), closes [#33](https://github.com/wyze/atom-seti-icons/issues/33)\n\n## Credits\n\nThank you to [Jesse Weed](//github.com/jesseweed) for making the original Seti UI theme.\n\n## License\n\nCopyright © 2015-2016 [Neil Kistner](//github.com/wyze)\n\nReleased under the MIT license. See [license](license) for details.\n\n[apm-image]: https://img.shields.io/apm/v/seti-icons.svg?style=flat-square\n[apm-url]: https://atom.io/packages/seti-icons\n\n[apmi-image]: https://img.shields.io/apm/dm/seti-icons.svg?style=flat-square\n[apmi-url]: https://atom.io/packages/seti-icons\n",
   "readmeFilename": "readme.md",
   "bugs": {
     "url": "https://github.com/wyze/atom-seti-icons/issues"
   },
   "homepage": "https://github.com/wyze/atom-seti-icons#readme",
-  "_id": "seti-icons@1.3.1",
-  "_shasum": "c8b0dbcc9de6fa6b19d68c95b3b98931ba8aaf46",
-  "_resolved": "file:../d-116530-63222-tua24a/package.tgz",
-  "_from": "../d-116530-63222-tua24a/package.tgz",
+  "_id": "seti-icons@1.3.2",
+  "_shasum": "acf4ed2344adb6f4f6a64b6a6b38823f9f97e621",
+  "_resolved": "file:../d-11666-20532-wz0jvp/package.tgz",
+  "_from": "../d-11666-20532-wz0jvp/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [],

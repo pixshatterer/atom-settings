@@ -63,7 +63,9 @@ function consumeToolBar(getToolBar) {
     tooltip: 'Open Nuclide Settings',
     priority: priority
   });
-  subscriptions.add(new (_atom2 || _atom()).Disposable(function () {
+  var disposable = new (_atom2 || _atom()).Disposable(function () {
     toolBar.removeItems();
-  }));
+  });
+  subscriptions.add(disposable);
+  return disposable;
 }

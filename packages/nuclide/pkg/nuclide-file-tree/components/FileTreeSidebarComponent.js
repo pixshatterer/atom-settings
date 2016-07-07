@@ -36,12 +36,6 @@ function _atom() {
   return _atom2 = require('atom');
 }
 
-var _classnames2;
-
-function _classnames() {
-  return _classnames2 = _interopRequireDefault(require('classnames'));
-}
-
 var _FileTree2;
 
 function _FileTree() {
@@ -96,6 +90,12 @@ function _commonsNodeEvent() {
   return _commonsNodeEvent2 = require('../../commons-node/event');
 }
 
+var _nuclideUiLibSection2;
+
+function _nuclideUiLibSection() {
+  return _nuclideUiLibSection2 = require('../../nuclide-ui/lib/Section');
+}
+
 var _nuclideFeatureConfig2;
 
 function _nuclideFeatureConfig() {
@@ -131,7 +131,7 @@ var FileTreeSidebarComponent = (function (_React$Component) {
     this._onViewChange = this._onViewChange.bind(this);
     this._scrollToPosition = this._scrollToPosition.bind(this);
     this._processExternalUpdate = this._processExternalUpdate.bind(this);
-    this._toggleOpenFilesExpanded = this._toggleOpenFilesExpanded.bind(this);
+    this._handleOpenFilesExpandedChange = this._handleOpenFilesExpandedChange.bind(this);
   }
 
   _createClass(FileTreeSidebarComponent, [{
@@ -196,20 +196,10 @@ var FileTreeSidebarComponent = (function (_React$Component) {
         })];
       }
 
-      var openFilesCaption = null;
+      var openFilesSection = null;
       var openFilesList = null;
       var foldersCaption = null;
       if (this.state.showOpenFiles) {
-        var triangleClass = (0, (_classnames2 || _classnames()).default)('nuclide-file-tree-section-caption icon', {
-          'icon-chevron-down': this._store.openFilesExpanded,
-          'icon-chevron-right': !this._store.openFilesExpanded
-        });
-        openFilesCaption = (_reactForAtom2 || _reactForAtom()).React.createElement(
-          'h6',
-          { className: triangleClass, onClick: this._toggleOpenFilesExpanded },
-          'OPEN FILES'
-        );
-
         if (this._store.openFilesExpanded) {
           openFilesList = (_reactForAtom2 || _reactForAtom()).React.createElement((_OpenFilesListComponent2 || _OpenFilesListComponent()).OpenFilesListComponent, {
             uris: this.state.openFilesUris,
@@ -217,12 +207,19 @@ var FileTreeSidebarComponent = (function (_React$Component) {
             activeUri: this.state.activeUri
           });
         }
-
-        foldersCaption = (_reactForAtom2 || _reactForAtom()).React.createElement(
-          'h6',
-          { className: 'nuclide-file-tree-section-caption' },
-          'FOLDERS'
+        openFilesSection = (_reactForAtom2 || _reactForAtom()).React.createElement(
+          (_nuclideUiLibSection2 || _nuclideUiLibSection()).Section,
+          {
+            className: 'nuclide-file-tree-section-caption',
+            collapsable: true,
+            collapsed: !this._store.openFilesExpanded,
+            headline: 'OPEN FILES',
+            onChange: this._handleOpenFilesExpandedChange,
+            size: 'small' },
+          openFilesList
         );
+
+        foldersCaption = (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibSection2 || _nuclideUiLibSection()).Section, { className: 'nuclide-file-tree-section-caption', headline: 'FOLDERS', size: 'small' });
       }
 
       // Include `tabIndex` so this component can be focused by calling its native `focus` method.
@@ -230,16 +227,15 @@ var FileTreeSidebarComponent = (function (_React$Component) {
         'div',
         {
           className: 'nuclide-file-tree-toolbar-container',
+          onFocus: this._handleFocus,
           tabIndex: 0 },
-        openFilesCaption,
-        openFilesList,
+        openFilesSection,
         toolbar,
         foldersCaption,
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           (_nuclideUiLibPanelComponentScroller2 || _nuclideUiLibPanelComponentScroller()).PanelComponentScroller,
           {
             ref: 'scroller',
-            onFocus: this._handleFocus,
             onScroll: this._onViewChange },
           (_reactForAtom2 || _reactForAtom()).React.createElement((_FileTree2 || _FileTree()).FileTree, {
             ref: 'fileTree',
@@ -264,9 +260,9 @@ var FileTreeSidebarComponent = (function (_React$Component) {
       }
     }
   }, {
-    key: '_toggleOpenFilesExpanded',
-    value: function _toggleOpenFilesExpanded() {
-      this._actions.setOpenFilesExpanded(!this._store.openFilesExpanded);
+    key: '_handleOpenFilesExpandedChange',
+    value: function _handleOpenFilesExpandedChange(isCollapsed) {
+      this._actions.setOpenFilesExpanded(!isCollapsed);
     }
   }, {
     key: '_setModifiedUris',

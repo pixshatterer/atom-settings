@@ -125,11 +125,11 @@ function generateProxy(serviceName, preserveFunctionNames, defs) {
       case 'function':
         var functionName = preserveFunctionNames ? name : serviceName + '/' + name;
         // Generate a remote proxy for each module-level function.
-        statements.push((_babelCoreLibTypes2 || _babelCoreLibTypes()).assignmentExpression('=', (_babelCoreLibTypes2 || _babelCoreLibTypes()).memberExpression(remoteModule, (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier(name)), generateFunctionProxy(functionName, definition.type)));
+        statements.push((_babelCoreLibTypes2 || _babelCoreLibTypes()).expressionStatement((_babelCoreLibTypes2 || _babelCoreLibTypes()).assignmentExpression('=', (_babelCoreLibTypes2 || _babelCoreLibTypes()).memberExpression(remoteModule, (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier(name)), generateFunctionProxy(functionName, definition.type))));
         break;
       case 'interface':
         // Generate a remote proxy for each remotable interface.
-        statements.push((_babelCoreLibTypes2 || _babelCoreLibTypes()).assignmentExpression('=', (_babelCoreLibTypes2 || _babelCoreLibTypes()).memberExpression(remoteModule, (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier(name)), generateInterfaceProxy(definition)));
+        statements.push((_babelCoreLibTypes2 || _babelCoreLibTypes()).expressionStatement((_babelCoreLibTypes2 || _babelCoreLibTypes()).assignmentExpression('=', (_babelCoreLibTypes2 || _babelCoreLibTypes()).memberExpression(remoteModule, (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier(name)), generateInterfaceProxy(definition))));
         break;
       case 'alias':
         // nothing
@@ -168,9 +168,9 @@ function generateFunctionProxy(name, funcType) {
   // _client.callRemoteFunction(name, kind, args)
   var callExpression = (_babelCoreLibTypes2 || _babelCoreLibTypes()).callExpression(callRemoteFunctionExpression, [(_babelCoreLibTypes2 || _babelCoreLibTypes()).literal(name), (_babelCoreLibTypes2 || _babelCoreLibTypes()).literal(funcType.returnType.kind), (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')]);
 
-  // Promise.all(...).then(args => ...)
+  // Promise.all(...).then(args => { return ...)
   var argumentsPromise = marshalArgsCall(funcType.argumentTypes);
-  var marshalArgsAndCall = thenPromise(argumentsPromise, (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([(_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')], callExpression));
+  var marshalArgsAndCall = thenPromise(argumentsPromise, (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([(_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')], (_babelCoreLibTypes2 || _babelCoreLibTypes()).blockStatement([(_babelCoreLibTypes2 || _babelCoreLibTypes()).returnStatement(callExpression)])));
 
   var result = generateUnmarshalResult(funcType.returnType, marshalArgsAndCall);
 
@@ -255,12 +255,12 @@ function generateRemoteDispatch(methodName, thisType, funcType) {
   // _client.callRemoteMethod(this, methodName, returnType, args)
   var remoteMethodCall = (_babelCoreLibTypes2 || _babelCoreLibTypes()).callExpression(callRemoteMethodExpression, [idIdentifier, (_babelCoreLibTypes2 || _babelCoreLibTypes()).literal(methodName), (_babelCoreLibTypes2 || _babelCoreLibTypes()).literal(funcType.returnType.kind), (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')]);
 
-  // _client.marshal(this, thisType).then(id => ... )
-  var idThenCall = thenPromise(generateTransformStatement((_babelCoreLibTypes2 || _babelCoreLibTypes()).thisExpression(), thisType, true), (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([idIdentifier], remoteMethodCall));
+  // _client.marshal(this, thisType).then(id => { return ... })
+  var idThenCall = thenPromise(generateTransformStatement((_babelCoreLibTypes2 || _babelCoreLibTypes()).thisExpression(), thisType, true), (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([idIdentifier], (_babelCoreLibTypes2 || _babelCoreLibTypes()).blockStatement([(_babelCoreLibTypes2 || _babelCoreLibTypes()).returnStatement(remoteMethodCall)])));
 
-  // Promise.all(...).then(args => ...)
+  // Promise.all(...).then(args => { return ... })
   var argumentsPromise = marshalArgsCall(funcType.argumentTypes);
-  var marshallThenCall = thenPromise(argumentsPromise, (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([(_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')], idThenCall));
+  var marshallThenCall = thenPromise(argumentsPromise, (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([(_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('args')], (_babelCoreLibTypes2 || _babelCoreLibTypes()).blockStatement([(_babelCoreLibTypes2 || _babelCoreLibTypes()).returnStatement(idThenCall)])));
 
   // methodName(arg0, ... argN) { return ... }
   var funcTypeArgs = funcType.argumentTypes.map(function (arg, i) {
@@ -304,7 +304,7 @@ function generateUnmarshalResult(returnType, rpcCallExpression) {
 // value => _client.unmarshal(value, type)
 function generateValueTransformer(type) {
   var value = (_babelCoreLibTypes2 || _babelCoreLibTypes()).identifier('value');
-  return (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([value], generateTransformStatement(value, type, false));
+  return (_babelCoreLibTypes2 || _babelCoreLibTypes()).arrowFunctionExpression([value], (_babelCoreLibTypes2 || _babelCoreLibTypes()).blockStatement([(_babelCoreLibTypes2 || _babelCoreLibTypes()).returnStatement(generateTransformStatement(value, type, false))]));
 }
 
 /**

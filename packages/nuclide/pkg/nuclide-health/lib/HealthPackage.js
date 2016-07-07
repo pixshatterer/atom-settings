@@ -148,9 +148,11 @@ function consumeToolBar(getToolBar) {
     tooltip: 'Toggle Nuclide health stats',
     priority: (0, (_commonsAtomSudaToolBar2 || _commonsAtomSudaToolBar()).farEndPriority)(400)
   });
-  subscriptions.add(new (_atom2 || _atom()).Disposable(function () {
+  var disposable = new (_atom2 || _atom()).Disposable(function () {
     toolBar.removeItems();
-  }));
+  });
+  subscriptions.add(disposable);
+  return disposable;
 }
 
 function consumeGadgetsService(gadgetsApi) {

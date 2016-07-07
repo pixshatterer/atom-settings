@@ -16,16 +16,20 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("compile", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangProcessService.js",
-        line: 23
-      },
-      kind: "named",
-      name: "ClangCompileResult"
-    }));
-  }
+    }]).then(args => {
+      return _client.callRemoteFunction("compile", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
+        location: {
+          type: "source",
+          fileName: "ClangProcessService.js",
+          line: 23
+        },
+        kind: "named",
+        name: "ClangCompileResult"
+      });
+    });
+  };
 
   remoteModule.get_completions = function (arg0, arg1, arg2, arg3, arg4) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -78,32 +82,36 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("get_completions", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangProcessService.js",
-        line: 33
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_completions", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangProcessService.js",
           line: 33
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangProcessService.js",
             line: 33
           },
-          kind: "named",
-          name: "ClangCompletion"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangProcessService.js",
+              line: 33
+            },
+            kind: "named",
+            name: "ClangCompletion"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.get_declaration = function (arg0, arg1, arg2) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -136,24 +144,28 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("get_declaration", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangProcessService.js",
-        line: 41
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_declaration", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangProcessService.js",
           line: 41
         },
-        kind: "named",
-        name: "ClangDeclaration"
-      }
-    }));
-  }
+        kind: "nullable",
+        type: {
+          location: {
+            type: "source",
+            fileName: "ClangProcessService.js",
+            line: 41
+          },
+          kind: "named",
+          name: "ClangDeclaration"
+        }
+      });
+    });
+  };
 
   remoteModule.get_declaration_info = function (arg0, arg1, arg2) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -186,32 +198,36 @@ module.exports = _client => {
         },
         kind: "number"
       }
-    }]).then(args => _client.callRemoteFunction("get_declaration_info", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangProcessService.js",
-        line: 49
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_declaration_info", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangProcessService.js",
           line: 49
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangProcessService.js",
             line: 49
           },
-          kind: "named",
-          name: "ClangCursor"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangProcessService.js",
+              line: 49
+            },
+            kind: "named",
+            name: "ClangCursor"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   remoteModule.get_outline = function (arg0) {
     return _client.marshalArguments(Array.from(arguments), [{
@@ -224,32 +240,36 @@ module.exports = _client => {
         },
         kind: "string"
       }
-    }]).then(args => _client.callRemoteFunction("get_outline", "promise", args)).then(value => _client.unmarshal(value, {
-      location: {
-        type: "source",
-        fileName: "ClangProcessService.js",
-        line: 54
-      },
-      kind: "nullable",
-      type: {
+    }]).then(args => {
+      return _client.callRemoteFunction("get_outline", "promise", args);
+    }).then(value => {
+      return _client.unmarshal(value, {
         location: {
           type: "source",
           fileName: "ClangProcessService.js",
           line: 54
         },
-        kind: "array",
+        kind: "nullable",
         type: {
           location: {
             type: "source",
             fileName: "ClangProcessService.js",
             line: 54
           },
-          kind: "named",
-          name: "ClangOutlineTree"
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "ClangProcessService.js",
+              line: 54
+            },
+            kind: "named",
+            name: "ClangOutlineTree"
+          }
         }
-      }
-    }));
-  }
+      });
+    });
+  };
 
   return remoteModule;
 };

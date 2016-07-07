@@ -20,22 +20,28 @@ module.exports = _client => {
     }
     waitForWatchmanSubscriptions() {
       return trackOperationTiming("HgService.waitForWatchmanSubscriptions", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "waitForWatchmanSubscriptions", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 235
-          },
-          kind: "void"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "waitForWatchmanSubscriptions", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 235
+            },
+            kind: "void"
+          });
+        });
       });
     }
     fetchStatuses(arg0, arg1) {
@@ -77,7 +83,51 @@ module.exports = _client => {
               kind: "any"
             }
           }
-        }]).then(args => _client.marshal(this, {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchStatuses", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 271
+            },
+            kind: "map",
+            keyType: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 271
+              },
+              kind: "named",
+              name: "NuclideUri"
+            },
+            valueType: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 271
+              },
+              kind: "named",
+              name: "StatusCodeIdValue"
+            }
+          });
+        });
+      });
+    }
+    observeFilesDidChange() {
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
           kind: "named",
           location: {
             type: "source",
@@ -85,96 +135,76 @@ module.exports = _client => {
             line: 195
           },
           name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchStatuses", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 271
-          },
-          kind: "map",
-          keyType: {
-            location: {
-              type: "source",
-              fileName: "HgService.js",
-              line: 271
-            },
-            kind: "named",
-            name: "NuclideUri"
-          },
-          valueType: {
-            location: {
-              type: "source",
-              fileName: "HgService.js",
-              line: 271
-            },
-            kind: "named",
-            name: "StatusCodeIdValue"
-          }
-        }));
-      });
-    }
-    observeFilesDidChange() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 195
-        },
-        name: "HgService"
-      }).then(id => _client.callRemoteMethod(id, "observeFilesDidChange", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 464
-        },
-        kind: "array",
-        type: {
+        }).then(id => {
+          return _client.callRemoteMethod(id, "observeFilesDidChange", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
           location: {
             type: "source",
             fileName: "HgService.js",
             line: 464
           },
-          kind: "named",
-          name: "NuclideUri"
-        }
-      }));
+          kind: "array",
+          type: {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 464
+            },
+            kind: "named",
+            name: "NuclideUri"
+          }
+        });
+      });
     }
     observeHgRepoStateDidChange() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 195
-        },
-        name: "HgService"
-      }).then(id => _client.callRemoteMethod(id, "observeHgRepoStateDidChange", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 472
-        },
-        kind: "void"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 195
+          },
+          name: "HgService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "observeHgRepoStateDidChange", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 472
+          },
+          kind: "void"
+        });
+      });
     }
     observeHgConflictStateDidChange() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 195
-        },
-        name: "HgService"
-      }).then(id => _client.callRemoteMethod(id, "observeHgConflictStateDidChange", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 479
-        },
-        kind: "boolean"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 195
+          },
+          name: "HgService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "observeHgConflictStateDidChange", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 479
+          },
+          kind: "boolean"
+        });
+      });
     }
     fetchDiffInfo(arg0) {
       return trackOperationTiming("HgService.fetchDiffInfo", () => {
@@ -197,48 +227,54 @@ module.exports = _client => {
               name: "NuclideUri"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchDiffInfo", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 492
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchDiffInfo", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 492
             },
-            kind: "map",
-            keyType: {
+            kind: "nullable",
+            type: {
               location: {
                 type: "source",
                 fileName: "HgService.js",
                 line: 492
               },
-              kind: "named",
-              name: "NuclideUri"
-            },
-            valueType: {
-              location: {
-                type: "source",
-                fileName: "HgService.js",
-                line: 492
+              kind: "map",
+              keyType: {
+                location: {
+                  type: "source",
+                  fileName: "HgService.js",
+                  line: 492
+                },
+                kind: "named",
+                name: "NuclideUri"
               },
-              kind: "named",
-              name: "DiffInfo"
+              valueType: {
+                location: {
+                  type: "source",
+                  fileName: "HgService.js",
+                  line: 492
+                },
+                kind: "named",
+                name: "DiffInfo"
+              }
             }
-          }
-        }));
+          });
+        });
       });
     }
     createBookmark(arg0, arg1) {
@@ -271,22 +307,28 @@ module.exports = _client => {
               kind: "string"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "createBookmark", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 524
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "createBookmark", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 524
+            },
+            kind: "void"
+          });
+        });
       });
     }
     deleteBookmark(arg0) {
@@ -301,22 +343,28 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "deleteBookmark", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 534
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "deleteBookmark", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 534
+            },
+            kind: "void"
+          });
+        });
       });
     }
     renameBookmark(arg0, arg1) {
@@ -341,108 +389,138 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "renameBookmark", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 538
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "renameBookmark", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 538
+            },
+            kind: "void"
+          });
+        });
       });
     }
     fetchActiveBookmark() {
       return trackOperationTiming("HgService.fetchActiveBookmark", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchActiveBookmark", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 545
-          },
-          kind: "string"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchActiveBookmark", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 545
+            },
+            kind: "string"
+          });
+        });
       });
     }
     fetchBookmarks() {
       return trackOperationTiming("HgService.fetchBookmarks", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchBookmarks", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 553
-          },
-          kind: "array",
-          type: {
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchBookmarks", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 553
             },
-            kind: "named",
-            name: "BookmarkInfo"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 553
+              },
+              kind: "named",
+              name: "BookmarkInfo"
+            }
+          });
+        });
       });
     }
     observeActiveBookmarkDidChange() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 195
-        },
-        name: "HgService"
-      }).then(id => _client.callRemoteMethod(id, "observeActiveBookmarkDidChange", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 573
-        },
-        kind: "void"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 195
+          },
+          name: "HgService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "observeActiveBookmarkDidChange", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 573
+          },
+          kind: "void"
+        });
+      });
     }
     observeBookmarksDidChange() {
-      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-        kind: "named",
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 195
-        },
-        name: "HgService"
-      }).then(id => _client.callRemoteMethod(id, "observeBookmarksDidChange", "observable", args)))).concatMap(id => id).concatMap(value => _client.unmarshal(value, {
-        location: {
-          type: "source",
-          fileName: "HgService.js",
-          line: 580
-        },
-        kind: "void"
-      }));
+      return Observable.fromPromise(_client.marshalArguments(Array.from(arguments), []).then(args => {
+        return _client.marshal(this, {
+          kind: "named",
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 195
+          },
+          name: "HgService"
+        }).then(id => {
+          return _client.callRemoteMethod(id, "observeBookmarksDidChange", "observable", args);
+        });
+      })).concatMap(id => id).concatMap(value => {
+        return _client.unmarshal(value, {
+          location: {
+            type: "source",
+            fileName: "HgService.js",
+            line: 580
+          },
+          kind: "void"
+        });
+      });
     }
     fetchFileContentAtRevision(arg0, arg1) {
       return trackOperationTiming("HgService.fetchFileContentAtRevision", () => {
@@ -475,30 +553,36 @@ module.exports = _client => {
               kind: "string"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchFileContentAtRevision", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 593
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchFileContentAtRevision", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 593
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 593
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     fetchFilesChangedAtRevision(arg0) {
@@ -513,89 +597,107 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchFilesChangedAtRevision", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 597
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchFilesChangedAtRevision", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 597
             },
-            kind: "named",
-            name: "RevisionFileChanges"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 597
+              },
+              kind: "named",
+              name: "RevisionFileChanges"
+            }
+          });
+        });
       });
     }
     fetchRevisionInfoBetweenHeadAndBase() {
       return trackOperationTiming("HgService.fetchRevisionInfoBetweenHeadAndBase", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchRevisionInfoBetweenHeadAndBase", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 607
-          },
-          kind: "nullable",
-          type: {
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchRevisionInfoBetweenHeadAndBase", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 607
             },
-            kind: "array",
+            kind: "nullable",
             type: {
               location: {
                 type: "source",
                 fileName: "HgService.js",
                 line: 607
               },
-              kind: "named",
-              name: "RevisionInfo"
+              kind: "array",
+              type: {
+                location: {
+                  type: "source",
+                  fileName: "HgService.js",
+                  line: 607
+                },
+                kind: "named",
+                name: "RevisionInfo"
+              }
             }
-          }
-        }));
+          });
+        });
       });
     }
     getBaseRevision() {
       return trackOperationTiming("HgService.getBaseRevision", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getBaseRevision", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 620
-          },
-          kind: "named",
-          name: "RevisionInfo"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getBaseRevision", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 620
+            },
+            kind: "named",
+            name: "RevisionInfo"
+          });
+        });
       });
     }
     getBlameAtHead(arg0) {
@@ -611,38 +713,44 @@ module.exports = _client => {
             kind: "named",
             name: "NuclideUri"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getBlameAtHead", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 637
-          },
-          kind: "map",
-          keyType: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getBlameAtHead", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 637
             },
-            kind: "string"
-          },
-          valueType: {
-            location: {
-              type: "source",
-              fileName: "HgService.js",
-              line: 637
+            kind: "map",
+            keyType: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 637
+              },
+              kind: "string"
             },
-            kind: "string"
-          }
-        }));
+            valueType: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 637
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     getConfigValueAsync(arg0) {
@@ -657,30 +765,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getConfigValueAsync", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 658
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getConfigValueAsync", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 658
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 658
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     getDifferentialRevisionForChangeSetId(arg0) {
@@ -695,30 +809,36 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getDifferentialRevisionForChangeSetId", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 679
-          },
-          kind: "nullable",
-          type: {
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getDifferentialRevisionForChangeSetId", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 679
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 679
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     getSmartlog(arg0, arg1) {
@@ -743,23 +863,29 @@ module.exports = _client => {
             },
             kind: "boolean"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getSmartlog", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 702
-          },
-          kind: "named",
-          name: "AsyncExecuteRet"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getSmartlog", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 702
+            },
+            kind: "named",
+            name: "AsyncExecuteRet"
+          });
+        });
       });
     }
     commit(arg0) {
@@ -774,22 +900,28 @@ module.exports = _client => {
             },
             kind: "string"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "commit", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 742
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "commit", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 742
+            },
+            kind: "void"
+          });
+        });
       });
     }
     amend(arg0) {
@@ -812,22 +944,28 @@ module.exports = _client => {
               kind: "string"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "amend", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 750
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "amend", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 750
+            },
+            kind: "void"
+          });
+        });
       });
     }
     revert(arg0) {
@@ -851,22 +989,28 @@ module.exports = _client => {
               name: "NuclideUri"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "revert", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 758
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "revert", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 758
+            },
+            kind: "void"
+          });
+        });
       });
     }
     checkout(arg0, arg1) {
@@ -891,22 +1035,28 @@ module.exports = _client => {
             },
             kind: "boolean"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "checkout", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 790
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "checkout", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 790
+            },
+            kind: "void"
+          });
+        });
       });
     }
     rename(arg0, arg1, arg2) {
@@ -959,22 +1109,28 @@ module.exports = _client => {
               kind: "boolean"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "rename", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 814
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "rename", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 814
+            },
+            kind: "void"
+          });
+        });
       });
     }
     remove(arg0, arg1) {
@@ -1016,22 +1172,28 @@ module.exports = _client => {
               kind: "boolean"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "remove", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 837
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "remove", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 837
+            },
+            kind: "void"
+          });
+        });
       });
     }
     add(arg0) {
@@ -1055,50 +1217,62 @@ module.exports = _client => {
               name: "NuclideUri"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "add", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 858
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "add", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 858
+            },
+            kind: "void"
+          });
+        });
       });
     }
     getHeadCommitMessage() {
       return trackOperationTiming("HgService.getHeadCommitMessage", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "getHeadCommitMessage", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 862
-          },
-          kind: "nullable",
-          type: {
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "getHeadCommitMessage", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 862
             },
-            kind: "string"
-          }
-        }));
+            kind: "nullable",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 862
+              },
+              kind: "string"
+            }
+          });
+        });
       });
     }
     log(arg0, arg1) {
@@ -1140,52 +1314,64 @@ module.exports = _client => {
               kind: "number"
             }
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "log", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 882
-          },
-          kind: "named",
-          name: "VcsLogResponse"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "log", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 882
+            },
+            kind: "named",
+            name: "VcsLogResponse"
+          });
+        });
       });
     }
     fetchMergeConflicts() {
       return trackOperationTiming("HgService.fetchMergeConflicts", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "fetchMergeConflicts", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 899
-          },
-          kind: "array",
-          type: {
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "fetchMergeConflicts", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
             location: {
               type: "source",
               fileName: "HgService.js",
               line: 899
             },
-            kind: "named",
-            name: "MergeConflict"
-          }
-        }));
+            kind: "array",
+            type: {
+              location: {
+                type: "source",
+                fileName: "HgService.js",
+                line: 899
+              },
+              kind: "named",
+              name: "MergeConflict"
+            }
+          });
+        });
       });
     }
     resolveConflictedFile(arg0) {
@@ -1201,68 +1387,86 @@ module.exports = _client => {
             kind: "named",
             name: "NuclideUri"
           }
-        }]).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "resolveConflictedFile", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 944
-          },
-          kind: "void"
-        }));
+        }]).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "resolveConflictedFile", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 944
+            },
+            kind: "void"
+          });
+        });
       });
     }
     continueRebase() {
       return trackOperationTiming("HgService.continueRebase", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "continueRebase", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 948
-          },
-          kind: "void"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "continueRebase", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 948
+            },
+            kind: "void"
+          });
+        });
       });
     }
     abortRebase() {
       return trackOperationTiming("HgService.abortRebase", () => {
-        return _client.marshalArguments(Array.from(arguments), []).then(args => _client.marshal(this, {
-          kind: "named",
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 195
-          },
-          name: "HgService"
-        }).then(id => _client.callRemoteMethod(id, "abortRebase", "promise", args))).then(value => _client.unmarshal(value, {
-          location: {
-            type: "source",
-            fileName: "HgService.js",
-            line: 952
-          },
-          kind: "void"
-        }));
+        return _client.marshalArguments(Array.from(arguments), []).then(args => {
+          return _client.marshal(this, {
+            kind: "named",
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 195
+            },
+            name: "HgService"
+          }).then(id => {
+            return _client.callRemoteMethod(id, "abortRebase", "promise", args);
+          });
+        }).then(value => {
+          return _client.unmarshal(value, {
+            location: {
+              type: "source",
+              fileName: "HgService.js",
+              line: 952
+            },
+            kind: "void"
+          });
+        });
       });
     }
     dispose() {
       return _client.disposeRemoteObject(this);
     }
-  }
+  };
   return remoteModule;
 };
 

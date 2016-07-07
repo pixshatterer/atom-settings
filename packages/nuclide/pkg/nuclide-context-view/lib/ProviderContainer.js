@@ -30,6 +30,12 @@ function _nuclideUiLibSection() {
   return _nuclideUiLibSection2 = require('../../nuclide-ui/lib/Section');
 }
 
+var _nuclideUiLibShowMoreComponent2;
+
+function _nuclideUiLibShowMoreComponent() {
+  return _nuclideUiLibShowMoreComponent2 = require('../../nuclide-ui/lib/ShowMoreComponent');
+}
+
 /**
  * Each context provider view is rendered inside a ProviderContainer.
  */
@@ -47,8 +53,21 @@ var ProviderContainer = (function (_React$Component) {
     key: 'render',
     value: function render() {
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
-        (_nuclideUiLibSection2 || _nuclideUiLibSection()).Section,
-        { headline: this.props.title, collapsable: true, collapsedByDefault: false },
+        'div',
+        { className: 'nuclide-context-view-provider-container' },
+        (_reactForAtom2 || _reactForAtom()).React.createElement(
+          (_nuclideUiLibSection2 || _nuclideUiLibSection()).Section,
+          { headline: this.props.title, collapsable: true },
+          this.props.isEditorBased ? this.props.children : this._textBasedComponent()
+        )
+      );
+    }
+  }, {
+    key: '_textBasedComponent',
+    value: function _textBasedComponent() {
+      return (_reactForAtom2 || _reactForAtom()).React.createElement(
+        (_nuclideUiLibShowMoreComponent2 || _nuclideUiLibShowMoreComponent()).ShowMoreComponent,
+        { maxHeight: 600, showMoreByDefault: false },
         this.props.children
       );
     }

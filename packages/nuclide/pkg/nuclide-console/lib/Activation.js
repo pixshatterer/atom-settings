@@ -201,6 +201,7 @@ function deserializeAppState(rawState) {
     currentExecutorId: null,
     records: rawState.records || [],
     providers: new Map(),
+    providerStatuses: new Map(),
     providerSubscriptions: new Map(),
 
     // This value will be replaced with the value form the config. We just use `POSITIVE_INFINITY`

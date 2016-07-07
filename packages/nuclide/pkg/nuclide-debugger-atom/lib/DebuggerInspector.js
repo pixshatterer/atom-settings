@@ -38,12 +38,6 @@ function _nuclideRemoteUri() {
   return _nuclideRemoteUri2 = _interopRequireDefault(require('../../nuclide-remote-uri'));
 }
 
-var _nuclideUiLibPanelComponent2;
-
-function _nuclideUiLibPanelComponent() {
-  return _nuclideUiLibPanelComponent2 = require('../../nuclide-ui/lib/PanelComponent');
-}
-
 var _nuclideUiLibButton2;
 
 function _nuclideUiLibButton() {
@@ -62,35 +56,38 @@ var DebuggerInspector = (_reactForAtom2 || _reactForAtom()).React.createClass({
     actions: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_DebuggerActions2 || _DebuggerActions()).default).isRequired,
     breakpointStore: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_BreakpointStore2 || _BreakpointStore()).default).isRequired,
     socket: (_reactForAtom2 || _reactForAtom()).React.PropTypes.string.isRequired,
-    bridge: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_Bridge2 || _Bridge()).default).isRequired
+    bridge: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_Bridge2 || _Bridge()).default).isRequired,
+    toggleOldView: (_reactForAtom2 || _reactForAtom()).React.PropTypes.func.isRequired,
+    showOldView: (_reactForAtom2 || _reactForAtom()).React.PropTypes.bool.isRequired
   },
 
   shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.actions !== this.props.actions || nextProps.breakpointStore !== this.props.breakpointStore || nextProps.socket !== this.props.socket || nextProps.bridge !== this.props.bridge;
+    return nextProps.actions !== this.props.actions || nextProps.breakpointStore !== this.props.breakpointStore || nextProps.socket !== this.props.socket || nextProps.bridge !== this.props.bridge || nextProps.showOldView !== this.props.showOldView || nextProps.toggleOldView !== this.props.toggleOldView;
   },
 
   render: function render() {
     return (_reactForAtom2 || _reactForAtom()).React.createElement(
-      (_nuclideUiLibPanelComponent2 || _nuclideUiLibPanelComponent()).PanelComponent,
-      { initialLength: 500, dock: 'right' },
+      'div',
+      { className: 'inspector' },
       (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
-        { className: 'inspector' },
-        (_reactForAtom2 || _reactForAtom()).React.createElement(
-          'div',
-          { className: 'control-bar', ref: 'controlBar' },
-          (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
-            title: 'Detach from the current process.',
-            icon: 'x',
-            buttonType: (_nuclideUiLibButton2 || _nuclideUiLibButton()).ButtonTypes.ERROR,
-            onClick: this._handleClickClose
-          }),
-          (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
-            title: '(Debug) Open Web Inspector for the debugger frame.',
-            icon: 'gear',
-            onClick: this._handleClickDevTools
-          })
-        )
+        { className: 'control-bar', ref: 'controlBar' },
+        (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
+          title: 'Detach from the current process.',
+          icon: 'x',
+          buttonType: (_nuclideUiLibButton2 || _nuclideUiLibButton()).ButtonTypes.ERROR,
+          onClick: this._handleClickClose
+        }),
+        (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
+          title: '(Debug) Open Web Inspector for the debugger frame.',
+          icon: 'gear',
+          onClick: this._handleClickDevTools
+        }),
+        (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
+          title: 'Switch back to the old debugger UI',
+          icon: 'history',
+          onClick: this._handleClickUISwitch
+        })
       )
     );
   },
@@ -104,16 +101,27 @@ var DebuggerInspector = (_reactForAtom2 || _reactForAtom()).React.createClass({
     webviewNode.disablewebsecurity = true;
     webviewNode.classList.add('native-key-bindings'); // required to pass through certain key events
     webviewNode.classList.add('nuclide-debugger-webview');
+    if (!this.props.showOldView) {
+      webviewNode.classList.add('nuclide-debugger-webview-hidden');
+    }
     this._webviewNode = webviewNode;
     var controlBarNode = (_reactForAtom2 || _reactForAtom()).ReactDOM.findDOMNode(this.refs.controlBar);
     controlBarNode.parentNode.insertBefore(webviewNode, controlBarNode.nextSibling);
     this.props.bridge.setWebviewElement(webviewNode);
   },
 
-  componentDidUpdate: function componentDidUpdate() {
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
     var webviewNode = this._webviewNode;
-    if (webviewNode) {
+    if (webviewNode == null) {
+      return;
+    }
+    if (this.props.socket !== prevProps.socket) {
       webviewNode.src = this._getUrl();
+    }
+    var showOldView = this.props.showOldView;
+
+    if (showOldView !== prevProps.showOldView) {
+      webviewNode.classList.toggle('nuclide-debugger-webview-hidden', !showOldView);
     }
   },
 
@@ -137,6 +145,10 @@ var DebuggerInspector = (_reactForAtom2 || _reactForAtom()).React.createClass({
     if (webviewNode) {
       webviewNode.openDevTools();
     }
+  },
+
+  _handleClickUISwitch: function _handleClickUISwitch() {
+    this.props.toggleOldView();
   }
 });
 
