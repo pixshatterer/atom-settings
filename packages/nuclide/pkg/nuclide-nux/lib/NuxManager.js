@@ -28,6 +28,12 @@ function _commonsNodePassesGK() {
   return _commonsNodePassesGK2 = _interopRequireDefault(require('../../commons-node/passesGK'));
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _commonsNodeCollection2;
 
 function _commonsNodeCollection() {
@@ -244,7 +250,7 @@ var NuxManager = (function () {
       (_nuclideAnalytics2 || _nuclideAnalytics()).default.track('nux-manager-action', {
         tourId: id,
         message: '' + message,
-        error: '' + error
+        error: (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(error)
       });
     }
   }]);

@@ -44,6 +44,12 @@ function _flux() {
   return _flux2 = require('flux');
 }
 
+var _shellQuote2;
+
+function _shellQuote() {
+  return _shellQuote2 = require('shell-quote');
+}
+
 var _commonsNodeStream2;
 
 function _commonsNodeStream() {
@@ -62,10 +68,22 @@ function _commonsNodeObservableToBuildTaskInfo() {
   return _commonsNodeObservableToBuildTaskInfo2 = require('../../commons-node/observableToBuildTaskInfo');
 }
 
+var _nuclideBuckBase2;
+
+function _nuclideBuckBase() {
+  return _nuclideBuckBase2 = require('../../nuclide-buck-base');
+}
+
 var _nuclideLogging2;
 
 function _nuclideLogging() {
   return _nuclideLogging2 = require('../../nuclide-logging');
+}
+
+var _nuclideReactNativeLibPackagerStartPackager2;
+
+function _nuclideReactNativeLibPackagerStartPackager() {
+  return _nuclideReactNativeLibPackagerStartPackager2 = require('../../nuclide-react-native/lib/packager/startPackager');
 }
 
 var _commonsAtomConsumeFirstProvider2;
@@ -118,6 +136,8 @@ var BuckBuildSystem = (function () {
     this._disposables.add(new (_commonsNodeStream2 || _commonsNodeStream()).DisposableSubscription(this._outputMessages));
   }
 
+  // Make sure that TaskType reflects the types listed below.
+
   _createClass(BuckBuildSystem, [{
     key: 'getTasks',
     value: function getTasks() {
@@ -125,7 +145,7 @@ var BuckBuildSystem = (function () {
 
       var store = _getFlux2.store;
 
-      var allEnabled = store.getMostRecentBuckProject() != null && Boolean(store.getBuildTarget());
+      var allEnabled = store.getCurrentBuckRoot() != null && Boolean(store.getBuildTarget());
       return TASKS.map(function (task) {
         var enabled = allEnabled;
         if (task.type === 'run' || task.type === 'debug') {
@@ -220,6 +240,17 @@ var BuckBuildSystem = (function () {
         cancel: function cancel() {
           _this2._logOutput('Build cancelled.', 'warning');
           taskInfo.cancel();
+        },
+        getTrackingData: function getTrackingData() {
+          var _getFlux5 = _this2._getFlux();
+
+          var store = _getFlux5.store;
+
+          return {
+            buckRoot: store.getCurrentBuckRoot(),
+            buildTarget: store.getBuildTarget(),
+            taskSettings: store.getTaskSettings()
+          };
         }
       };
     }
@@ -239,7 +270,8 @@ var BuckBuildSystem = (function () {
 
       return {
         buildTarget: store.getBuildTarget(),
-        isReactNativeServerMode: store.isReactNativeServerMode()
+        isReactNativeServerMode: store.isReactNativeServerMode(),
+        taskSettings: store.getTaskSettings()
       };
     }
   }, {
@@ -247,68 +279,50 @@ var BuckBuildSystem = (function () {
     value: function _runTaskType(taskType) {
       var _this3 = this;
 
-      var _getFlux5 = this._getFlux();
+      var _getFlux6 = this._getFlux();
 
-      var store = _getFlux5.store;
+      var store = _getFlux6.store;
 
-      var buckProject = store.getMostRecentBuckProject();
+      var buckRoot = store.getCurrentBuckRoot();
       var buildTarget = store.getBuildTarget();
-      if (buckProject == null || buildTarget == null) {
+      if (buckRoot == null || buildTarget == null) {
         // All tasks should have been disabled.
         return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
       }
 
       atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-console:show');
+      var settings = store.getTaskSettings()[taskType] || {};
 
       var subcommand = taskType === 'run' || taskType === 'debug' ? 'install' : taskType;
-      this._logOutput('Starting "buck ' + subcommand + ' ' + buildTarget + '"', 'log');
+      var argString = '';
+      if (settings.arguments != null && settings.arguments.length > 0) {
+        argString = ' ' + (0, (_shellQuote2 || _shellQuote()).quote)(settings.arguments);
+      }
+      this._logOutput('Starting "buck ' + subcommand + ' ' + buildTarget + argString + '"', 'log');
 
+      var buckProject = (0, (_nuclideBuckBase2 || _nuclideBuckBase()).createBuckProject)(buckRoot);
       return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.fromPromise(buckProject.getHTTPServerPort()).catch(function (err) {
         (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)().warn('Failed to get httpPort for ' + buildTarget, err);
         return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(-1);
       }).switchMap(function (httpPort) {
-        var socketStream = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
+        var socketEvents = null;
         if (httpPort > 0) {
-          socketStream = (0, (_BuckEventStream2 || _BuckEventStream()).getEventsFromSocket)(buckProject.getWebSocketStream(httpPort)).share();
+          socketEvents = (0, (_BuckEventStream2 || _BuckEventStream()).getEventsFromSocket)(buckProject.getWebSocketStream(httpPort)).share();
         } else {
           _this3._logOutput('Enable httpserver in your .buckconfig for better output.', 'warning');
         }
 
-        var buckObservable = _this3._runBuckCommand(buckProject, buildTarget, subcommand, taskType === 'debug', httpPort < 0);
+        var processEvents = _this3._runBuckCommand(buckProject, buildTarget, subcommand, settings.arguments || [], taskType === 'debug');
 
-        var eventStream = undefined;
-        if (httpPort <= 0) {
+        var mergedEvents = undefined;
+        if (socketEvents == null) {
           // Without a websocket, just pipe the Buck output directly.
-          eventStream = buckObservable;
+          mergedEvents = processEvents;
         } else {
-          eventStream = socketStream.merge(
-          // Skip everything from Buck's output until the first non-log message.
-          // We ensure that error/info logs will not duplicate messages from the websocket.
-          // $FlowFixMe: add skipWhile to flow-typed rx definitions
-          buckObservable.skipWhile(function (event) {
-            return event.type !== 'log' || event.level === 'log';
-          }));
-          if (taskType === 'test') {
-            // The websocket does not reliably provide test output.
-            // After the build finishes, fall back to the Buck output stream.
-            eventStream = eventStream.takeUntil(socketStream.filter((_BuckEventStream2 || _BuckEventStream()).isBuildFinishEvent)).concat(buckObservable);
-          } else if (subcommand === 'install') {
-            // Add a message indicating that install has started after build completes.
-            // The websocket does not naturally provide any indication.
-            eventStream = eventStream.merge(socketStream.switchMap(function (event) {
-              if ((0, (_BuckEventStream2 || _BuckEventStream()).isBuildFinishEvent)(event)) {
-                return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of({
-                  type: 'log',
-                  message: 'Installing...',
-                  level: 'info'
-                });
-              }
-              return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
-            }));
-          }
+          mergedEvents = (0, (_BuckEventStream2 || _BuckEventStream()).combineEventStreams)(subcommand, socketEvents, processEvents);
         }
 
-        return eventStream.switchMap(function (event) {
+        return mergedEvents.switchMap(function (event) {
           if (event.type === 'progress') {
             return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of({
               kind: 'progress',
@@ -318,17 +332,17 @@ var BuckBuildSystem = (function () {
             _this3._logOutput(event.message, event.level);
           }
           return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
-        }).takeUntil(buckObservable.ignoreElements()
-        // Despite the docs, takeUntil doesn't respond to completion.
-        .concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(null)));
+        });
+      }).finally(function () {
+        return buckProject.dispose();
       }).share();
     }
   }, {
     key: '_runBuckCommand',
-    value: function _runBuckCommand(buckProject, buildTarget, subcommand, debug, logOutput) {
-      var _getFlux6 = this._getFlux();
+    value: function _runBuckCommand(buckProject, buildTarget, subcommand, args, debug) {
+      var _getFlux7 = this._getFlux();
 
-      var store = _getFlux6.store;
+      var store = _getFlux7.store;
 
       if (debug) {
         // Stop any existing debugging sessions, as install hangs if an existing
@@ -341,21 +355,19 @@ var BuckBuildSystem = (function () {
         var rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
         var isReactNativeServerMode = store.isReactNativeServerMode();
         if (isReactNativeServerMode) {
-          rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.defer(function () {
-            atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-react-native:start-packager');
+          rnObservable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.fromPromise((0, (_nuclideReactNativeLibPackagerStartPackager2 || _nuclideReactNativeLibPackagerStartPackager()).startPackager)()), (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.defer(function () {
             atom.commands.dispatch(atom.views.getView(atom.workspace), 'nuclide-react-native:start-debugging');
             return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
-          });
+          })).ignoreElements();
         }
-        buckObservable = rnObservable.concat(buckProject.installWithOutput([buildTarget], store.getSimulator(), {
+        buckObservable = rnObservable.concat(buckProject.installWithOutput([buildTarget], args.concat(isReactNativeServerMode ? ['--', '-executor-override', 'RCTWebSocketExecutor'] : []), store.getSimulator(), {
           run: true,
-          debug: debug,
-          appArgs: isReactNativeServerMode ? ['-executor-override', 'RCTWebSocketExecutor'] : []
+          debug: debug
         }));
       } else if (subcommand === 'build') {
-        buckObservable = buckProject.buildWithOutput([buildTarget]);
+        buckObservable = buckProject.buildWithOutput([buildTarget], args);
       } else if (subcommand === 'test') {
-        buckObservable = buckProject.testWithOutput([buildTarget]);
+        buckObservable = buckProject.testWithOutput([buildTarget], args);
       } else {
         throw Error('Unknown subcommand: ' + subcommand);
       }
@@ -388,7 +400,6 @@ var BuckBuildSystem = (function () {
 })();
 
 exports.BuckBuildSystem = BuckBuildSystem;
-
 var TASKS = [{
   type: 'build',
   label: 'Build',

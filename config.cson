@@ -28,7 +28,8 @@
     fontSize: 12
     invisibles: {}
     scrollPastEnd: true
-    tabType: "soft"
+    softTabs: false
+    tabLength: 4
   "exception-reporting":
     userId: "66b06d99-09fe-dd4b-9af9-e9dfa274c62f"
   "file-watcher":
@@ -50,10 +51,17 @@
       workingSets: [
         {
           name: "Todo project"
+          active: true
           uris: [
             "/Users/germangalvis/apacheDocs/r-native/Todo"
           ]
+        }
+        {
+          name: "Ooyala Fusion"
           active: true
+          uris: [
+            "/Library/WebServer/Documents/ratio/Fusion-Roku"
+          ]
         }
       ]
   "one-dark-ui": {}

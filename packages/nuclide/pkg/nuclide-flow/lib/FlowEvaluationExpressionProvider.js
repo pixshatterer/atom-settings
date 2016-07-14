@@ -16,12 +16,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _commonsAtomRange2;
 
-var _commonsAtomWordAtPosition2;
-
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _constants2;
@@ -39,7 +37,7 @@ var FlowEvaluationExpressionProvider = (function () {
     key: 'getEvaluationExpression',
     value: function getEvaluationExpression(editor, position) {
       // TODO: Replace RegExp with AST-based, more accurate approach.
-      var extractedIdentifier = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position, (_constants2 || _constants()).JAVASCRIPT_IDENTIFIER_REGEX);
+      var extractedIdentifier = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position, (_constants2 || _constants()).JAVASCRIPT_IDENTIFIER_REGEX);
       if (extractedIdentifier == null) {
         return Promise.resolve(null);
       }

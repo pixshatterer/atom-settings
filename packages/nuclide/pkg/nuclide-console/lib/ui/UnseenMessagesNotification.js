@@ -52,7 +52,8 @@ var NewMessagesNotification = (function (_React$Component) {
         {
           className: className,
           onClick: this.props.onClick },
-        '⬇ New Messages ⬇'
+        (_reactForAtom2 || _reactForAtom()).React.createElement('span', { className: 'nuclide-console-new-messages-notification-icon icon icon-arrow-down' }),
+        'New Messages'
       );
     }
   }]);

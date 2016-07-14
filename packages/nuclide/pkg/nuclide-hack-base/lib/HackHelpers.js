@@ -44,7 +44,7 @@ var callHHClient = _asyncToGenerator(function* (args, errorStream, outputJson, p
 
     var execResult = null;
     try {
-      (_hackConfig4 || _hackConfig3()).logger.logTrace('Calling Hack: ' + hackCommand + ' with ' + allArgs);
+      (_hackConfig4 || _hackConfig3()).logger.logTrace('Calling Hack: ' + hackCommand + ' with ' + allArgs.toString());
       execResult = yield (0, (_commonsNodeProcess2 || _commonsNodeProcess()).asyncExecute)(hackCommand, allArgs, { stdin: processInput });
     } catch (err) {
       reject(err);
@@ -63,7 +63,7 @@ var callHHClient = _asyncToGenerator(function* (args, errorStream, outputJson, p
     }
 
     var output = errorStream ? stderr : stdout;
-    (_hackConfig4 || _hackConfig3()).logger.logTrace('Hack output for ' + allArgs + ': ' + output);
+    (_hackConfig4 || _hackConfig3()).logger.logTrace('Hack output for ' + allArgs.toString() + ': ' + output);
     if (!outputJson) {
       resolve({ result: output, hackRoot: hackRoot });
       return;

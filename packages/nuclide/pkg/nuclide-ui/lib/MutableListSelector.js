@@ -99,7 +99,8 @@ var MutableListSelector = (function (_React$Component) {
             key: item.id,
             className: classes,
             onClick: _this._onItemClicked.bind(_this, item.id),
-            onDoubleClick: _this._onItemDoubleClicked.bind(_this, item.id) },
+            onDoubleClick: _this._onItemDoubleClicked.bind(_this, item.id),
+            tabIndex: 0 },
           item.displayTitle
         );
       });

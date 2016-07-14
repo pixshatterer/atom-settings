@@ -126,6 +126,7 @@ var ClangFlagsManager = (function () {
 
     this._pathToFlags = new Map();
     this._cachedBuckProjects = new Map();
+    this._cachedBuckFlags = new Map();
     this._compilationDatabases = new Set();
     this._realpathCache = {};
     this._flagFileObservables = new Map();
@@ -138,6 +139,7 @@ var ClangFlagsManager = (function () {
     value: function reset() {
       this._pathToFlags.clear();
       this._cachedBuckProjects.clear();
+      this._cachedBuckFlags.clear();
       this._compilationDatabases.clear();
       this._realpathCache = {};
       this._flagFileObservables.clear();
@@ -185,22 +187,33 @@ var ClangFlagsManager = (function () {
     value: _asyncToGenerator(function* (src) {
       var _this = this;
 
-      var cached = this._pathToFlags.get(src);
-      if (cached != null) {
-        return cached;
+      var data = yield this._getFlagsForSrcCached(src);
+      if (data == null) {
+        return null;
       }
-      cached = this._getFlagsForSrcImpl(src);
-      this._pathToFlags.set(src, cached);
-      var flags = yield cached;
-      if (flags != null) {
-        this._subscriptions.push(flags.changes.subscribe({
+      if (data.flags === undefined) {
+        var _rawData = data.rawData;
+
+        data.flags = _rawData == null ? null : ClangFlagsManager.sanitizeCommand(_rawData.file, _rawData.flags, _rawData.directory);
+        // Subscribe to changes.
+        this._subscriptions.push(data.changes.subscribe({
           next: function next(change) {
             _this._flagsChanged.add(src);
           },
           error: function error() {}
         }));
       }
-      return flags;
+      return data.flags;
+    })
+  }, {
+    key: '_getFlagsForSrcCached',
+    value: _asyncToGenerator(function* (src) {
+      var cached = this._pathToFlags.get(src);
+      if (cached == null) {
+        cached = this._getFlagsForSrcImpl(src);
+        this._pathToFlags.set(src, cached);
+      }
+      return cached;
     })
   }, {
     key: '_getFlagsForSrcImpl',
@@ -231,7 +244,7 @@ var ClangFlagsManager = (function () {
         }
         var sourceFile = yield ClangFlagsManager._findSourceFileForHeader(src, projectRoot);
         if (sourceFile != null) {
-          return this.getFlagsForSrc(sourceFile);
+          return this._getFlagsForSrcCached(sourceFile);
         }
       }
 
@@ -244,7 +257,7 @@ var ClangFlagsManager = (function () {
       var buildFile = yield ClangFlagsManager._guessBuildFile(src);
       if (buildFile != null) {
         return {
-          flags: null,
+          rawData: null,
           changes: this._watchFlagFile(buildFile)
         };
       }
@@ -277,7 +290,11 @@ var ClangFlagsManager = (function () {
             if (yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.exists(filename)) {
               var realpath = yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.realpath(filename, _this2._realpathCache);
               var result = {
-                flags: ClangFlagsManager.sanitizeCommand(file, args, directory),
+                rawData: {
+                  flags: args,
+                  file: file,
+                  directory: directory
+                },
                 changes: changes
               };
               flags.set(realpath, result);
@@ -294,12 +311,9 @@ var ClangFlagsManager = (function () {
   }, {
     key: '_loadFlagsFromBuck',
     value: _asyncToGenerator(function* (src) {
-      var _this3 = this;
-
-      var flags = new Map();
       var buckProject = yield this._getBuckProject(src);
       if (!buckProject) {
-        return flags;
+        return new Map();
       }
 
       var target = (yield buckProject.getOwner(src)).find(function (x) {
@@ -307,8 +321,23 @@ var ClangFlagsManager = (function () {
       });
 
       if (target == null) {
-        return flags;
+        return new Map();
       }
+
+      var buckProjectRoot = yield buckProject.getPath();
+      var key = buckProjectRoot + ':' + target;
+      var cached = this._cachedBuckFlags.get(key);
+      if (cached != null) {
+        return cached;
+      }
+      cached = this._loadFlagsForBuckTarget(buckProject, buckProjectRoot, target);
+      this._cachedBuckFlags.set(key, cached);
+      return cached;
+    })
+  }, {
+    key: '_loadFlagsForBuckTarget',
+    value: _asyncToGenerator(function* (buckProject, buckProjectRoot, target) {
+      var _this3 = this;
 
       // TODO(mbolin): The architecture should be chosen from a dropdown menu like
       // it is in Xcode rather than hardcoding things to iphonesimulator-x86_64.
@@ -328,21 +357,23 @@ var ClangFlagsManager = (function () {
         logger.error(error);
         throw error;
       }
-      var buckProjectRoot = yield buckProject.getPath();
       var pathToCompilationDatabase = buildReport.results[buildTarget].output;
       pathToCompilationDatabase = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(buckProjectRoot, pathToCompilationDatabase);
 
-      var compilationDatabaseJsonBuffer = yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.readFile(pathToCompilationDatabase);
-      var compilationDatabaseJson = compilationDatabaseJsonBuffer.toString('utf8');
-      var compilationDatabase = JSON.parse(compilationDatabaseJson);
+      var compilationDatabase = JSON.parse((yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.readFile(pathToCompilationDatabase, 'utf8')));
 
+      var flags = new Map();
       var buildFile = yield buckProject.getBuildFile(target);
       var changes = buildFile == null ? (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty() : this._watchFlagFile(buildFile);
       compilationDatabase.forEach(function (item) {
         var file = item.file;
 
         var result = {
-          flags: ClangFlagsManager.sanitizeCommand(file, item.arguments, buckProjectRoot),
+          rawData: {
+            flags: item.arguments,
+            file: file,
+            directory: buckProjectRoot
+          },
           changes: changes
         };
         flags.set(file, result);
@@ -456,9 +487,9 @@ var ClangFlagsManager = (function () {
       var dir = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.dirname(header);
       var files = yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.readdir(dir);
       var basename = ClangFlagsManager._getFileBasename(header);
-      for (var file of files) {
-        if ((0, (_utils2 || _utils()).isSourceFile)(file) && ClangFlagsManager._getFileBasename(file) === basename) {
-          return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(dir, file);
+      for (var _file of files) {
+        if ((0, (_utils2 || _utils()).isSourceFile)(_file) && ClangFlagsManager._getFileBasename(_file) === basename) {
+          return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(dir, _file);
         }
       }
 
@@ -486,6 +517,8 @@ var ClangFlagsManager = (function () {
 })();
 
 module.exports = ClangFlagsManager;
+
+// Will be computed and memoized from rawData on demand.
 
 // Emits file change events for the underlying flags file.
 // (rename, change)

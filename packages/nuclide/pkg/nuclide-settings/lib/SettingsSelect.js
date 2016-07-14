@@ -45,17 +45,14 @@ var SettingsSelect = (function (_React$Component) {
     _classCallCheck(this, SettingsSelect);
 
     _get(Object.getPrototypeOf(SettingsSelect.prototype), 'constructor', this).call(this, props);
-    this._onChanged = this._onChanged.bind(this);
+    this._handleChange = this._handleChange.bind(this);
   }
 
   _createClass(SettingsSelect, [{
-    key: '_onChanged',
-    value: function _onChanged(event) {
+    key: '_handleChange',
+    value: function _handleChange(event) {
       var value = event.target.value;
-      this.props.onChanged({
-        keyPath: this.props.keyPath,
-        newValue: value
-      });
+      this.props.onChange(value);
     }
   }, {
     key: 'render',
@@ -101,7 +98,7 @@ var SettingsSelect = (function (_React$Component) {
           {
             className: 'form-control',
             id: id,
-            onChange: this._onChanged,
+            onChange: this._handleChange,
             value: value },
           optionElements
         )

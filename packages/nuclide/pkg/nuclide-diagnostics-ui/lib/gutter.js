@@ -236,6 +236,7 @@ function showPopupFor(messages, item, goToLocation, fixer) {
   // on top of everything.
   var workspaceElement = atom.views.getView(atom.workspace);
   var hostElement = window.document.createElement('div');
+  // $FlowFixMe check parentNode for null
   workspaceElement.parentNode.appendChild(hostElement);
 
   // Move it down vertically so it does not end up under the mouse pointer.

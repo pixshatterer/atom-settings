@@ -36,6 +36,18 @@ function _commonsNodeDebounce() {
   return _commonsNodeDebounce2 = _interopRequireDefault(require('../../commons-node/debounce'));
 }
 
+var _commonsNodePromise2;
+
+function _commonsNodePromise() {
+  return _commonsNodePromise2 = require('../../commons-node/promise');
+}
+
+var _nuclideBuckBase2;
+
+function _nuclideBuckBase() {
+  return _nuclideBuckBase2 = require('../../nuclide-buck-base');
+}
+
 var _SimulatorDropdown2;
 
 function _SimulatorDropdown() {
@@ -48,10 +60,22 @@ function _BuckToolbarActions() {
   return _BuckToolbarActions2 = _interopRequireDefault(require('./BuckToolbarActions'));
 }
 
+var _uiBuckToolbarSettings2;
+
+function _uiBuckToolbarSettings() {
+  return _uiBuckToolbarSettings2 = _interopRequireDefault(require('./ui/BuckToolbarSettings'));
+}
+
 var _BuckToolbarStore2;
 
 function _BuckToolbarStore() {
   return _BuckToolbarStore2 = _interopRequireDefault(require('./BuckToolbarStore'));
+}
+
+var _nuclideUiLibButton2;
+
+function _nuclideUiLibButton() {
+  return _nuclideUiLibButton2 = require('../../nuclide-ui/lib/Button');
 }
 
 var _nuclideUiLibCombobox2;
@@ -83,15 +107,6 @@ var BUCK_TARGET_INPUT_WIDTH = 400;
 var BuckToolbar = (function (_React$Component) {
   _inherits(BuckToolbar, _React$Component);
 
-  _createClass(BuckToolbar, null, [{
-    key: 'propTypes',
-    value: {
-      store: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_BuckToolbarStore2 || _BuckToolbarStore()).default).isRequired,
-      actions: (_reactForAtom2 || _reactForAtom()).React.PropTypes.instanceOf((_BuckToolbarActions2 || _BuckToolbarActions()).default).isRequired
-    },
-    enumerable: true
-  }]);
-
   function BuckToolbar(props) {
     var _this = this;
 
@@ -105,7 +120,7 @@ var BuckToolbar = (function (_React$Component) {
 
     this._buckToolbarActions = this.props.actions;
     this._buckToolbarStore = this.props.store;
-    this._projectAliasesCache = new WeakMap();
+    this._projectAliasesCache = new Map();
 
     this._disposables = new (_atom2 || _atom()).CompositeDisposable();
 
@@ -113,6 +128,8 @@ var BuckToolbar = (function (_React$Component) {
     this._disposables.add(this._buckToolbarStore.subscribe(function () {
       _this.forceUpdate();
     }));
+
+    this.state = { settingsVisible: false };
   }
 
   _createClass(BuckToolbar, [{
@@ -123,15 +140,22 @@ var BuckToolbar = (function (_React$Component) {
   }, {
     key: '_requestOptions',
     value: _asyncToGenerator(function* (inputText) {
-      var project = this._buckToolbarStore.getMostRecentBuckProject();
-      if (project == null) {
-        throw new Error('No active Buck project.');
+      var _this2 = this;
+
+      var buckRoot = this._buckToolbarStore.getCurrentBuckRoot();
+      if (buckRoot == null) {
+        throw new Error('No active Buck project. Check your Current Working Root.');
       }
 
-      var aliases = this._projectAliasesCache.get(project);
+      var aliases = this._projectAliasesCache.get(buckRoot);
       if (!aliases) {
-        aliases = project.listAliases();
-        this._projectAliasesCache.set(project, aliases);
+        (function () {
+          var buckProject = (0, (_nuclideBuckBase2 || _nuclideBuckBase()).createBuckProject)(buckRoot);
+          aliases = (0, (_commonsNodePromise2 || _commonsNodePromise()).lastly)(buckProject.listAliases(), function () {
+            return buckProject.dispose();
+          });
+          _this2._projectAliasesCache.set(buckRoot, aliases);
+        })();
       }
 
       var result = (yield aliases).slice();
@@ -143,6 +167,8 @@ var BuckToolbar = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       var buckToolbarStore = this._buckToolbarStore;
       var status = undefined;
       if (buckToolbarStore.isLoadingRule()) {
@@ -193,6 +219,8 @@ var BuckToolbar = (function (_React$Component) {
         }
       }
 
+      var activeTaskType = this.props.activeTaskType;
+
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
         null,
@@ -210,7 +238,26 @@ var BuckToolbar = (function (_React$Component) {
           placeholderText: 'Buck build target',
           width: BUCK_TARGET_INPUT_WIDTH
         }),
-        widgets
+        (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibButton2 || _nuclideUiLibButton()).Button, {
+          className: 'nuclide-buck-settings icon icon-gear',
+          size: (_nuclideUiLibButton2 || _nuclideUiLibButton()).ButtonSizes.SMALL,
+          disabled: activeTaskType == null || this.props.store.getCurrentBuckRoot() == null,
+          onClick: function () {
+            return _this3._showSettings();
+          }
+        }),
+        widgets,
+        this.state.settingsVisible && activeTaskType != null ? (_reactForAtom2 || _reactForAtom()).React.createElement((_uiBuckToolbarSettings2 || _uiBuckToolbarSettings()).default, {
+          currentBuckRoot: this.props.store.getCurrentBuckRoot(),
+          settings: this.props.store.getTaskSettings()[activeTaskType] || {},
+          buildType: activeTaskType,
+          onDismiss: function () {
+            return _this3._hideSettings();
+          },
+          onSave: function (settings) {
+            return _this3._saveSettings(activeTaskType, settings);
+          }
+        }) : null
       );
     }
   }, {
@@ -228,23 +275,28 @@ var BuckToolbar = (function (_React$Component) {
     value: function _handleReactNativeServerModeChanged(checked) {
       this._buckToolbarActions.updateReactNativeServerMode(checked);
     }
+  }, {
+    key: '_showSettings',
+    value: function _showSettings() {
+      this.setState({ settingsVisible: true });
+    }
+  }, {
+    key: '_hideSettings',
+    value: function _hideSettings() {
+      this.setState({ settingsVisible: false });
+    }
+  }, {
+    key: '_saveSettings',
+    value: function _saveSettings(taskType, settings) {
+      this._buckToolbarActions.updateTaskSettings(taskType, settings);
+      this._hideSettings();
+    }
   }]);
 
   return BuckToolbar;
 })((_reactForAtom2 || _reactForAtom()).React.Component);
 
 module.exports = BuckToolbar;
-
-/**
- * The toolbar makes an effort to keep track of which BuckProject to act on, based on the last
- * TextEditor that had focus that corresponded to a BuckProject. This means that if a user opens
- * an editor for a file in a Buck project, types in a build target, focuses an editor for a file
- * that is not part of a Buck project, and hits "Build," the toolbar will build the target in the
- * project that corresponds to the editor that previously had focus.
- *
- * Ultimately, we should have a dropdown to let the user specify the Buck project when it is
- * ambiguous.
- */
 
 // Querying Buck can be slow, so cache aliases by project.
 // Putting the cache here allows the user to refresh it by toggling the UI.

@@ -20,6 +20,12 @@ function _commonsNodeSingleton() {
   return _commonsNodeSingleton2 = _interopRequireDefault(require('../../commons-node/singleton'));
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var PREPARE_STACK_TRACE_HOOKED_KEY = '_nuclide_error_stack_trace_hooked';
 
 var hookedPrepareStackTrace = undefined;
@@ -108,7 +114,7 @@ function structuredStackTraceHook(error, frames) {
 function defaultPrepareStackTrace(error, frames) {
   var formattedStackTrace = error.message ? error.name + ': ' + error.message : '' + error.name;
   frames.forEach(function (frame) {
-    formattedStackTrace += '\n    at ' + frame.toString();
+    formattedStackTrace += '\n    at ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(frame.toString());
   });
   return formattedStackTrace;
 }

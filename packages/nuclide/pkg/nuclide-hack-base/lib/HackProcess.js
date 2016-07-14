@@ -41,7 +41,7 @@ var getHackProcess = _asyncToGenerator(function* (filePath) {
 
 var createHackProcess = _asyncToGenerator(function* (command, configDir) {
   (_hackConfig4 || _hackConfig3()).logger.logInfo('Creating new hack connection for ' + configDir + ': ' + command);
-  (_hackConfig4 || _hackConfig3()).logger.logInfo('Current PATH: ' + process.env.PATH);
+  (_hackConfig4 || _hackConfig3()).logger.logInfo('Current PATH: ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(process.env.PATH));
   var startServerResult = yield (0, (_commonsNodeProcess2 || _commonsNodeProcess()).asyncExecute)(command, ['start', configDir]);
   (_hackConfig4 || _hackConfig3()).logger.logInfo('Hack connection start server results:\n' + JSON.stringify(startServerResult, null, 2) + '\n');
   if (startServerResult.exitCode !== 0 && startServerResult.exitCode !== HACK_SERVER_ALREADY_EXISTS_EXIT_CODE) {
@@ -86,6 +86,12 @@ var _commonsNodeProcess2;
 
 function _commonsNodeProcess() {
   return _commonsNodeProcess2 = require('../../commons-node/process');
+}
+
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
 }
 
 var _commonsNodeRpcProcess2;

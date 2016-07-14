@@ -114,7 +114,6 @@ var HyperclickForTextEditor = (function () {
         if (_this2._textEditorView.component == null) {
           return;
         }
-        // $FlowFixMe (most)
         getLinesDomNode().removeEventListener('mousedown', _this2._onMouseDown);
       };
       var addMouseDownListener = function addMouseDownListener() {
@@ -138,6 +137,7 @@ var HyperclickForTextEditor = (function () {
   }, {
     key: '_onMouseMove',
     value: function _onMouseMove(event) {
+      var mouseEvent = event;
       if (this._isLoading) {
         // Show the loading cursor.
         this._textEditorView.classList.add('hyperclick-loading');
@@ -147,8 +147,8 @@ var HyperclickForTextEditor = (function () {
       // pressing the key without moving the mouse again. We only save the
       // relevant properties to prevent retaining a reference to the event.
       this._lastMouseEvent = {
-        clientX: event.clientX,
-        clientY: event.clientY
+        clientX: mouseEvent.clientX,
+        clientY: mouseEvent.clientY
       };
 
       // Don't fetch suggestions if the mouse is still in the same 'word', where
@@ -169,7 +169,7 @@ var HyperclickForTextEditor = (function () {
 
       this._lastWordRange = range;
 
-      if (this._isHyperclickEvent(event)) {
+      if (this._isHyperclickEvent(mouseEvent)) {
         // Clear the suggestion if the mouse moved out of the range.
         if (!this._isMouseAtLastSuggestion()) {
           this._clearSuggestion();
@@ -182,7 +182,8 @@ var HyperclickForTextEditor = (function () {
   }, {
     key: '_onMouseDown',
     value: function _onMouseDown(event) {
-      if (!this._isHyperclickEvent(event) || !this._isMouseAtLastSuggestion()) {
+      var mouseEvent = event;
+      if (!this._isHyperclickEvent(mouseEvent) || !this._isMouseAtLastSuggestion()) {
         return;
       }
 
@@ -197,15 +198,17 @@ var HyperclickForTextEditor = (function () {
   }, {
     key: '_onKeyDown',
     value: function _onKeyDown(event) {
+      var mouseEvent = event;
       // Show the suggestion at the last known mouse position.
-      if (this._isHyperclickEvent(event)) {
+      if (this._isHyperclickEvent(mouseEvent)) {
         this._setSuggestionForLastMouseEvent();
       }
     }
   }, {
     key: '_onKeyUp',
     value: function _onKeyUp(event) {
-      if (!this._isHyperclickEvent(event)) {
+      var mouseEvent = event;
+      if (!this._isHyperclickEvent(mouseEvent)) {
         this._clearSuggestion();
       }
     }
@@ -386,11 +389,8 @@ var HyperclickForTextEditor = (function () {
     value: function dispose() {
       this._isDestroyed = true;
       this._clearSuggestion();
-      // $FlowFixMe (most)
       this._textEditorView.removeEventListener('mousemove', this._onMouseMove);
-      // $FlowFixMe (most)
       this._textEditorView.removeEventListener('keydown', this._onKeyDown);
-      // $FlowFixMe (most)
       this._textEditorView.removeEventListener('keyup', this._onKeyUp);
       this._subscriptions.dispose();
     }

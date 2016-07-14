@@ -40,6 +40,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 /**
  * An input field rendered as an <atom-text-editor mini />.
  */
@@ -156,7 +162,7 @@ var AtomInput = (function (_React$Component) {
     value: function render() {
       var className = (0, (_classnames2 || _classnames()).default)(this.props.className, _defineProperty({
         'atom-text-editor-unstyled': this.props.unstyled
-      }, 'atom-text-editor-' + this.props.size, this.props.size != null));
+      }, 'atom-text-editor-' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(this.props.size), this.props.size != null));
 
       return(
         // Because the contents of `<atom-text-editor>` elements are managed by its custom web

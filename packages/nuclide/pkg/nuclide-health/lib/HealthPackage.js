@@ -246,13 +246,13 @@ function updateAnalytics() {
 
       // All analyticsBuffer entries have the same keys; we use the first entry to know what they are.
       Object.keys(analyticsBuffer[0]).forEach(function (statsKey) {
-        if (statsKey === 'lastKeyLatency') {
+        // These values are not to be aggregated or sent.
+        if (statsKey === 'lastKeyLatency' || statsKey === 'activeHandlesByType') {
           return;
-          // This field is only used to for a sticky value in the status bar, and is not to be sent.
         }
 
         var aggregates = aggregate(analyticsBuffer.map(function (stats) {
-          return stats[statsKey];
+          return typeof stats[statsKey] === 'number' ? stats[statsKey] : 0;
         }), statsKey === 'keyLatency');
         // skipZeros: Don't use empty key latency values in aggregates.
         Object.keys(aggregates).forEach(function (aggregatesKey) {
@@ -302,17 +302,20 @@ function getHealthStats() {
     lastKeyLatency = keyLatency;
   }
 
+  var activeHandles = getActiveHandles();
+  var activeHandlesByType = getActiveHandlesByType(Array.from(activeHandles));
+
   var result = _extends({}, stats, {
     heapPercentage: 100 * stats.heapUsed / stats.heapTotal, // Just for convenience.
     cpuPercentage: (_os2 || _os()).default.loadavg()[0], // 1 minute CPU average.
     lastKeyLatency: lastKeyLatency,
     keyLatency: keyLatency,
-    activeHandles: getActiveHandles().length,
-    activeRequests: getActiveRequests().length
+    activeHandles: activeHandles.length,
+    activeRequests: getActiveRequests().length,
+    activeHandlesByType: activeHandlesByType
   });
 
   keyLatency = 0; // We only want to ever record a key latency time once, and so we reset it.
-
   return result;
 }
 
@@ -329,4 +332,42 @@ function getActiveRequests() {
     return process._getActiveRequests();
   }
   return [];
+}
+
+function getActiveHandlesByType(handles) {
+  var activeHandlesByType = {
+    childprocess: [],
+    tlssocket: [],
+    other: []
+  };
+  getTopLevelHandles(handles).filter(function (handle) {
+    var type = handle.constructor.name.toLowerCase();
+    if (type !== 'childprocess' && type !== 'tlssocket') {
+      type = 'other';
+    }
+    activeHandlesByType[type].push(handle);
+  });
+  return activeHandlesByType;
+}
+
+// Returns a list of handles which are not children of others (i.e. sockets as process pipes).
+function getTopLevelHandles(handles) {
+  var topLevelHandles = [];
+  var seen = new Set();
+  handles.forEach(function (handle) {
+    if (seen.has(handle)) {
+      return;
+    }
+    seen.add(handle);
+    topLevelHandles.push(handle);
+    if (handle.constructor.name === 'ChildProcess') {
+      seen.add(handle);
+      ['stdin', 'stdout', 'stderr', '_channel'].forEach(function (pipe) {
+        if (handle[pipe]) {
+          seen.add(handle[pipe]);
+        }
+      });
+    }
+  });
+  return topLevelHandles;
 }

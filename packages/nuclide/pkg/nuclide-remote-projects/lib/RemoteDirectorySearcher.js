@@ -54,10 +54,12 @@ var RemoteDirectorySearcher = (function () {
         return _this._serviceProvider(dir);
       });
 
-      // Start the search in each directory, and merge the resulting streams.
-      var searchStream = (_Observable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable).merge.apply(_Observable, _toConsumableArray(directories.map(function (dir, index) {
+      var searchStreams = directories.map(function (dir, index) {
         return services[index].findInProjectSearch(dir.getPath(), regex, options.inclusions);
-      })));
+      });
+
+      // Start the search in each directory, and merge the resulting streams.
+      var searchStream = (_Observable = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable).merge.apply(_Observable, _toConsumableArray(searchStreams));
 
       // Create a subject that we can use to track search completion.
       var searchCompletion = new (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).ReplaySubject();

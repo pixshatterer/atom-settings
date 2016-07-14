@@ -174,6 +174,7 @@ var _default = (function () {
         _this2._loadingSpinnerDiv = document.createElement('div');
         _this2._loadingSpinnerDiv.className = 'nuclide-blame-ui-spinner';
         var gutterView = atom.views.getView(_this2._gutter);
+        // $FlowFixMe
         gutterView.appendChild(_this2._loadingSpinnerDiv);
       }, MS_TO_WAIT_BEFORE_SPINNER);
     }

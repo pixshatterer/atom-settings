@@ -224,6 +224,11 @@ var HgRepositoryClientAsync = (function () {
     value: function addAll(filePaths) {
       return this._client.addAll(filePaths);
     }
+  }, {
+    key: 'onDidDestroy',
+    value: function onDidDestroy(callback) {
+      return this._client.onDidDestroy(callback);
+    }
   }]);
 
   return HgRepositoryClientAsync;

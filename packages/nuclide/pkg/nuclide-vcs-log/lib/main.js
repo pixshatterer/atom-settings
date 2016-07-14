@@ -54,6 +54,12 @@ function _commonsAtomProjects() {
   return _commonsAtomProjects2 = require('../../commons-atom/projects');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _querystring2;
 
 function _querystring() {
@@ -252,7 +258,7 @@ function createLogPaneForPath(path) {
       files: [path],
       showDifferentialRevision: showDifferentialRevision
     },
-    title: repository.getType() + ' log ' + (0, (_commonsAtomProjects2 || _commonsAtomProjects()).getAtomProjectRelativePath)(path)
+    title: repository.getType() + ' log ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)((0, (_commonsAtomProjects2 || _commonsAtomProjects()).getAtomProjectRelativePath)(path))
   });
 
   repository.log([path], MAX_NUM_LOG_RESULTS).then(function (response) {

@@ -234,6 +234,7 @@ function openConnectionDialog(props) {
 
       // Center the parent in both Atom v1.6 and in Atom v1.8.
       // TODO(ssorallen): Remove all but `maxWidth` once Nuclide is Atom v1.8+
+      // $FlowFixMe
       var parentEl = hostEl.parentElement;
       if (parentEl != null) {
         parentEl.style.left = '50%';
@@ -248,7 +249,12 @@ function openConnectionDialog(props) {
       (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement((_ConnectionDialog2 || _ConnectionDialog()).default, initialDialogProps), hostEl);
     }
 
-    openBaseDialog();
+    // Select the last profile that was used. It's possible the config changed since the last time
+    // this was opened and the profile no longer exists. If the profile is not found,
+    // `openBaseDialog` will select the "default" / "Most Recent" option.
+    openBaseDialog(compositeConnectionProfiles.find(function (profile) {
+      return profile.displayTitle === defaultConnectionProfile.params.displayTitle;
+    }));
   });
 }
 

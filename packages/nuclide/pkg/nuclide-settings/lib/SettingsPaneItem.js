@@ -2,13 +2,7 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-/*
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
- */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -19,6 +13,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+/*
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the LICENSE file in
+ * the root directory of this source tree.
+ */
 
 var _atom2;
 
@@ -63,8 +65,8 @@ var NuclideSettingsPaneItem = (function (_React$Component) {
     _get(Object.getPrototypeOf(NuclideSettingsPaneItem.prototype), 'constructor', this).call(this, props);
 
     // Bind callbacks first since we use these during config data generation.
-    this._onConfigChanged = this._onConfigChanged.bind(this);
-    this._onComponentChanged = this._onComponentChanged.bind(this);
+    this._handleConfigChange = this._handleConfigChange.bind(this);
+    this._handleComponentChange = this._handleComponentChange.bind(this);
 
     this.state = this._getConfigData();
   }
@@ -81,14 +83,14 @@ var NuclideSettingsPaneItem = (function (_React$Component) {
       }
 
       var configData = {};
-      var nuclidePackages = atom.packages.getActivePackages().filter(function (pkg) {
+      var nuclidePackages = atom.packages.getLoadedPackages().filter(function (pkg) {
         return pkg.metadata && pkg.metadata.nuclide;
       });
 
       // Config data is organized as a series of nested objects. First, by category
       // and then by packages in each category. Each package contains a title and an
       // object for each setting in that package. Each setting also contains an
-      // onChanged callback for components. We also listen for atom.config.onDidChange.
+      // onChange callback for components. We also listen for atom.config.onDidChange.
       //
       // ```
       // configData = {
@@ -132,17 +134,20 @@ var NuclideSettingsPaneItem = (function (_React$Component) {
               var keyPath = pkgName + '.' + settingName;
               var schema = (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.getSchema(keyPath);
               settings[settingName] = {
-                name: settingName,
-                description: getDescription(schema),
                 keyPath: keyPath,
-                onChanged: _this._onComponentChanged,
-                order: getOrder(schema),
-                title: getTitle(schema, settingName),
-                value: (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get(keyPath)
+                value: (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get(keyPath),
+                onChange: function onChange(value) {
+                  _this._handleComponentChange(keyPath, value);
+                },
+                schema: _extends({}, schema, {
+                  description: getDescription(schema),
+                  order: getOrder(schema),
+                  title: getTitle(schema, settingName)
+                })
               };
 
               if (disposables) {
-                var disposable = (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.onDidChange(keyPath, _this._onConfigChanged);
+                var disposable = (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.onDidChange(keyPath, _this._handleConfigChange);
                 _this._disposables.add(disposable);
               }
             });
@@ -158,8 +163,8 @@ var NuclideSettingsPaneItem = (function (_React$Component) {
       return configData;
     }
   }, {
-    key: '_onConfigChanged',
-    value: function _onConfigChanged(event) {
+    key: '_handleConfigChange',
+    value: function _handleConfigChange(event) {
       var _this2 = this;
 
       // Workaround: Defer this._getConfigData() as it registers new config.onDidChange() callbacks
@@ -170,9 +175,9 @@ var NuclideSettingsPaneItem = (function (_React$Component) {
       });
     }
   }, {
-    key: '_onComponentChanged',
-    value: function _onComponentChanged(event) {
-      (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.set(event.keyPath, event.newValue);
+    key: '_handleComponentChange',
+    value: function _handleComponentChange(keyPath, value) {
+      (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.set(keyPath, value);
     }
   }, {
     key: 'render',

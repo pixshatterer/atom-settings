@@ -17,3 +17,5 @@ Object.defineProperty(exports, '__esModule', {
 
 // The source can't be part of the message because we want to be able to populate a filter menu
 // before we even have any messages.
+
+// $FlowFixMe

@@ -64,10 +64,6 @@ function getLogger() {
  *  If the directory is not part of a Mercurial repository, returns null.
  */
 function getRepositoryDescription(directory) {
-  var _require = require('../../nuclide-remote-connection');
-
-  var RemoteDirectory = _require.RemoteDirectory;
-
   if (directory instanceof (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).RemoteDirectory) {
     var repositoryDescription = directory.getHgRepositoryDescription();
     if (repositoryDescription == null || repositoryDescription.repoPath == null || repositoryDescription.originURL == null) {
@@ -85,13 +81,13 @@ function getRepositoryDescription(directory) {
     return {
       originURL: _originURL,
       repoPath: repoUri,
-      workingDirectory: new RemoteDirectory(serverConnection, workingDirectoryUri),
+      workingDirectory: serverConnection.createDirectory(workingDirectoryUri),
       workingDirectoryLocalPath: _workingDirectoryLocalPath
     };
   } else {
-    var _require2 = require('../../nuclide-source-control-helpers');
+    var _require = require('../../nuclide-source-control-helpers');
 
-    var findHgRepository = _require2.findHgRepository;
+    var findHgRepository = _require.findHgRepository;
 
     var repositoryDescription = findHgRepository(directory.getPath());
     if (repositoryDescription == null) {
@@ -135,9 +131,9 @@ var HgRepositoryProvider = (function () {
         var _workingDirectory = repositoryDescription.workingDirectory;
         var _workingDirectoryLocalPath2 = repositoryDescription.workingDirectoryLocalPath;
 
-        var _require3 = require('../../nuclide-client');
+        var _require2 = require('../../nuclide-client');
 
-        var getServiceByNuclideUri = _require3.getServiceByNuclideUri;
+        var getServiceByNuclideUri = _require2.getServiceByNuclideUri;
 
         var service = getServiceByNuclideUri('HgService', directory.getPath());
         (0, (_assert2 || _assert()).default)(service);

@@ -24,12 +24,6 @@ function _commonsAtomConsumeFirstProvider() {
   return _commonsAtomConsumeFirstProvider2 = _interopRequireDefault(require('../../../commons-atom/consumeFirstProvider'));
 }
 
-var _ReactNativeDebuggerInstance2;
-
-function _ReactNativeDebuggerInstance() {
-  return _ReactNativeDebuggerInstance2 = require('./ReactNativeDebuggerInstance');
-}
-
 var _ReactNativeProcessInfo2;
 
 function _ReactNativeProcessInfo() {
@@ -105,8 +99,7 @@ var DebuggingActivation = (function () {
     value: function provideNuclideDebugger() {
       return {
         name: 'React Native',
-        getProcessInfoList: getProcessInfoList,
-        ReactNativeDebuggerInstance: (_ReactNativeDebuggerInstance2 || _ReactNativeDebuggerInstance()).ReactNativeDebuggerInstance
+        getProcessInfoList: getProcessInfoList
       };
     }
   }]);

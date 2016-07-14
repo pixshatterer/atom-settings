@@ -207,7 +207,7 @@ exports.getTypeAtPos = getTypeAtPos;
 
 var getSourceHighlights = _asyncToGenerator(function* (filePath, contents, line, column) {
   var hhResult = yield (0, (_HackHelpers2 || _HackHelpers()).callHHClient)(
-  /*args*/['--find-lvar-refs', formatLineColumn(line, column)],
+  /*args*/['--ide-highlight-refs', formatLineColumn(line, column)],
   /*errorStream*/false,
   /*outputJson*/true,
   /*processInput*/contents,

@@ -52,8 +52,6 @@ function _createBuckWebSocket() {
 
 var logger = require('../../nuclide-logging').getLogger();
 
-/*AsyncExecuteOptions*/
-
 /**
  * As defined in com.facebook.buck.cli.Command, some of Buck's subcommands are
  * read-only. The read-only commands can be executed in parallel, but the rest
@@ -67,6 +65,9 @@ var BLOCKING_BUCK_COMMAND_QUEUE_PREFIX = 'buck';
 /**
  * Represents a Buck project on disk. All Buck commands for a project should be
  * done through an instance of this class.
+ *
+ * TODO(hansonw): This should be a stateless set of global functions.
+ * In the meantime, don't introduce any additional state here.
  */
 
 var BuckProject = (function () {
@@ -232,8 +233,6 @@ var BuckProject = (function () {
      *   telling the launched application to stop at the loader breakpoint
      *   waiting for debugger to connect
      * @param simulator The UDID of the simulator to install the binary on.
-     * @param appArgs If 'run' is set to 'true', these are passed as the command line arguments to
-     *   the application being run.
      * @return Promise that resolves to a build report.
      */
   }, {
@@ -290,8 +289,8 @@ var BuckProject = (function () {
      */
   }, {
     key: 'buildWithOutput',
-    value: function buildWithOutput(buildTargets) {
-      return this._buildWithOutput(buildTargets, {});
+    value: function buildWithOutput(buildTargets, extraArguments) {
+      return this._buildWithOutput(buildTargets, { extraArguments: extraArguments });
     }
 
     /**
@@ -307,8 +306,8 @@ var BuckProject = (function () {
      */
   }, {
     key: 'testWithOutput',
-    value: function testWithOutput(buildTargets) {
-      return this._buildWithOutput(buildTargets, { test: true });
+    value: function testWithOutput(buildTargets, extraArguments) {
+      return this._buildWithOutput(buildTargets, { test: true, extraArguments: extraArguments });
     }
 
     /**
@@ -324,8 +323,13 @@ var BuckProject = (function () {
      */
   }, {
     key: 'installWithOutput',
-    value: function installWithOutput(buildTargets, simulator, runOptions) {
-      return this._buildWithOutput(buildTargets, { install: true, simulator: simulator, runOptions: runOptions });
+    value: function installWithOutput(buildTargets, extraArguments, simulator, runOptions) {
+      return this._buildWithOutput(buildTargets, {
+        install: true,
+        simulator: simulator,
+        runOptions: runOptions,
+        extraArguments: extraArguments
+      });
     }
 
     /**
@@ -365,6 +369,7 @@ var BuckProject = (function () {
       var install = baseOptions.install;
       var simulator = baseOptions.simulator;
       var test = baseOptions.test;
+      var extraArguments = baseOptions.extraArguments;
 
       var runOptions = baseOptions.runOptions || { run: false };
 
@@ -386,11 +391,10 @@ var BuckProject = (function () {
           if (runOptions.debug) {
             args.push('--wait-for-debugger');
           }
-          if (runOptions.appArgs) {
-            args.push('--');
-            args = args.concat(runOptions.appArgs);
-          }
         }
+      }
+      if (extraArguments != null) {
+        args = args.concat(extraArguments);
       }
       return args;
     }
@@ -523,3 +527,4 @@ var BuckProject = (function () {
 exports.BuckProject = BuckProject;
 
 // The service framework doesn't support imported types
+/*AsyncExecuteOptions*/

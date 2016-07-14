@@ -55,7 +55,11 @@ function createExtraUiComponent(store, actions) {
     _createClass(ExtraUi, [{
       key: 'render',
       value: function render() {
-        return (_reactForAtom2 || _reactForAtom()).React.createElement((_BuckToolbar2 || _BuckToolbar()).default, { store: store, actions: actions });
+        return (_reactForAtom2 || _reactForAtom()).React.createElement((_BuckToolbar2 || _BuckToolbar()).default, {
+          activeTaskType: this.props.activeTaskType,
+          store: store,
+          actions: actions
+        });
       }
     }]);
 

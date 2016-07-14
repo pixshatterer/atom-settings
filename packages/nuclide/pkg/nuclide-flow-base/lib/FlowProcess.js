@@ -281,7 +281,7 @@ var FlowProcess = (function () {
             // server. So, don't update.
             return;
           default:
-            logger.error('Unknown return code from Flow: ' + result.exitCode);
+            logger.error('Unknown return code from Flow: ' + String(result.exitCode));
             status = (_FlowConstants2 || _FlowConstants()).ServerStatus.UNKNOWN;
         }
       }

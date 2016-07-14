@@ -55,7 +55,7 @@ var HealthPaneItemComponent = (function (_React$Component) {
 
       var sections = {
         Stats: (_reactForAtom2 || _reactForAtom()).React.createElement((_sectionsBasicStatsSectionComponent2 || _sectionsBasicStatsSectionComponent()).default, this.props),
-        Handles: (_reactForAtom2 || _reactForAtom()).React.createElement((_sectionsActiveHandlesSectionComponent2 || _sectionsActiveHandlesSectionComponent()).default, { activeHandleObjects: this.props.activeHandleObjects })
+        Handles: (_reactForAtom2 || _reactForAtom()).React.createElement((_sectionsActiveHandlesSectionComponent2 || _sectionsActiveHandlesSectionComponent()).default, { activeHandlesByType: this.props.activeHandlesByType })
       };
 
       // For each section, we use settings-view to get a familiar look for table cells.
@@ -89,7 +89,7 @@ var HealthPaneItemComponent = (function (_React$Component) {
       lastKeyLatency: PropTypes.number.isRequired,
       activeHandles: PropTypes.number.isRequired,
       activeRequests: PropTypes.number.isRequired,
-      activeHandleObjects: PropTypes.arrayOf(PropTypes.object).isRequired
+      activeHandlesByType: PropTypes.object.isRequired
     },
     enumerable: true
   }]);

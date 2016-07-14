@@ -29,14 +29,14 @@ var getBuckProjectRoot = _asyncToGenerator(function* (filePath) {
     }
   }
   return directory;
-}
+});
+
+exports.getBuckProjectRoot = getBuckProjectRoot;
+exports.createBuckProject = createBuckProject;
 
 /**
  * Given a file path, returns the BuckProject for its project root (if it exists).
  */
-);
-
-exports.getBuckProjectRoot = getBuckProjectRoot;
 
 var getBuckProject = _asyncToGenerator(function* (filePath) {
   var rootPath = yield getBuckProjectRoot(filePath);
@@ -48,12 +48,8 @@ var getBuckProject = _asyncToGenerator(function* (filePath) {
   if (buckProject != null) {
     return buckProject;
   }
-
-  var buckService = (0, (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).getServiceByNuclideUri)('BuckProject', filePath);
-  if (buckService) {
-    buckProject = new buckService.BuckProject({ rootPath: rootPath });
-    buckProjectForBuckProjectDirectory.set(rootPath, buckProject);
-  }
+  buckProject = createBuckProject(rootPath);
+  buckProjectForBuckProjectDirectory.set(rootPath, buckProject);
   return buckProject;
 });
 
@@ -98,4 +94,10 @@ function isBuckFile(filePath) {
   // name of the build file: https://github.com/facebook/buck/issues/238.
   // This function will not work for those who use that option.
   return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.basename(filePath) === 'BUCK';
+}
+
+function createBuckProject(rootPath) {
+  var buckService = (0, (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).getServiceByNuclideUri)('BuckProject', rootPath);
+  (0, (_assert2 || _assert()).default)(buckService != null);
+  return new buckService.BuckProject({ rootPath: rootPath });
 }

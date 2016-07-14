@@ -99,6 +99,7 @@ function treeToUiTree(outlineTree) {
 // original.
 function highlightCurrentNode(outline, cursorLocation) {
   (0, (_assert2 || _assert()).default)(outline.kind === 'outline');
+  // $FlowIssue
   return _extends({}, outline, {
     outlineTrees: highlightCurrentNodeInTrees(outline.outlineTrees, cursorLocation)
   });

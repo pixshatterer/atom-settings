@@ -55,7 +55,7 @@ var DiagnosticStore = (function () {
     _classCallCheck(this, DiagnosticStore);
 
     this._providerToFileToMessages = new Map();
-    this._fileToProviders = new Map();
+    this._fileToProviders = new (_commonsNodeCollection2 || _commonsNodeCollection()).MultiMap();
     this._providerToProjectDiagnostics = new Map();
 
     this._fileChanges = new (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Subject();
@@ -125,12 +125,7 @@ var DiagnosticStore = (function () {
         // Update _providerToFileToMessages.
         fileToMessages.set(filePath, newMessagesForPath);
         // Update _fileToProviders.
-        var providers = _this._fileToProviders.get(filePath);
-        if (!providers) {
-          providers = new Set();
-          _this._fileToProviders.set(filePath, providers);
-        }
-        providers.add(diagnosticProvider);
+        _this._fileToProviders.add(filePath, diagnosticProvider);
 
         _this._emitFileMessages(filePath);
       });
@@ -178,10 +173,8 @@ var DiagnosticStore = (function () {
           fileToDiagnostics.delete(filePath);
         }
         // Update _fileToProviders.
-        var providers = this._fileToProviders.get(filePath);
-        if (providers) {
-          providers.delete(diagnosticProvider);
-        }
+        this._fileToProviders.delete(filePath, diagnosticProvider);
+
         this._emitFileMessages(filePath);
       }
     }
@@ -295,14 +288,12 @@ var DiagnosticStore = (function () {
     value: function _getFileMessages(filePath) {
       var allFileMessages = [];
       var relevantProviders = this._fileToProviders.get(filePath);
-      if (relevantProviders) {
-        for (var provider of relevantProviders) {
-          var fileToMessages = this._providerToFileToMessages.get(provider);
-          (0, (_assert2 || _assert()).default)(fileToMessages != null);
-          var _messages = fileToMessages.get(filePath);
-          (0, (_assert2 || _assert()).default)(_messages != null);
-          allFileMessages = allFileMessages.concat(_messages);
-        }
+      for (var provider of relevantProviders) {
+        var fileToMessages = this._providerToFileToMessages.get(provider);
+        (0, (_assert2 || _assert()).default)(fileToMessages != null);
+        var _messages = fileToMessages.get(filePath);
+        (0, (_assert2 || _assert()).default)(_messages != null);
+        allFileMessages = allFileMessages.concat(_messages);
       }
       return allFileMessages;
     }

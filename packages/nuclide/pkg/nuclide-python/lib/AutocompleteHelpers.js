@@ -16,22 +16,30 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _assert2;
+
+function _assert() {
+  return _assert2 = _interopRequireDefault(require('assert'));
+}
+
 var _nuclideAnalytics2;
 
 function _nuclideAnalytics() {
   return _nuclideAnalytics2 = require('../../nuclide-analytics');
 }
 
+var _nuclideRemoteConnection2;
+
+function _nuclideRemoteConnection() {
+  return _nuclideRemoteConnection2 = require('../../nuclide-remote-connection');
+}
+
 var _constants2;
 
 function _constants() {
   return _constants2 = require('./constants');
-}
-
-var _jediClientHelpers2;
-
-function _jediClientHelpers() {
-  return _jediClientHelpers2 = require('./jedi-client-helpers');
 }
 
 var _config2;
@@ -95,17 +103,25 @@ var AutocompleteHelpers = (function () {
         }
       }
 
-      var result = undefined;
-      try {
-        result = yield (0, (_jediClientHelpers2 || _jediClientHelpers()).getCompletions)(editor);
-      } catch (e) {
-        return [];
-      }
-      if (result == null) {
+      var src = editor.getPath();
+      if (!src) {
         return [];
       }
 
-      return result.map(function (completion) {
+      var cursor = editor.getLastCursor();
+      var line = cursor.getBufferRow();
+      var column = cursor.getBufferColumn();
+
+      var service = (0, (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).getServiceByNuclideUri)('PythonService', src);
+      (0, (_assert2 || _assert()).default)(service);
+
+      var results = yield service.getCompletions(src, editor.getText(), line, column);
+
+      if (!results) {
+        return [];
+      }
+
+      return results.map(function (completion) {
         // Always display optional arguments in the UI.
         var displayText = getText(completion);
         // Only autocomplete arguments if the include optional arguments setting is on.

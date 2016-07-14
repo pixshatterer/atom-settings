@@ -92,6 +92,8 @@ var Activation = (function () {
         return;
       }
       atom.clipboard.write(el.innerText);
+    }), atom.commands.add('atom-workspace', 'nuclide-console:clear', function () {
+      return _this._commands.clearRecords();
     }), (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.observe('nuclide-console.maximumMessageCount', function (maxMessageCount) {
       return _this._commands.setMaxMessageCount(maxMessageCount);
     }),

@@ -13,7 +13,7 @@ var codeHighlightFromEditor = _asyncToGenerator(function* (editor, position) {
   (0, (_assert2 || _assert()).default)(filePath != null);
 
   var id = (0, (_utils2 || _utils()).getIdentifierAtPosition)(editor, position);
-  if (id == null || !id.startsWith('$')) {
+  if (id == null) {
     return [];
   }
 

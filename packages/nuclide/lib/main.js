@@ -159,7 +159,7 @@ Object.keys(features).forEach(function (name) {
   // use only, and aren't included in Nuclide builds.
   var enabled = !name.startsWith('sample-')
   // Hackfix to disable packages
-   && name !== 'nuclide-context-view' && name !== 'nuclide-nux';
+   && name !== 'nuclide-nux';
 
   // Entry for enabling/disabling the feature
   var setting = {

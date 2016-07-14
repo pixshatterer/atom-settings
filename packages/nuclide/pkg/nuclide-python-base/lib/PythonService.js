@@ -34,9 +34,61 @@ exports.getReferences = getReferences;
 var getOutline = _asyncToGenerator(function* (src, contents) {
   var service = yield serverManager.getJediService(src);
   return service.get_outline(src, contents);
-});
+}
+
+// Set to false if flake8 isn't found, so we don't repeatedly fail.
+);
 
 exports.getOutline = getOutline;
+
+var getDiagnostics = _asyncToGenerator(function* (src, contents) {
+  if (!shouldRunFlake8) {
+    return [];
+  }
+
+  var dirName = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.dirname(src);
+  var configDir = yield (_commonsNodeFsPromise2 || _commonsNodeFsPromise()).default.findNearestFile('.flake8', dirName);
+  var configPath = configDir ? (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(configDir, '.flake8') : null;
+
+  var result = undefined;
+  try {
+    result = yield require('./fb/run-flake8')(src, contents, configPath);
+  } catch (e) {
+    // Ignore.
+  }
+
+  if (!result) {
+    var command = global.atom && atom.config.get('nuclide.nuclide-python.pathToFlake8') || 'flake8';
+    var args = [];
+
+    if (configPath) {
+      args.push('--config');
+      args.push(configPath);
+    }
+
+    // Read contents from stdin.
+    args.push('-');
+
+    result = yield (0, (_commonsNodeProcess2 || _commonsNodeProcess()).asyncExecute)(command, args, { cwd: dirName, stdin: contents });
+  }
+  // 1 indicates unclean lint result (i.e. has errors/warnings).
+  // A non-successful exit code can result in some cases that we want to ignore,
+  // for example when an incorrect python version is specified for a source file.
+  if (result.exitCode && result.exitCode > 1) {
+    return [];
+  } else if (result.exitCode == null) {
+    // Don't throw if flake8 is not found on the user's system.
+    if (result.errorCode === 'ENOENT') {
+      // Don't retry again.
+      shouldRunFlake8 = false;
+      return [];
+    }
+    throw new Error('flake8 failed with error: ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(result.errorMessage) + ', ' + ('stderr: ' + result.stderr + ', stdout: ' + result.stdout));
+  }
+  return (0, (_flake82 || _flake8()).parseFlake8Output)(src, result.stdout);
+});
+
+exports.getDiagnostics = getDiagnostics;
 
 var formatCode = _asyncToGenerator(function* (src, contents, start, end) {
   var libCommand = getFormatterPath();
@@ -55,7 +107,7 @@ var formatCode = _asyncToGenerator(function* (src, contents, start, end) {
   if (result.exitCode === 1) {
     throw new Error('"' + libCommand + '" failed, likely due to syntax errors.');
   } else if (result.exitCode == null) {
-    throw new Error('"' + libCommand + '" failed with error: ' + result.errorMessage + ', ' + ('stderr: ' + result.stderr + ', stdout: ' + result.stdout + '.'));
+    throw new Error('"' + libCommand + '" failed with error: ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(result.errorMessage) + ', ' + ('stderr: ' + result.stderr + ', stdout: ' + result.stdout + '.'));
   } else if (contents !== '' && result.stdout === '') {
     // Throw error if the yapf output is empty, which is almost never desirable.
     throw new Error('Empty output received from yapf.');
@@ -76,6 +128,18 @@ function _commonsNodeProcess() {
   return _commonsNodeProcess2 = require('../../commons-node/process');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
+var _commonsNodeFsPromise2;
+
+function _commonsNodeFsPromise() {
+  return _commonsNodeFsPromise2 = _interopRequireDefault(require('../../commons-node/fsPromise'));
+}
+
 var _nuclideRemoteUri2;
 
 function _nuclideRemoteUri() {
@@ -86,6 +150,12 @@ var _JediServerManager2;
 
 function _JediServerManager() {
   return _JediServerManager2 = _interopRequireDefault(require('./JediServerManager'));
+}
+
+var _flake82;
+
+function _flake8() {
+  return _flake82 = require('./flake8');
 }
 
 var formatterPath = undefined;
@@ -109,5 +179,7 @@ function getFormatterPath() {
 }
 
 var serverManager = new (_JediServerManager2 || _JediServerManager()).default();
+
+var shouldRunFlake8 = true;
 
 // Class params, i.e. superclasses.

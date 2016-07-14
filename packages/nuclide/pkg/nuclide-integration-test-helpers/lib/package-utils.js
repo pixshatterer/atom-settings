@@ -15,6 +15,13 @@ var activateAllPackages = _asyncToGenerator(function* () {
   // or ones widely used in conjunction with nuclide.
   var whitelist = ['autocomplete-plus', 'hyperclick', 'status-bar', 'tool-bar'];
 
+  // Manually call `triggerDeferredActivationHooks` since Atom doesn't call it via
+  // `atom.packages.activate()` during tests. Calling this before we activate
+  // Nuclide packages sets `deferredActivationHooks` to `null`, so that deferred
+  // activation hooks are triggered as needed instead of batched.
+  // https://github.com/atom/atom/blob/v1.8.0/src/package-manager.coffee#L467-L472
+  atom.packages.triggerDeferredActivationHooks();
+
   var packageNames = atom.packages.getAvailablePackageNames().filter(function (name) {
     var pack = atom.packages.loadPackage(name);
     if (pack == null) {

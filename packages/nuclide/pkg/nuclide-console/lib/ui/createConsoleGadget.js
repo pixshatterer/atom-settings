@@ -105,12 +105,14 @@ function createConsoleGadget(state$, commands) {
         var _this2 = this;
 
         var sources = Array.from(this.state.providers.values()).map(function (source) {
+          // $FlowFixMe
+          var status = _this2.state.providerStatuses.get(source.id);
           return {
             id: source.id,
             name: source.id,
-            status: _this2.state.providerStatuses.get(source.id),
-            start: source.start,
-            stop: source.stop
+            status: status,
+            start: source.start != null ? source.start : undefined,
+            stop: source.stop != null ? source.stop : undefined
           };
         });
         // TODO(matthewwithanm): serialize and restore `initialSelectedSourceId`

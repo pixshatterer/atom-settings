@@ -146,8 +146,8 @@ var ClangServerManager = (function () {
         (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)().error('Error getting flags for ' + src + ':', e);
         return null;
       });
-      if (trueFlags != null && trueFlags.flags != null) {
-        return { flags: trueFlags.flags, usesDefaultFlags: false };
+      if (trueFlags != null) {
+        return { flags: trueFlags, usesDefaultFlags: false };
       } else if (defaultFlags != null) {
         return { flags: yield augmentDefaultFlags(src, defaultFlags), usesDefaultFlags: true };
       } else {
@@ -157,7 +157,11 @@ var ClangServerManager = (function () {
   }, {
     key: 'reset',
     value: function reset(src) {
-      this._servers.del(src);
+      if (src != null) {
+        this._servers.del(src);
+      } else {
+        this._servers.reset();
+      }
       this._flagsManager.reset();
     }
   }, {

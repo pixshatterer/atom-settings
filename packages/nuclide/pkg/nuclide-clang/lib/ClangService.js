@@ -31,8 +31,6 @@ var getClangService = _asyncToGenerator(function* (src, contents, defaultFlags, 
  * Compiles the specified source file (automatically determining the correct compilation flags).
  * It currently returns an Observable just to circumvent the 60s service timeout for Promises.
  * TODO(9519963): Stream back more detailed compile status message.
- *
- * If `clean` is provided, any existing Clang server for the file is restarted.
  */
 );
 
@@ -103,6 +101,7 @@ var formatCode = _asyncToGenerator(function* (src, contents, cursor, offset, len
 /**
  * Kill the Clang server for a particular source file,
  * as well as all the cached compilation flags.
+ * If no file is provided, all servers are reset.
  */
 );
 
@@ -200,10 +199,7 @@ var ClangCursorTypes = (0, (_commonsNodeCollection2 || _commonsNodeCollection())
 
 exports.ClangCursorTypes = ClangCursorTypes;
 
-function compile(src, contents, clean, defaultFlags) {
-  if (clean) {
-    serverManager.reset(src);
-  }
+function compile(src, contents, defaultFlags) {
   var doCompile = _asyncToGenerator(function* () {
     // Note: restarts the server if the flags changed.
     var server = yield serverManager.getClangServer(src, contents, defaultFlags, true);

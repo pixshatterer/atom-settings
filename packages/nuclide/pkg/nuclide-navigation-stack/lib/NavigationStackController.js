@@ -26,6 +26,12 @@ function _commonsAtomTextEditor() {
   return _commonsAtomTextEditor2 = require('../../commons-atom/text-editor');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _NavigationStack2;
 
 function _NavigationStack() {
@@ -122,7 +128,7 @@ var NavigationStackController = (function () {
   }, {
     key: 'updatePosition',
     value: function updatePosition(editor, newBufferPosition) {
-      log('updatePosition ' + newBufferPosition.row + ', ' + newBufferPosition.column + ' ' + editor.getPath());
+      log('updatePosition ' + newBufferPosition.row + ', ' + (newBufferPosition.column + ' ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath())));
 
       this._updateStackLocation(editor);
     }
@@ -131,14 +137,14 @@ var NavigationStackController = (function () {
   }, {
     key: 'updateScroll',
     value: function updateScroll(editor, scrollTop) {
-      log('updateScroll ' + scrollTop + ' ' + editor.getPath());
+      log('updateScroll ' + scrollTop + ' ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
 
       this._updateStackLocation(editor);
     }
   }, {
     key: 'onCreate',
     value: function onCreate(editor) {
-      log('onCreate ' + editor.getPath());
+      log('onCreate ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
 
       this._navigationStack.editorOpened(editor);
       this._updateStackLocation(editor);
@@ -146,7 +152,7 @@ var NavigationStackController = (function () {
   }, {
     key: 'onDestroy',
     value: function onDestroy(editor) {
-      log('onDestroy ' + editor.getPath());
+      log('onDestroy ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
 
       this._navigationStack.editorClosed(editor);
     }
@@ -155,7 +161,7 @@ var NavigationStackController = (function () {
   }, {
     key: 'onOpen',
     value: function onOpen(editor) {
-      log('onOpen ' + editor.getPath());
+      log('onOpen ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
 
       // Hack alert, an atom.workspace.open of a location in the current editor,
       // we get the location update before the onDidOpen event, and we don't get
@@ -173,20 +179,20 @@ var NavigationStackController = (function () {
   }, {
     key: 'onActivate',
     value: function onActivate(editor) {
-      log('onActivate ' + editor.getPath());
+      log('onActivate ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
       this._inActivate = true;
       this._updateStackLocation(editor);
     }
   }, {
     key: 'onActiveStopChanging',
     value: function onActiveStopChanging(editor) {
-      log('onActivePaneStopChanging ' + editor.getPath());
+      log('onActivePaneStopChanging ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
       this._inActivate = false;
     }
   }, {
     key: 'onOptInNavigation',
     value: function onOptInNavigation(editor) {
-      log('onOptInNavigation ' + editor.getPath());
+      log('onOptInNavigation ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(editor.getPath()));
       // Opt-in navigation is handled in the same way as a file open with no preceeding activation
       this.onOpen(editor);
     }

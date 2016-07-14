@@ -97,6 +97,12 @@ var RemoteDirectory = (function () {
   }
 
   _createClass(RemoteDirectory, [{
+    key: 'dispose',
+    value: function dispose() {
+      this._subscriptionCount = 0;
+      this._unsubscribeFromNativeChangeEvents();
+    }
+  }, {
     key: 'onDidChange',
     value: function onDidChange(callback) {
       this._willAddSubscription();

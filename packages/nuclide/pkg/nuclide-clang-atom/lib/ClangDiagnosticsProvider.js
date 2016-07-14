@@ -88,7 +88,6 @@ var ClangDiagnosticsProvider = (function () {
     this._bufferDiagnostics = new WeakMap();
     this._hasSubscription = new WeakMap();
     this._subscriptions = new (_atom2 || _atom()).CompositeDisposable();
-    this._openedFiles = new Set();
   }
 
   _createDecoratedClass(ClangDiagnosticsProvider, [{
@@ -126,8 +125,7 @@ var ClangDiagnosticsProvider = (function () {
       }
 
       try {
-        var diagnostics = yield (0, (_libclang2 || _libclang()).getDiagnostics)(textEditor, !this._openedFiles.has(filePath));
-        this._openedFiles.add(filePath);
+        var diagnostics = yield (0, (_libclang2 || _libclang()).getDiagnostics)(textEditor);
         // It's important to make sure that the buffer hasn't already been destroyed.
         if (diagnostics == null || !this._hasSubscription.get(buffer)) {
           return;
@@ -266,8 +264,3 @@ module.exports = ClangDiagnosticsProvider;
 
 // Keep track of the diagnostics created by each text buffer.
 // Diagnostics will be removed once the file is closed.
-
-// When we open a file for the first time, make sure we pass 'clean' to getDiagnostics
-// to reset any server state for the file.
-// This is so the user can easily refresh the Clang + Buck state by reloading Atom.
-// Note that we do not use the TextBuffer here, since a close/reopen is acceptable.

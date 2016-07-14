@@ -77,8 +77,8 @@ function _lookupPreferIpV6() {
 var logger = require('../../nuclide-logging').getLogger();
 
 // Sync word and regex pattern for parsing command stdout.
-var READY_TIMEOUT_MS = 60 * 1000;
-var SFTP_TIMEOUT_MS = 10 * 1000;
+var READY_TIMEOUT_MS = 120 * 1000;
+var SFTP_TIMEOUT_MS = 20 * 1000;
 
 // Name of the saved connection profile.
 
@@ -318,9 +318,17 @@ var SshHandshake = (function () {
               sftpTimer = setTimeout(function () {
                 _this._error('Failed to start sftp connection', SshHandshake.ErrorType.SFTP_TIMEOUT, new Error());
                 sftpTimer = null;
+                _this._connection.end();
                 resolve(false);
               }, SFTP_TIMEOUT_MS);
               _this._connection.sftp(_asyncToGenerator(function* (error, sftp) {
+                if (sftpTimer != null) {
+                  // Clear the sftp timer once we get a response.
+                  clearTimeout(sftpTimer);
+                } else {
+                  // If the timer already triggered, we timed out. Just exit.
+                  return;
+                }
                 if (error) {
                   _this._error('Failed to start sftp connection', SshHandshake.ErrorType.SERVER_START_FAILED, error);
                   return resolve(false);
@@ -365,12 +373,6 @@ var SshHandshake = (function () {
             stdOut += data;
           });
         });
-      }).then(function (result) {
-        // Clear the sftp timeout to avoid the stray error message.
-        if (sftpTimer != null) {
-          clearTimeout(sftpTimer);
-        }
-        return result;
       });
     })
   }, {

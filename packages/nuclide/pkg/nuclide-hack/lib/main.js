@@ -67,6 +67,12 @@ function _commonsAtomProjects() {
   return _commonsAtomProjects2 = require('../../commons-atom/projects');
 }
 
+var _AutocompleteProvider2;
+
+function _AutocompleteProvider() {
+  return _AutocompleteProvider2 = _interopRequireDefault(require('./AutocompleteProvider'));
+}
+
 var HACK_GRAMMARS_STRING = (_nuclideHackCommon2 || _nuclideHackCommon()).HACK_GRAMMARS.join(', ');
 var PACKAGE_NAME = 'nuclide-hack';
 
@@ -96,8 +102,7 @@ function activate() {
 /** Provider for autocomplete service. */
 
 function createAutocompleteProvider() {
-  var AutocompleteProvider = require('./AutocompleteProvider');
-  var autocompleteProvider = new AutocompleteProvider();
+  var autocompleteProvider = new (_AutocompleteProvider2 || _AutocompleteProvider()).default();
 
   return {
     selector: (_nuclideHackCommon2 || _nuclideHackCommon()).HACK_GRAMMARS.map(function (grammar) {

@@ -72,6 +72,12 @@ function _commonsNodeEvent() {
   return _commonsNodeEvent2 = require('../../commons-node/event');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var logger = require('../../nuclide-logging').getLogger();
 
 var PING_SEND_INTERVAL = 5000;
@@ -128,7 +134,8 @@ var NuclideSocket = (function () {
     var protocol = _default$parse.protocol;
     var host = _default$parse.host;
 
-    this._websocketUri = 'ws' + (protocol === 'https:' ? 's' : '') + '://' + host;
+    // TODO verify that `host` is non-null rather than using maybeToString
+    this._websocketUri = 'ws' + (protocol === 'https:' ? 's' : '') + '://' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(host);
 
     this._heartbeat = new (_XhrConnectionHeartbeat2 || _XhrConnectionHeartbeat()).XhrConnectionHeartbeat(serverUri, options);
     this._heartbeat.onConnectionRestored(function () {

@@ -10,7 +10,11 @@ Object.defineProperty(exports, '__esModule', {
  * the root directory of this source tree.
  */
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -51,6 +55,7 @@ var BuckToolbarStore = (function () {
       this._buildTarget = initialState && initialState.buildTarget || '';
       this._buildRuleType = '';
       this._isReactNativeServerMode = initialState && initialState.isReactNativeServerMode || false;
+      this._taskSettings = initialState && initialState.taskSettings || {};
     }
   }, {
     key: '_setupActions',
@@ -59,8 +64,8 @@ var BuckToolbarStore = (function () {
 
       this._dispatcher.register(function (action) {
         switch (action.actionType) {
-          case (_BuckToolbarActions2 || _BuckToolbarActions()).default.ActionType.UPDATE_PROJECT:
-            _this._mostRecentBuckProject = action.project;
+          case (_BuckToolbarActions2 || _BuckToolbarActions()).default.ActionType.UPDATE_BUCK_ROOT:
+            _this._currentBuckRoot = action.buckRoot;
             break;
           case (_BuckToolbarActions2 || _BuckToolbarActions()).default.ActionType.UPDATE_BUILD_TARGET:
             _this._buildTarget = action.buildTarget;
@@ -79,6 +84,10 @@ var BuckToolbarStore = (function () {
             break;
           case (_BuckToolbarActions2 || _BuckToolbarActions()).default.ActionType.UPDATE_REACT_NATIVE_SERVER_MODE:
             _this._isReactNativeServerMode = action.serverMode;
+            _this.emitChange();
+            break;
+          case (_BuckToolbarActions2 || _BuckToolbarActions()).default.ActionType.UPDATE_TASK_SETTINGS:
+            _this._taskSettings = _extends({}, _this._taskSettings, _defineProperty({}, action.taskType, action.settings));
             _this.emitChange();
             break;
         }
@@ -105,9 +114,9 @@ var BuckToolbarStore = (function () {
       return this._buildTarget;
     }
   }, {
-    key: 'getMostRecentBuckProject',
-    value: function getMostRecentBuckProject() {
-      return this._mostRecentBuckProject;
+    key: 'getCurrentBuckRoot',
+    value: function getCurrentBuckRoot() {
+      return this._currentBuckRoot;
     }
   }, {
     key: 'isLoadingRule',
@@ -138,6 +147,11 @@ var BuckToolbarStore = (function () {
     key: 'getSimulator',
     value: function getSimulator() {
       return this._simulator;
+    }
+  }, {
+    key: 'getTaskSettings',
+    value: function getTaskSettings() {
+      return this._taskSettings;
     }
   }]);
 

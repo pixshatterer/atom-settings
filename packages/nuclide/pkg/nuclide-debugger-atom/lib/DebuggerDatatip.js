@@ -76,10 +76,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _commonsAtomWordAtPosition2;
+var _commonsAtomRange2;
 
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _nuclideUiLibBindObservableAsProps2;
@@ -110,7 +110,7 @@ var GK_DEBUGGER_DATATIPS = 'nuclide_debugger_datatips';
 
 var DEFAULT_WORD_REGEX = /\w+/gi;
 function defaultGetEvaluationExpression(editor, position) {
-  var extractedIdentifier = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position, DEFAULT_WORD_REGEX);
+  var extractedIdentifier = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position, DEFAULT_WORD_REGEX);
   if (extractedIdentifier == null) {
     return Promise.resolve(null);
   }

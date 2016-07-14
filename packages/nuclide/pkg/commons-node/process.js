@@ -123,7 +123,7 @@ var checkOutput = _asyncToGenerator(function* (command, args) {
 
   var result = yield asyncExecute(command, args, options);
   if (result.exitCode !== 0) {
-    var reason = result.exitCode != null ? 'exitCode: ' + result.exitCode : 'error: ' + result.errorMessage;
+    var reason = result.exitCode != null ? 'exitCode: ' + result.exitCode : 'error: ' + (0, (_string2 || _string()).maybeToString)(result.errorMessage);
     throw new Error('asyncExecute "' + command + '" failed with ' + reason + ', ' + ('stderr: ' + result.stderr + ', stdout: ' + result.stdout + '.'));
   }
   return result;
@@ -162,6 +162,12 @@ var _stream2;
 
 function _stream() {
   return _stream2 = require('./stream');
+}
+
+var _string2;
+
+function _string() {
+  return _string2 = require('./string');
 }
 
 var _rxjsBundlesRxUmdMinJs2;
@@ -256,6 +262,7 @@ function getPlatformPath() {
         if (error) {
           reject(error);
         } else {
+          // $FlowFixMe (stdout is a Buffer, which does not have match)
           var match = stdout.match(DARWIN_PATH_HELPER_REGEXP);
           resolve(match && match.length > 1 ? match[1] : '');
         }

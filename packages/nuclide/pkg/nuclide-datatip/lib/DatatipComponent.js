@@ -32,6 +32,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var DATATIP_ACTIONS = Object.freeze({
   PIN: 'PIN',
   CLOSE: 'CLOSE'
@@ -78,7 +84,7 @@ var DatatipComponent = (function (_React$Component) {
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
         _extends({
-          className: className + ' nuclide-datatip-container'
+          className: (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(className) + ' nuclide-datatip-container'
         }, props),
         (_reactForAtom2 || _reactForAtom()).React.createElement(
           'div',

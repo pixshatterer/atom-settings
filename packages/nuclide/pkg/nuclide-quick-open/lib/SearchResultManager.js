@@ -264,7 +264,7 @@ var SearchResultManager = (function () {
 
         if (isEligible) {
           var providersForDirectory = newProvidersByDirectories.get(directory);
-          (0, (_assert2 || _assert()).default)(providersForDirectory != null, 'Providers for directory ' + directory + ' not defined');
+          (0, (_assert2 || _assert()).default)(providersForDirectory != null, 'Providers for directory ' + directory.getPath() + ' not defined');
           providersForDirectory.add(provider);
         }
       }

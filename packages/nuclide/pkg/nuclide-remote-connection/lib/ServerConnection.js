@@ -272,12 +272,19 @@ var ServerConnection = (function () {
   }, {
     key: 'close',
     value: function close() {
+      var _this2 = this;
+
       if (this._closed) {
         return;
       }
 
       // Future getClient calls should fail, if it has a cached ServerConnection instance.
       this._closed = true;
+
+      Object.keys(this._entries).forEach(function (path) {
+        _this2._entries[path].dispose();
+      });
+      this._entries = {};
 
       // The Rpc channel owns the socket.
       if (this._client != null) {

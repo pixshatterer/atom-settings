@@ -73,6 +73,12 @@ var RemoteFile = (function () {
   }
 
   _createClass(RemoteFile, [{
+    key: 'dispose',
+    value: function dispose() {
+      this._subscriptionCount = 0;
+      this._unsubscribeFromNativeChangeEvents();
+    }
+  }, {
     key: 'onDidChange',
     value: function onDidChange(callback) {
       this._willAddSubscription();

@@ -38,6 +38,12 @@ function _commonsNodePromise() {
   return _commonsNodePromise2 = require('../../commons-node/promise');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _path2;
 
 function _path() {
@@ -164,7 +170,7 @@ var WatchmanClient = (function () {
         // TODO(most): use state messages to decide on when to send updates.
         var stateEnter = response['state-enter'];
         var stateLeave = response['state-leave'];
-        var stateMessage = stateEnter != null ? 'Entering ' + stateEnter : 'Leaving ' + stateLeave;
+        var stateMessage = stateEnter != null ? 'Entering ' + stateEnter : 'Leaving ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(stateLeave);
         logger.info('Subscription state: ' + stateMessage);
         return;
       }

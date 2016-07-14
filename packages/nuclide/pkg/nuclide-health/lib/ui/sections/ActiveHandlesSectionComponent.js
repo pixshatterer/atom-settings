@@ -52,21 +52,9 @@ var ActiveHandlesSectionComponent = (function (_React$Component) {
   _createClass(ActiveHandlesSectionComponent, [{
     key: 'render',
     value: function render() {
-      if (!this.props.activeHandleObjects || this.props.activeHandleObjects.length === 0) {
+      if (!this.props.activeHandlesByType || Object.keys(this.props.activeHandlesByType).length === 0) {
         return (_reactForAtom2 || _reactForAtom()).React.createElement('div', null);
       }
-
-      var handlesByType = {};
-      ActiveHandlesSectionComponent.getTopLevelHandles(this.props.activeHandleObjects).forEach(function (handle) {
-        var type = handle.constructor.name.toLowerCase();
-        if (type !== 'childprocess' && type !== 'tlssocket') {
-          type = 'other';
-        }
-        if (!handlesByType[type]) {
-          handlesByType[type] = [];
-        }
-        handlesByType[type].push(handle);
-      });
 
       // Note that widthPercentage properties should add up to 90 since the ID column always adds 10.
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
@@ -74,8 +62,8 @@ var ActiveHandlesSectionComponent = (function (_React$Component) {
         null,
         (_reactForAtom2 || _reactForAtom()).React.createElement((_HandlesTableComponent2 || _HandlesTableComponent()).default, {
           key: 1,
-          title: 'Processes',
-          handles: handlesByType.childprocess,
+          title: 'Child processes',
+          handles: this.props.activeHandlesByType.childprocess,
           keyed: function (process) {
             return process.pid;
           },
@@ -116,7 +104,7 @@ var ActiveHandlesSectionComponent = (function (_React$Component) {
         (_reactForAtom2 || _reactForAtom()).React.createElement((_HandlesTableComponent2 || _HandlesTableComponent()).default, {
           key: 2,
           title: 'TLS Sockets',
-          handles: handlesByType.tlssocket,
+          handles: this.props.activeHandlesByType.tlssocket,
           keyed: function (socket) {
             return socket.localPort;
           },
@@ -143,7 +131,7 @@ var ActiveHandlesSectionComponent = (function (_React$Component) {
         (_reactForAtom2 || _reactForAtom()).React.createElement((_HandlesTableComponent2 || _HandlesTableComponent()).default, {
           key: 3,
           title: 'Other handles',
-          handles: handlesByType.other,
+          handles: this.props.activeHandlesByType.other,
           keyed: function (handle, h) {
             return h;
           },
@@ -158,33 +146,9 @@ var ActiveHandlesSectionComponent = (function (_React$Component) {
       );
     }
   }], [{
-    key: 'getTopLevelHandles',
-
-    // Returns a list of handles which are not children of others (i.e. sockets as process pipes).
-    value: function getTopLevelHandles(handles) {
-      var topLevelHandles = new Set();
-      var seen = new Set();
-      handles.forEach(function (handle) {
-        if (seen.has(handle)) {
-          return;
-        }
-        seen.add(handle);
-        topLevelHandles.add(handle);
-        if (handle.constructor.name === 'ChildProcess') {
-          seen.add(handle);
-          ['stdin', 'stdout', 'stderr', '_channel'].forEach(function (pipe) {
-            if (handle[pipe]) {
-              seen.add(handle[pipe]);
-            }
-          });
-        }
-      });
-      return topLevelHandles;
-    }
-  }, {
     key: 'propTypes',
     value: {
-      activeHandleObjects: PropTypes.arrayOf(PropTypes.object).isRequired
+      activeHandlesByType: PropTypes.object.isRequired
     },
     enumerable: true
   }]);

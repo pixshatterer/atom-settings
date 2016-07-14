@@ -267,7 +267,6 @@ var Commands = (function () {
           // Re-render the item with the new props.
           (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement(GadgetComponent, newProps), item.element);
 
-          // $FlowIssue(t10268095)
           _this._observer.next({
             type: (_ActionTypes2 || _ActionTypes()).UPDATE_PANE_ITEM,
             payload: {

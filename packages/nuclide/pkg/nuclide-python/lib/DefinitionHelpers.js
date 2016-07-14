@@ -30,10 +30,10 @@ function _atom() {
   return _atom2 = require('atom');
 }
 
-var _commonsAtomWordAtPosition2;
+var _commonsAtomRange2;
 
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _nuclideRemoteConnection2;
@@ -74,7 +74,7 @@ var DefinitionHelpers = (function () {
       var column = position.column;
       var contents = editor.getText();
 
-      var wordMatch = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position);
+      var wordMatch = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position);
       if (wordMatch == null) {
         return null;
       }

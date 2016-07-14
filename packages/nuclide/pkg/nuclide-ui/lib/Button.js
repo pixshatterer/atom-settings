@@ -30,6 +30,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var ButtonSizes = Object.freeze({
   EXTRA_SMALL: 'EXTRA_SMALL',
   SMALL: 'SMALL',
@@ -78,7 +84,7 @@ var Button = function Button(props) {
 
   var sizeClassname = size == null ? '' : ButtonSizeClassnames[size] || '';
   var buttonTypeClassname = buttonType == null ? '' : ButtonTypeClassnames[buttonType] || '';
-  var newClassName = (0, (_classnames2 || _classnames()).default)(className, 'btn', (_ref = {}, _defineProperty(_ref, 'icon icon-' + icon, icon != null), _defineProperty(_ref, sizeClassname, size != null), _defineProperty(_ref, 'selected', selected), _defineProperty(_ref, buttonTypeClassname, buttonType != null), _ref));
+  var newClassName = (0, (_classnames2 || _classnames()).default)(className, 'btn', (_ref = {}, _defineProperty(_ref, 'icon icon-' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(icon), icon != null), _defineProperty(_ref, sizeClassname, size != null), _defineProperty(_ref, 'selected', selected), _defineProperty(_ref, buttonTypeClassname, buttonType != null), _ref));
   var Wrapper = wrapperElement == null ? 'button' : wrapperElement;
   return (_reactForAtom2 || _reactForAtom()).React.createElement(
     Wrapper,

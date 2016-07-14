@@ -10,6 +10,8 @@ Object.defineProperty(exports, '__esModule', {
  * the root directory of this source tree.
  */
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
@@ -73,7 +75,7 @@ var ServerHackLanguage = (function () {
       if (completionsResult) {
         completions = completionsResult.completions;
       }
-      return processCompletions(completions);
+      return processCompletions(completions, contents, offset);
     })
   }, {
     key: 'formatSource',
@@ -97,7 +99,7 @@ var ServerHackLanguage = (function () {
       if (response == null) {
         return [];
       }
-      return response.positions.map(hackRangeToAtomRange);
+      return response.map(hackRangeToAtomRange);
     })
   }, {
     key: 'getDiagnostics',
@@ -193,30 +195,75 @@ function hackRangeToAtomRange(position) {
   return new (_atom2 || _atom()).Range([position.line - 1, position.char_start - 1], [position.line - 1, position.char_end]);
 }
 
-function processCompletions(completionsResponse) {
+function matchTypeOfType(type) {
+  // strip parens if present
+  if (type[0] === '(' && type[type.length - 1] === ')') {
+    return type.substring(1, type.length - 1);
+  }
+  return type;
+}
+
+function escapeName(name) {
+  return name.replace(/\\/g, '\\\\');
+}
+
+function paramSignature(params) {
+  var paramStrings = params.map(function (param) {
+    return param.type + ' ' + param.name;
+  });
+  return '(' + paramStrings.join(', ') + ')';
+}
+
+function matchSnippet(name, params) {
+  var escapedName = escapeName(name);
+  if (params != null) {
+    // Construct the snippet: e.g. myFunction(${1:$arg1}, ${2:$arg2});
+    var paramsString = params.map(function (param, index) {
+      return '${' + (index + 1) + ':' + param.name + '}';
+    }).join(', ');
+    return escapedName + '(' + paramsString + ')';
+  } else {
+    return escapedName;
+  }
+}
+
+// Returns the length of the largest match between a suffix of contents
+// and a prefix of match.
+function matchLength(contents, match) {
+  for (var i = match.length; i > 0; i--) {
+    var toMatch = match.substring(0, i);
+    if (contents.endsWith(toMatch)) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+function processCompletions(completionsResponse, contents, offset) {
+  var contentsLine = contents.substring(contents.lastIndexOf('\n', offset - 1) + 1, offset).toLowerCase();
   return completionsResponse.map(function (completion) {
     var name = completion.name;
-    var functionDetails = completion.func_details;
     var type = completion.type;
+    var func_details = completion.func_details;
 
-    if (type && type.indexOf('(') === 0 && type.lastIndexOf(')') === type.length - 1) {
-      type = type.substring(1, type.length - 1);
-    }
-    var matchSnippet = name;
-    if (functionDetails) {
-      var params = functionDetails.params;
-
-      // Construct the snippet: e.g. myFunction(${1:$arg1}, ${2:$arg2});
-      var paramsString = params.map(function (param, index) {
-        return '${' + (index + 1) + ':' + param.name + '}';
-      }).join(', ');
-      matchSnippet = name + '(' + paramsString + ')';
-    }
-    return {
-      matchSnippet: matchSnippet,
-      matchText: name,
-      matchType: type
+    var commonResult = {
+      displayText: name,
+      replacementPrefix: contents.substring(offset - matchLength(contentsLine, name.toLowerCase()), offset),
+      description: matchTypeOfType(type)
     };
+    if (func_details != null) {
+      return _extends({}, commonResult, {
+        snippet: matchSnippet(name, func_details.params),
+        leftLabel: func_details.return_type,
+        rightLabel: paramSignature(func_details.params),
+        type: 'function'
+      });
+    } else {
+      return _extends({}, commonResult, {
+        snippet: matchSnippet(name),
+        rightLabel: matchTypeOfType(type)
+      });
+    }
   });
 }
 

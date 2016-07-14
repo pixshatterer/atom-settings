@@ -26,6 +26,12 @@ function _nuclideFeatureConfig() {
   return _nuclideFeatureConfig2 = _interopRequireDefault(require('../../nuclide-feature-config'));
 }
 
+var _commonsNodePassesGK2;
+
+function _commonsNodePassesGK() {
+  return _commonsNodePassesGK2 = require('../../commons-node/passesGK');
+}
+
 var subscriptions = null;
 var currentConfig = (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-notifications');
 var gkEnabled = false;
@@ -41,16 +47,10 @@ function activate(state) {
   // Listen for Atom notifications:
   atom.notifications.onDidAddNotification(proxyToNativeNotification));
 
-  try {
-    (function () {
-      // Listen for the gatekeeper to tell us if we can generate native notifications.
-      // $FlowFB
-      var gatekeeper = require('../../fb-gatekeeper').gatekeeper;
-      subscriptions.add(gatekeeper.onceInitialized(function () {
-        gkEnabled = gatekeeper.isGkEnabled('nuclide_native_notifications');
-      }));
-    })();
-  } catch (e) {}
+  // Listen for the gatekeeper to tell us if we can generate native notifications.
+  subscriptions.add((0, (_commonsNodePassesGK2 || _commonsNodePassesGK()).onceGkInitialized)(function () {
+    gkEnabled = (0, (_commonsNodePassesGK2 || _commonsNodePassesGK()).isGkEnabled)('nuclide_native_notifications');
+  }));
 }
 
 function proxyToNativeNotification(notification) {

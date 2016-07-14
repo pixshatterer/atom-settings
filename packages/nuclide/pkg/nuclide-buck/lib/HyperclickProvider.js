@@ -85,7 +85,7 @@ var findTargetLocation = _asyncToGenerator(function* (target) {
  */
 
 var findBuildTarget = _asyncToGenerator(function* (textEditor, position, absolutePath, buckProject) {
-  var wordMatchAndRange = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(textEditor, position, TARGET_REGEX);
+  var wordMatchAndRange = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(textEditor, position, TARGET_REGEX);
   if (wordMatchAndRange == null) {
     return null;
   }
@@ -111,7 +111,7 @@ var findBuildTarget = _asyncToGenerator(function* (textEditor, position, absolut
  */
 
 var findRelativeFilePath = _asyncToGenerator(function* (textEditor, position, directory) {
-  var wordMatchAndRange = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(textEditor, position, RELATIVE_FILE_PATH_REGEX);
+  var wordMatchAndRange = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(textEditor, position, RELATIVE_FILE_PATH_REGEX);
   if (!wordMatchAndRange) {
     return null;
   }
@@ -162,10 +162,10 @@ function _nuclideBuckBase() {
   return _nuclideBuckBase2 = require('../../nuclide-buck-base');
 }
 
-var _commonsAtomWordAtPosition2;
+var _commonsAtomRange2;
 
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _nuclideClient2;

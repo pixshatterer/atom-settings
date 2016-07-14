@@ -34,8 +34,8 @@ function _config() {
   return _config2 = require('./config');
 }
 
-var HEARTBEAT_INTERVAL_MS = 5000;
-var HEARTBEAT_TIMEOUT_MS = 5000;
+var HEARTBEAT_INTERVAL_MS = 10000;
+var HEARTBEAT_TIMEOUT_MS = 10000;
 var MAX_HEARTBEAT_AWAY_RECONNECT_MS = 60000;
 
 var XhrConnectionHeartbeat = (function () {

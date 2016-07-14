@@ -47,6 +47,11 @@ module.exports = {
 
 // Sent whenever any message changes, and includes all messages.
 
+/*
+ * Allows overriding of the LinterProvider name per message. Useful for when
+ * a provider's messages come from multiple lint sources.
+ */
+
 /**
  * Extension: Allows a provider to include a display name that will be shown with its messages.
  */

@@ -327,5 +327,3 @@ var NuclideServer = (function () {
 })();
 
 module.exports = NuclideServer;
-
-// $FlowFixMe (peterhal)

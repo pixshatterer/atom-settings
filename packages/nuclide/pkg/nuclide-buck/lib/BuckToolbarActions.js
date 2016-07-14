@@ -42,9 +42,10 @@ var BuckToolbarActions = (function () {
       UPDATE_IS_LOADING_RULE: null,
       UPDATE_RULE_TYPE: null,
       UPDATE_PANEL_VISIBILITY: null,
-      UPDATE_PROJECT: null,
+      UPDATE_BUCK_ROOT: null,
       UPDATE_REACT_NATIVE_SERVER_MODE: null,
-      UPDATE_SIMULATOR: null
+      UPDATE_SIMULATOR: null,
+      UPDATE_TASK_SETTINGS: null
     })),
     enumerable: true
   }]);
@@ -60,11 +61,11 @@ var BuckToolbarActions = (function () {
   _createClass(BuckToolbarActions, [{
     key: 'updateProjectPath',
     value: _asyncToGenerator(function* (path) {
-      var buckProject = yield (0, (_nuclideBuckBase2 || _nuclideBuckBase()).getBuckProject)(path);
-      if (buckProject != null && buckProject !== this._store.getMostRecentBuckProject()) {
+      var buckRoot = yield (0, (_nuclideBuckBase2 || _nuclideBuckBase()).getBuckProjectRoot)(path);
+      if (buckRoot != null && buckRoot !== this._store.getCurrentBuckRoot()) {
         this._dispatcher.dispatch({
-          actionType: BuckToolbarActions.ActionType.UPDATE_PROJECT,
-          project: buckProject
+          actionType: BuckToolbarActions.ActionType.UPDATE_BUCK_ROOT,
+          buckRoot: buckRoot
         });
         // Update the build target information as well.
         this.updateBuildTarget(this._store.getBuildTarget());
@@ -79,19 +80,21 @@ var BuckToolbarActions = (function () {
       });
 
       // Find the rule type, if applicable.
-      var buckProject = this._store.getMostRecentBuckProject();
-      if (buckProject != null) {
+      var buckRoot = this._store.getCurrentBuckRoot();
+      if (buckRoot != null) {
         if (this._loadingRules++ === 0) {
           this._dispatcher.dispatch({
             actionType: BuckToolbarActions.ActionType.UPDATE_IS_LOADING_RULE,
             isLoadingRule: true
           });
         }
+        var buckProject = (0, (_nuclideBuckBase2 || _nuclideBuckBase()).createBuckProject)(buckRoot);
         var buildRuleType = buildTarget === '' ? null : (yield buckProject.buildRuleTypeFor(buildTarget)
         // Most likely, this is an invalid target, so do nothing.
         .catch(function (e) {
           return null;
         }));
+        buckProject.dispose();
         this._dispatcher.dispatch({
           actionType: BuckToolbarActions.ActionType.UPDATE_RULE_TYPE,
           ruleType: buildRuleType
@@ -118,6 +121,15 @@ var BuckToolbarActions = (function () {
       this._dispatcher.dispatch({
         actionType: BuckToolbarActions.ActionType.UPDATE_REACT_NATIVE_SERVER_MODE,
         serverMode: serverMode
+      });
+    }
+  }, {
+    key: 'updateTaskSettings',
+    value: function updateTaskSettings(taskType, settings) {
+      this._dispatcher.dispatch({
+        actionType: BuckToolbarActions.ActionType.UPDATE_TASK_SETTINGS,
+        taskType: taskType,
+        settings: settings
       });
     }
   }]);

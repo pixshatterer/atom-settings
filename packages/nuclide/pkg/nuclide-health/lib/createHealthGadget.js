@@ -90,11 +90,9 @@ function createHealthGadget(state$) {
     }, {
       key: 'render',
       value: function render() {
-        var _state = this.state;
-        var stats = _state.stats;
-        var activeHandleObjects = _state.activeHandleObjects;
+        var stats = this.state.stats;
 
-        if (stats == null || activeHandleObjects == null) {
+        if (stats == null) {
           return (_reactForAtom2 || _reactForAtom()).React.createElement('div', null);
         }
 
@@ -106,9 +104,9 @@ function createHealthGadget(state$) {
             heapPercentage: stats.heapPercentage,
             memory: stats.rss,
             lastKeyLatency: stats.lastKeyLatency,
-            activeHandles: activeHandleObjects.length,
-            activeHandleObjects: activeHandleObjects,
-            activeRequests: stats.activeRequests
+            activeHandles: stats.activeHandles,
+            activeRequests: stats.activeRequests,
+            activeHandlesByType: stats.activeHandlesByType
           })
         );
       }

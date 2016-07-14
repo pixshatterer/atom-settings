@@ -8,7 +8,7 @@ var getHackRoot = _asyncToGenerator(function* (filePath) {
 
 var setRootDirectoryUri = _asyncToGenerator(function* (directoryUri) {
   var hackRootDirectory = yield getHackRoot(directoryUri);
-  (_utils2 || _utils()).default.log('setRootDirectoryUri: from ' + directoryUri + ' to ' + hackRootDirectory);
+  (_utils2 || _utils()).default.log('setRootDirectoryUri: from ' + directoryUri + ' to ' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(hackRootDirectory));
   // TODO: make xdebug_includes.php path configurable from hhconfig.
   var hackDummyRequestFilePath = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(hackRootDirectory ? hackRootDirectory : '', '/scripts/xdebug_includes.php');
 
@@ -58,6 +58,12 @@ var _commonsNodeFsPromise2;
 
 function _commonsNodeFsPromise() {
   return _commonsNodeFsPromise2 = _interopRequireDefault(require('../../commons-node/fsPromise'));
+}
+
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
 }
 
 var _nuclideRemoteUri2;

@@ -22,6 +22,7 @@ var PORT_LINE = /.*(Running packager on port.*?)\s*│/;
 var SOURCE_LIST_START = /Looking for JS files in/;
 var NORMAL_LINE = /^\s*\[(\d+):(\d+):(\d+) (A|P)M\]\s*(.*?)\s*$/;
 var ERROR_LINE = /^\s*ERROR\s*(.*?)\s*$/;
+var READY_LINE = /React packager ready/i;
 
 /**
  * Parses output from the packager into messages.
@@ -33,6 +34,7 @@ function parseMessages(raw) {
     var sawPortLine = false;
     var sawSourcesStart = false;
     var sawSourcesEnd = false;
+    var sawReadyMessage = false;
     var sourceDirectories = [];
 
     return raw.subscribe({
@@ -47,8 +49,11 @@ function parseMessages(raw) {
           if (match != null) {
             sawPortLine = true;
             observer.next({
-              level: 'info',
-              text: match[1]
+              kind: 'message',
+              message: {
+                level: 'info',
+                text: match[1]
+              }
             });
             return;
           }
@@ -56,6 +61,7 @@ function parseMessages(raw) {
 
         if (!sawSourcesStart && !sawPreamble) {
           sawSourcesStart = line.match(SOURCE_LIST_START) != null;
+          return;
         }
 
         // Once we've seen the start of the source list, we need to accumulate a list until we see
@@ -68,8 +74,11 @@ function parseMessages(raw) {
             // We've gotten our list!
             sawSourcesEnd = true;
             observer.next({
-              level: 'info',
-              text: 'Looking for JS files in: ' + sourceDirectories.join(',')
+              kind: 'message',
+              message: {
+                level: 'info',
+                text: 'Looking for JS files in: ' + sourceDirectories.join(',')
+              }
             });
             return;
           }
@@ -81,7 +90,13 @@ function parseMessages(raw) {
             return;
           }
 
-          observer.next(parseRegularMessage(line));
+          observer.next({ kind: 'message', message: parseRegularMessage(line) });
+
+          if (!sawReadyMessage && READY_LINE.test('React packager ready')) {
+            sawReadyMessage = true;
+            observer.next({ kind: 'ready' });
+          }
+
           return;
         }
 

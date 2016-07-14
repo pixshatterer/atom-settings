@@ -138,6 +138,7 @@ var CreateConnectionProfileForm = (function (_React$Component) {
           initialSshPort: initialFields.sshPort,
           initialPathToPrivateKey: initialFields.pathToPrivateKey,
           initialAuthMethod: initialFields.authMethod,
+          initialDisplayTitle: initialFields.displayTitle,
           onCancel: emptyFunction,
           onConfirm: emptyFunction,
           onDidChange: emptyFunction,

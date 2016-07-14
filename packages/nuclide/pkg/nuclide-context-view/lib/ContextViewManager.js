@@ -12,8 +12,6 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -46,6 +44,12 @@ var _rxjsBundlesRxUmdMinJs2;
 
 function _rxjsBundlesRxUmdMinJs() {
   return _rxjsBundlesRxUmdMinJs2 = require('rxjs/bundles/Rx.umd.min.js');
+}
+
+var _nuclideAnalytics2;
+
+function _nuclideAnalytics() {
+  return _nuclideAnalytics2 = require('../../nuclide-analytics');
 }
 
 var _nuclideLogging2;
@@ -90,56 +94,37 @@ var ContextViewManager = (function () {
   function ContextViewManager(width, isVisible) {
     _classCallCheck(this, ContextViewManager);
 
-    this._width = width;
-    this._disposables = new (_atom2 || _atom()).CompositeDisposable();
+    this._atomPanel = null;
     this._contextProviders = [];
-    this.currentDefinition = null;
-    this._definitionService = null;
     this._defServiceSubscription = null;
+    this._definitionService = null;
+    this._disposables = new (_atom2 || _atom()).CompositeDisposable();
+    this._isVisible = isVisible;
+    this._panelDOMElement = null;
+    this._width = width;
+    this.currentDefinition = null;
 
-    this._panelDOMElement = document.createElement('div');
+    this.hide = this.hide.bind(this);
+    this._onResize = this._onResize.bind(this);
 
-    // Otherwise it does not fill the whole panel, which might be alright except it means that the
-    // resize-handle doesn't extend all the way to the bottom.
-    //
-    // Use 'flex' to fit Atom v1.6.0+ and `height: inherit` to fit Atom <v1.6.0. The latter uses
-    // `height: 100%;` down the hierarchy and becomes innocuous in 1.6.0 because inheriting will
-    // give `height: auto;`.
-    this._panelDOMElement.style.display = 'flex';
-    this._panelDOMElement.style.height = 'inherit';
-    this.render();
-
-    this._atomPanel = atom.workspace.addRightPanel({
-      item: this._panelDOMElement,
-      visible: isVisible,
-      priority: 200
-    });
+    this._render();
     this._bindShortcuts();
   }
 
   _createClass(ContextViewManager, [{
     key: 'dispose',
     value: function dispose() {
-      this.disposeView();
+      this._disposeView();
       this._disposables.dispose();
-    }
-  }, {
-    key: 'getWidth',
-    value: function getWidth() {
-      return this._width;
     }
   }, {
     key: 'hide',
     value: function hide() {
-      if (this._atomPanel.isVisible()) {
-        this._atomPanel.hide();
+      if (this._isVisible) {
+        this._isVisible = false;
+        this._render();
       }
       this.updateSubscription();
-    }
-  }, {
-    key: 'isVisible',
-    value: function isVisible() {
-      return this._atomPanel.isVisible();
     }
   }, {
     key: 'registerProvider',
@@ -150,12 +135,8 @@ var ContextViewManager = (function () {
           return false;
         }
       }
-
       this._contextProviders.push(newProvider);
-
-      if (this.isVisible()) {
-        this.render();
-      }
+      this._render();
       return true;
     }
   }, {
@@ -163,7 +144,7 @@ var ContextViewManager = (function () {
     value: function serialize() {
       return {
         width: this._width,
-        visible: this.isVisible()
+        visible: this._isVisible
       };
     }
 
@@ -175,13 +156,9 @@ var ContextViewManager = (function () {
   }, {
     key: 'consumeDefinitionService',
     value: function consumeDefinitionService(service) {
-      // TODO (reesjones) handle case when definition service is deactivated
       this._definitionService = service;
       this.updateSubscription();
-
-      if (this.isVisible()) {
-        this.render();
-      }
+      this._render();
     }
   }, {
     key: 'updateSubscription',
@@ -189,19 +166,19 @@ var ContextViewManager = (function () {
       var _this = this;
 
       // Only subscribe if panel showing and there's something to subscribe to
-      if (this.isVisible() && this._definitionService !== null) {
-        this._defServiceSubscription = (0, (_commonsAtomDebounced2 || _commonsAtomDebounced()).observeTextEditorsPositions)(EDITOR_DEBOUNCE_INTERVAL, POSITION_DEBOUNCE_INTERVAL).filter(function (pos) {
-          return pos != null;
-        }).map(_asyncToGenerator(function* (editorPos) {
-          (0, (_assert2 || _assert()).default)(editorPos != null);
-          (0, (_assert2 || _assert()).default)(_this._definitionService != null);
-          try {
-            return yield _this._definitionService.getDefinition(editorPos.editor, editorPos.position);
-          } catch (err) {
-            logger.error('Error querying definition service: ', err);
-            return null;
-          }
-        })).switchMap(function (queryResult) {
+      if (this._isVisible && this._definitionService != null) {
+        this._defServiceSubscription = (0, (_commonsAtomDebounced2 || _commonsAtomDebounced()).observeTextEditorsPositions)(EDITOR_DEBOUNCE_INTERVAL, POSITION_DEBOUNCE_INTERVAL).filter(function (editorPos) {
+          return editorPos != null;
+        }).map(function (editorPos) {
+          return (0, (_nuclideAnalytics2 || _nuclideAnalytics()).trackOperationTiming)('nuclide-context-view:getDefinition', function () {
+            (0, (_assert2 || _assert()).default)(editorPos != null);
+            (0, (_assert2 || _assert()).default)(_this._definitionService != null);
+            return _this._definitionService.getDefinition(editorPos.editor, editorPos.position).catch(function (error) {
+              logger.error('Error querying definition service: ', error);
+              return null;
+            });
+          });
+        }).switchMap(function (queryResult) {
           return queryResult != null ? (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.fromPromise(queryResult) : (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
         }).map(function (queryResult) {
           return queryResult != null ? queryResult.definitions[0] : null; // We do want to return null sometimes so providers can show "No definition selected"
@@ -211,8 +188,7 @@ var ContextViewManager = (function () {
         return;
       }
       // Otherwise, unsubscribe if there is a subscription
-      if (this._defServiceSubscription !== null) {
-        (0, (_assert2 || _assert()).default)(this._defServiceSubscription != null);
+      if (this._defServiceSubscription != null) {
         this._defServiceSubscription.unsubscribe();
         this._defServiceSubscription = null;
       }
@@ -220,16 +196,20 @@ var ContextViewManager = (function () {
   }, {
     key: 'show',
     value: function show() {
-      if (!this.isVisible()) {
-        this.render();
-        this._atomPanel.show();
+      if (!this._isVisible) {
+        this._isVisible = true;
+        this._render();
       }
       this.updateSubscription();
     }
   }, {
     key: 'toggle',
     value: function toggle() {
-      this.isVisible() ? this.hide() : this.show();
+      if (this._isVisible) {
+        this.hide();
+      } else {
+        this.show();
+      }
     }
   }, {
     key: 'deregisterProvider',
@@ -242,10 +222,7 @@ var ContextViewManager = (function () {
           wasRemoved = true;
         }
       }
-
-      if (this.isVisible()) {
-        this.render();
-      }
+      this._render();
       return wasRemoved;
     }
   }, {
@@ -256,9 +233,7 @@ var ContextViewManager = (function () {
       }
 
       this.currentDefinition = newDefinition;
-      if (this.isVisible()) {
-        this.render();
-      }
+      this._render();
     }
   }, {
     key: '_bindShortcuts',
@@ -273,15 +248,16 @@ var ContextViewManager = (function () {
       this._disposables.add(atom.commands.add('atom-workspace', 'nuclide-context-view:hide', this.hide.bind(this)));
     }
   }, {
-    key: 'disposeView',
-    value: function disposeView() {
-      var tempHandle = this._panelDOMElement;
-      if (tempHandle != null) {
+    key: '_disposeView',
+    value: function _disposeView() {
+      if (this._panelDOMElement != null) {
         (_reactForAtom2 || _reactForAtom()).ReactDOM.unmountComponentAtNode(this._panelDOMElement);
-        this._atomPanel.destroy();
+        this._panelDOMElement = null;
       }
-
-      this._panelDOMElement = null;
+      if (this._atomPanel != null) {
+        this._atomPanel.destroy();
+        this._atomPanel = null;
+      }
     }
   }, {
     key: '_onResize',
@@ -289,8 +265,8 @@ var ContextViewManager = (function () {
       this._width = newWidth;
     }
   }, {
-    key: 'render',
-    value: function render() {
+    key: '_renderProviders',
+    value: function _renderProviders() {
       var _this2 = this;
 
       // Create collection of provider React elements to render, and
@@ -310,15 +286,38 @@ var ContextViewManager = (function () {
       }
 
       // Render the panel in atom workspace
+      if (!this._panelDOMElement) {
+        this._panelDOMElement = document.createElement('div');
+        this._panelDOMElement.style.display = 'flex';
+      }
+
       (_reactForAtom2 || _reactForAtom()).ReactDOM.render((_reactForAtom2 || _reactForAtom()).React.createElement(
         (_ContextViewPanel2 || _ContextViewPanel()).ContextViewPanel,
         {
           initialWidth: this._width,
-          onResize: this._onResize.bind(this),
+          onResize: this._onResize,
           definition: this.currentDefinition,
-          onHide: this.hide.bind(this) },
+          onHide: this.hide },
         providerElements
       ), this._panelDOMElement);
+
+      if (!this._atomPanel) {
+        (0, (_assert2 || _assert()).default)(this._panelDOMElement != null);
+        this._atomPanel = atom.workspace.addRightPanel({
+          item: this._panelDOMElement,
+          visible: true,
+          priority: 200
+        });
+      }
+    }
+  }, {
+    key: '_render',
+    value: function _render() {
+      if (this._isVisible) {
+        this._renderProviders();
+      } else {
+        this._disposeView();
+      }
     }
   }]);
 

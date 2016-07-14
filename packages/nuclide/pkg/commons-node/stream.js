@@ -4,8 +4,6 @@ Object.defineProperty(exports, '__esModule', {
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 exports.observeStream = observeStream;
@@ -15,11 +13,10 @@ exports.bufferUntil = bufferUntil;
 exports.cacheWhileSubscribed = cacheWhileSubscribed;
 exports.diffSets = diffSets;
 exports.reconcileSetDiffs = reconcileSetDiffs;
+exports.reconcileSets = reconcileSets;
 exports.toggle = toggle;
 exports.compact = compact;
 exports.takeWhileInclusive = takeWhileInclusive;
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -184,91 +181,27 @@ function bufferUntil(stream, condition) {
  * This is intended to be used with cold Observables. If you have a hot Observable, `cache(1)` will
  * be just fine because the hot Observable will continue producing values even when there are no
  * subscribers, so you can be assured that the cached values are up-to-date.
- *
- * Completion and error semantics are usnpec'd. If you are using this with Observables that
- * complete, come up with coherent completion semantics and implement them.
  */
 
 function cacheWhileSubscribed(input) {
-  // cache() is implemented as publishBehavior().refCount
-  //
-  // publishBehavior() is implemented as multiCast(new ReplaySubject())
-  //
-  // So, we need our own Subject that implements the semantics we want.
-  return input.multicast(new CacheWhileSubscribedSubject()).refCount();
+  return input.multicast(function () {
+    return new (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).ReplaySubject(1);
+  }).refCount();
 }
 
-// Based on the implementation of ReplaySubject:
-// http://reactivex.io/rxjs/file/es6/ReplaySubject.js.html#lineNumber7
-
-var CacheWhileSubscribedSubject = (function (_Subject) {
-  _inherits(CacheWhileSubscribedSubject, _Subject);
-
-  function CacheWhileSubscribedSubject() {
-    _classCallCheck(this, CacheWhileSubscribedSubject);
-
-    _get(Object.getPrototypeOf(CacheWhileSubscribedSubject.prototype), 'constructor', this).call(this);
-    this._cachedValue = null;
-    this._hasCachedValue = false;
-    this._subscriberCount = 0;
+function subtractSet(a, b, hash_) {
+  if (a.size === 0) {
+    return new Set();
+  } else if (b.size === 0) {
+    return new Set(a);
   }
-
-  _createClass(CacheWhileSubscribedSubject, [{
-    key: '_setCachedValue',
-    value: function _setCachedValue(value) {
-      if (this._subscriberCount === 0) {
-        return;
-      }
-      this._cachedValue = value;
-      this._hasCachedValue = true;
-    }
-  }, {
-    key: '_clearCachedValue',
-    value: function _clearCachedValue() {
-      this._cachedValue = null;
-      this._hasCachedValue = false;
-    }
-  }, {
-    key: 'next',
-    value: function next(value) {
-      this._setCachedValue(value);
-      _get(Object.getPrototypeOf(CacheWhileSubscribedSubject.prototype), 'next', this).call(this, value);
-    }
-  }, {
-    key: '_subscribe',
-    value: function _subscribe(subscriber) {
-      var _this2 = this;
-
-      this._incrementSubscriberCount();
-      if (this._hasCachedValue && !subscriber.isUnsubscribed) {
-        subscriber.next(this._cachedValue);
-      }
-      return _get(Object.getPrototypeOf(CacheWhileSubscribedSubject.prototype), '_subscribe', this).call(this, subscriber).add(function () {
-        return _this2._decrementSubscriberCount();
-      });
-    }
-  }, {
-    key: '_incrementSubscriberCount',
-    value: function _incrementSubscriberCount() {
-      this._subscriberCount++;
-    }
-  }, {
-    key: '_decrementSubscriberCount',
-    value: function _decrementSubscriberCount() {
-      this._subscriberCount--;
-      if (this._subscriberCount === 0) {
-        this._clearCachedValue();
-      }
-    }
-  }]);
-
-  return CacheWhileSubscribedSubject;
-})((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Subject);
-
-function subtractSet(a, b) {
   var result = new Set();
+  var hash = hash_ || function (x) {
+    return x;
+  };
+  var bHashes = hash_ == null ? b : new Set(Array.from(b.values()).map(hash));
   a.forEach(function (value) {
-    if (!b.has(value)) {
+    if (!bHashes.has(hash(value))) {
       result.add(value);
     }
   });
@@ -276,28 +209,13 @@ function subtractSet(a, b) {
 }
 
 /**
- * Shallowly compare two Sets.
- */
-function setsAreEqual(a, b) {
-  if (a.size !== b.size) {
-    return false;
-  }
-  for (var _item of a) {
-    if (!b.has(_item)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/**
  * Given a stream of sets, return a stream of diffs.
  * **IMPORTANT:** These sets are assumed to be immutable by convention. Don't mutate them!
  */
 
-function diffSets(stream) {
+function diffSets(sets, hash) {
   return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(new Set()), // Always start with no items with an empty set
-  stream).distinctUntilChanged(setsAreEqual)
+  sets)
   // $FlowFixMe(matthewwithanm): Type this.
   .pairwise().map(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2);
@@ -305,9 +223,11 @@ function diffSets(stream) {
     var previous = _ref2[0];
     var next = _ref2[1];
     return {
-      added: subtractSet(next, previous),
-      removed: subtractSet(previous, next)
+      added: subtractSet(next, previous, hash),
+      removed: subtractSet(previous, next, hash)
     };
+  }).filter(function (diff) {
+    return diff.added.size > 0 || diff.removed.size > 0;
   });
 }
 
@@ -316,10 +236,13 @@ function diffSets(stream) {
  * disposable when the item is removed.
  */
 
-function reconcileSetDiffs(diffs, addAction) {
+function reconcileSetDiffs(diffs, addAction, hash_) {
+  var hash = hash_ || function (x) {
+    return x;
+  };
   var itemsToDisposables = new Map();
   var disposeItem = function disposeItem(item) {
-    var disposable = itemsToDisposables.get(item);
+    var disposable = itemsToDisposables.get(hash(item));
     (0, (_assert2 || _assert()).default)(disposable != null);
     disposable.dispose();
     itemsToDisposables.delete(item);
@@ -334,12 +257,46 @@ function reconcileSetDiffs(diffs, addAction) {
   return new (_eventKit2 || _eventKit()).CompositeDisposable(new DisposableSubscription(diffs.subscribe(function (diff) {
     // For every item that got added, perform the add action.
     diff.added.forEach(function (item) {
-      itemsToDisposables.set(item, addAction(item));
+      itemsToDisposables.set(hash(item), addAction(item));
     });
 
     // "Undo" the add action for each item that got removed.
     diff.removed.forEach(disposeItem);
   })), new (_eventKit2 || _eventKit()).Disposable(disposeAll));
+}
+
+/**
+ * Given a stream of sets, perform a side-effect whenever an item is added (i.e. is present in a
+ * set but wasn't in the previous set in the stream), and a corresponding cleanup when it's removed.
+ * **IMPORTANT:** These sets are assumed to be immutable by convention. Don't mutate them!
+ *
+ * Example:
+ *
+ *    const dogs = Observable.of(
+ *      new Set([{name: 'Winston', id: 1}, {name: 'Penelope', id: 2}]),
+ *      new Set([{name: 'Winston', id: 1}]),
+ *    );
+ *    const disposable = reconcileSets(
+ *      dogs,
+ *      dog => {
+ *        const notification = atom.notifications.addSuccess(
+ *          `${dog.name} was added!`,
+ *          {dismissable: true},
+ *        );
+ *        return new Disposable(() => { notification.dismiss(); });
+ *      },
+ *      dog => dog.id,
+ *    );
+ *
+ * The above code will first add notifications saying "Winston was added!" and "Penelope was
+ * added!", then dismiss the "Penelope" notification. Since the Winston object is in the final set
+ * of the dogs observable, his notification will remain until `disposable.dispose()` is called, at
+ * which point the cleanup for all remaining items will be performed.
+ */
+
+function reconcileSets(sets, addAction, hash) {
+  var diffs = diffSets(sets, hash);
+  return reconcileSetDiffs(diffs, addAction, hash);
 }
 
 function toggle(source, toggler) {
@@ -373,6 +330,3 @@ function takeWhileInclusive(source, predicate) {
     });
   });
 }
-
-// undefined, null, etc. are valid values so we have to store the information about whether we
-// have a cached result separately.

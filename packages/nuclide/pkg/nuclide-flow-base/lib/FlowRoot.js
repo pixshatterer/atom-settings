@@ -405,7 +405,7 @@ var FlowRoot = (function () {
       var args = ['version', '--json'];
       var json = undefined;
       try {
-        var result = yield (_FlowProcess2 || _FlowProcess()).FlowProcess.execFlowClient(args);
+        var result = yield (_FlowProcess2 || _FlowProcess()).FlowProcess.execFlowClient(args, { cwd: this._root });
         if (result == null) {
           return null;
         }
@@ -457,7 +457,7 @@ function parseJSON(args, value) {
   try {
     return JSON.parse(value);
   } catch (e) {
-    logger.error('Invalid JSON result from flow ' + args.join(' ') + '. JSON:\n\'' + value + '\'.');
+    logger.warn('Invalid JSON result from flow ' + args.join(' ') + '. JSON:\n\'' + value + '\'.');
     throw e;
   }
 }

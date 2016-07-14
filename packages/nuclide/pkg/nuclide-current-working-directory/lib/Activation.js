@@ -26,6 +26,12 @@ function _atom() {
   return _atom2 = require('atom');
 }
 
+var _commonsAtomProjects2;
+
+function _commonsAtomProjects() {
+  return _commonsAtomProjects2 = require('../../commons-atom/projects');
+}
+
 var Activation = (function () {
   function Activation(rawState) {
     _classCallCheck(this, Activation);
@@ -34,7 +40,7 @@ var Activation = (function () {
     var initialCwdPath = state.initialCwdPath;
 
     this._cwdApi = new (_CwdApi2 || _CwdApi()).CwdApi(initialCwdPath);
-    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._cwdApi);
+    this._disposables = new (_atom2 || _atom()).CompositeDisposable(this._cwdApi, atom.commands.add('atom-workspace', 'nuclide-current-working-root:set-from-active-file', this._setFromActiveFile.bind(this)));
   }
 
   _createClass(Activation, [{
@@ -54,6 +60,29 @@ var Activation = (function () {
       return {
         initialCwdPath: cwd == null ? null : cwd.getPath()
       };
+    }
+  }, {
+    key: '_setFromActiveFile',
+    value: function _setFromActiveFile() {
+      var editor = atom.workspace.getActiveTextEditor();
+      if (editor == null) {
+        atom.notifications.addError('No file is currently active.');
+        return;
+      }
+
+      var path = editor.getPath();
+      if (path == null) {
+        atom.notifications.addError('Active file does not have a path.');
+        return;
+      }
+
+      var projectRoot = (0, (_commonsAtomProjects2 || _commonsAtomProjects()).getAtomProjectRootPath)(path);
+      if (projectRoot == null) {
+        atom.notifications.addError('Active file does not belong to a project.');
+        return;
+      }
+
+      this._cwdApi.setCwd(projectRoot);
     }
   }]);
 

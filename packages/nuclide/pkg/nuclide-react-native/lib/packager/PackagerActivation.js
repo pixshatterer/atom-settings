@@ -18,6 +18,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 var _nuclideConsoleLibLogTailer2;
 
 function _nuclideConsoleLibLogTailer() {
@@ -48,6 +50,12 @@ function _atom() {
   return _atom2 = require('atom');
 }
 
+var _assert2;
+
+function _assert() {
+  return _assert2 = _interopRequireDefault(require('assert'));
+}
+
 var _rxjsBundlesRxUmdMinJs2;
 
 function _rxjsBundlesRxUmdMinJs() {
@@ -65,9 +73,19 @@ var PackagerActivation = (function () {
 
     _classCallCheck(this, PackagerActivation);
 
+    var packagerEvents = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.defer(getPackagerObservable).share();
+    var messages = packagerEvents.filter(function (event) {
+      return event.kind === 'message';
+    }).map(function (event) {
+      return (0, (_assert2 || _assert()).default)(event.kind === 'message'), event.message;
+    });
+    var ready = packagerEvents.filter(function (message) {
+      return message.kind === 'ready';
+    }).mapTo(undefined);
     this._logTailer = new (_nuclideConsoleLibLogTailer2 || _nuclideConsoleLibLogTailer()).LogTailer({
       name: 'React Native Packager',
-      messages: (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.defer(getPackagerObservable),
+      messages: messages,
+      ready: ready,
       trackingEvents: {
         start: 'react-native-packager:start',
         stop: 'react-native-packager:stop',
@@ -78,8 +96,8 @@ var PackagerActivation = (function () {
     this._disposables = new (_atom2 || _atom()).CompositeDisposable(new (_atom2 || _atom()).Disposable(function () {
       _this._logTailer.stop();
     }), atom.commands.add('atom-workspace', {
-      'nuclide-react-native:start-packager': function nuclideReactNativeStartPackager() {
-        return _this._logTailer.start();
+      'nuclide-react-native:start-packager': function nuclideReactNativeStartPackager(event) {
+        _this._logTailer.start(event.detail == null ? undefined : event.detail);
       },
       'nuclide-react-native:stop-packager': function nuclideReactNativeStopPackager() {
         return _this._logTailer.stop();
@@ -155,6 +173,10 @@ function getPackagerObservable() {
       case 'stdout':
         return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(event.data);
       case 'exit':
+        if (event.exitCode !== 0) {
+          return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.throw(new Error('Packager exited with non-zero exit code (' + event.exitCode + ')'));
+        }
+        return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.empty();
       case 'stderr':
       default:
         // We just ignore these.

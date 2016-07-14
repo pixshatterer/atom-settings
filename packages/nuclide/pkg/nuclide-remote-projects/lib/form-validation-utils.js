@@ -37,6 +37,8 @@ function validateFormInputs(profileName, connectionDetails, defaultRemoteServerC
 
   if (!profileName) {
     missingFields.push('Profile Name');
+  } else {
+    profileParams.displayTitle = profileName;
   }
   if (!connectionDetails.username) {
     missingFields.push('Username');

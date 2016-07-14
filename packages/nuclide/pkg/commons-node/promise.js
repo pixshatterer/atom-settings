@@ -201,6 +201,7 @@ var asyncSome = _asyncToGenerator(function* (array, someFunction, limit) {
 
 exports.asyncSome = asyncSome;
 exports.isPromise = isPromise;
+exports.lastly = lastly;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
@@ -500,4 +501,21 @@ function asyncLimit(array, limit, mappingFunction) {
 
 function isPromise(object) {
   return Boolean(object) && typeof object === 'object' && typeof object.then === 'function';
+}
+
+/**
+ * We can't name a function 'finally', so use lastly instead.
+ * fn() will be executed (and completed) after the provided promise resolves/rejects.
+ */
+
+function lastly(promise, fn) {
+  return promise.then(function (ret) {
+    return Promise.resolve(fn()).then(function () {
+      return ret;
+    });
+  }, function (err) {
+    return Promise.resolve(fn()).then(function () {
+      return Promise.reject(err);
+    });
+  });
 }

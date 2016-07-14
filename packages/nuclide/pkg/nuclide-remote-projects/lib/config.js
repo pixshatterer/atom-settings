@@ -48,6 +48,7 @@ function getConnectionDialogDefaultSettings() {
     pathToPrivateKey: (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.join(homedir, '.ssh', 'id_rsa'),
     remoteServerCommand: 'nuclide-start-server',
     authMethod: (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).SshHandshake.SupportedMethods.PASSWORD,
+    displayTitle: '(default)',
     sshPort: '22'
   };
 }

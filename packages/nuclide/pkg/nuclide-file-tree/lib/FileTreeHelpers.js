@@ -95,11 +95,11 @@ function getDirectoryByKey(key) {
   if (!isDirKey(key)) {
     return null;
   } else if ((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(path)) {
-    var connection = (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).RemoteConnection.getForUri(path);
+    var connection = (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).ServerConnection.getForUri(path);
     if (connection == null) {
       return null;
     }
-    return new (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).RemoteDirectory(connection.getConnection(), path);
+    return connection.createDirectory(path);
   } else {
     return new (_atom2 || _atom()).Directory(path);
   }
@@ -110,12 +110,11 @@ function getFileByKey(key) {
   if (isDirKey(key)) {
     return null;
   } else if ((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(path)) {
-    var connection = (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).RemoteConnection.getForUri(path);
+    var connection = (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).ServerConnection.getForUri(path);
     if (connection == null) {
-      return;
+      return null;
     }
-
-    return new (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).RemoteFile(connection.getConnection(), path);
+    return connection.createFile(path);
   } else {
     return new (_atom4 || _atom3()).File(path);
   }

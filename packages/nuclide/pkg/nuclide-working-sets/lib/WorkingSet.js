@@ -107,12 +107,20 @@ var WorkingSet = (function () {
       }
 
       try {
-        var tokens = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.split(uri);
-        return this._containsPathFor(tokens, /* mustHaveLeaf */true);
+        return this.containsFileBySplitPath((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.split(uri));
       } catch (e) {
         logger.error(e);
         return true;
       }
+    }
+  }, {
+    key: 'containsFileBySplitPath',
+    value: function containsFileBySplitPath(tokens) {
+      if (this.isEmpty()) {
+        return true;
+      }
+
+      return this._containsPathFor(tokens, /* mustHaveLeaf */true);
     }
   }, {
     key: 'containsDir',
@@ -122,12 +130,20 @@ var WorkingSet = (function () {
       }
 
       try {
-        var tokens = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.split(uri);
-        return this._containsPathFor(tokens, /* mustHaveLeaf */false);
+        return this.containsDirBySplitPath((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.split(uri));
       } catch (e) {
         logger.error(e);
         return true;
       }
+    }
+  }, {
+    key: 'containsDirBySplitPath',
+    value: function containsDirBySplitPath(tokens) {
+      if (this.isEmpty()) {
+        return true;
+      }
+
+      return this._containsPathFor(tokens, /* mustHaveLeaf */false);
     }
   }, {
     key: 'isEmpty',

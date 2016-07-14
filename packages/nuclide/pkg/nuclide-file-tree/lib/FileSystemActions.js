@@ -141,7 +141,7 @@ var FileSystemActions = (function () {
             try {
               yield hgRepository.addAll([newFile.getPath()]);
             } catch (e) {
-              atom.notifications.addError('Failed to add \'' + newFile.getPath + '\' to version control.  Error: ' + e.toString());
+              atom.notifications.addError('Failed to add \'' + newFile.getPath() + '\' to version control.  Error: ' + e.toString());
             }
           }
           onDidConfirm(newFile.getPath());

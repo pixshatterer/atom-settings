@@ -34,6 +34,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var Dropdown = (function (_React$Component) {
   _inherits(Dropdown, _React$Component);
 
@@ -83,7 +89,7 @@ var Dropdown = (function (_React$Component) {
       });
       var selectClassName = (0, (_classnames2 || _classnames()).default)('nuclide-dropdown', (_ref = {
         'btn': !this.props.isFlat
-      }, _defineProperty(_ref, 'btn-' + this.props.size, !this.props.isFlat && this.props.size != null), _defineProperty(_ref, 'nuclide-dropdown-flat', this.props.isFlat), _ref));
+      }, _defineProperty(_ref, 'btn-' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(this.props.size), !this.props.isFlat && this.props.size != null), _defineProperty(_ref, 'nuclide-dropdown-flat', this.props.isFlat), _ref));
 
       var selectedIndex = this.props.options.findIndex(function (option) {
         return option.value === _this.props.value;

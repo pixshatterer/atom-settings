@@ -26,8 +26,14 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var Toolbar = function Toolbar(props) {
-  var className = (0, (_classnames2 || _classnames()).default)('nuclide-ui-toolbar', _defineProperty({}, 'nuclide-ui-toolbar--' + props.location, props.location != null));
+  var className = (0, (_classnames2 || _classnames()).default)('nuclide-ui-toolbar', _defineProperty({}, 'nuclide-ui-toolbar--' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(props.location), props.location != null));
 
   return (_reactForAtom2 || _reactForAtom()).React.createElement(
     'div',

@@ -160,7 +160,7 @@ var ConnectionHealthNotifier = (function () {
         case 'PORT_NOT_ACCESSIBLE':
           // Notify never heard a heartbeat from the server.
           var port = socket.getServerPort();
-          addHeartbeatNotification(HEARTBEAT_NOTIFICATION_ERROR, code, '**Nuclide Server Is Not Reachable**<br/>' + ('It could be running on a port that is not accessible: ' + port + '.'),
+          addHeartbeatNotification(HEARTBEAT_NOTIFICATION_ERROR, code, '**Nuclide Server Is Not Reachable**<br/>' + ('It could be running on a port that is not accessible: ' + String(port) + '.'),
           /*dismissable*/true,
           /*askToReload*/false);
           break;

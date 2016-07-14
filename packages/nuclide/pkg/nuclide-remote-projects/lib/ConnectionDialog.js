@@ -336,10 +336,7 @@ var ConnectionDialog = (function (_React$Component) {
   }, {
     key: 'ok',
     value: function ok() {
-      var _state = this.state;
-      var indexOfSelectedConnectionProfile = _state.indexOfSelectedConnectionProfile;
-      var mode = _state.mode;
-      var connectionProfiles = this.props.connectionProfiles;
+      var mode = this.state.mode;
 
       if (mode === REQUEST_CONNECTION_DETAILS) {
         // User is trying to submit connection details.
@@ -355,11 +352,7 @@ var ConnectionDialog = (function (_React$Component) {
         var pathToPrivateKey = _connectionDetailsForm$getFormFields.pathToPrivateKey;
         var authMethod = _connectionDetailsForm$getFormFields.authMethod;
         var password = _connectionDetailsForm$getFormFields.password;
-
-        var displayTitle = '';
-        if (connectionProfiles != null && indexOfSelectedConnectionProfile > -1) {
-          displayTitle = connectionProfiles[indexOfSelectedConnectionProfile].displayTitle;
-        }
+        var displayTitle = _connectionDetailsForm$getFormFields.displayTitle;
 
         if (username && server && cwd && remoteServerCommand) {
           this.setState({
@@ -419,6 +412,7 @@ var ConnectionDialog = (function (_React$Component) {
       var sshPort = _connectionDetailsForm$getFormFields2.sshPort;
       var pathToPrivateKey = _connectionDetailsForm$getFormFields2.pathToPrivateKey;
       var authMethod = _connectionDetailsForm$getFormFields2.authMethod;
+      var displayTitle = _connectionDetailsForm$getFormFields2.displayTitle;
 
       return {
         username: username,
@@ -427,7 +421,8 @@ var ConnectionDialog = (function (_React$Component) {
         remoteServerCommand: remoteServerCommand,
         sshPort: sshPort,
         pathToPrivateKey: pathToPrivateKey,
-        authMethod: authMethod
+        authMethod: authMethod,
+        displayTitle: displayTitle
       };
     }
   }, {

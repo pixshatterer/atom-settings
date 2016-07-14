@@ -14,7 +14,16 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 exports.activate = activate;
 exports.deactivate = deactivate;
+
+var consumeNuclideContextView = _asyncToGenerator(function* (contextView) {
+  (0, (_assert2 || _assert()).default)(activation != null);
+  var registration = yield contextView.registerProvider(activation.getContextProvider());
+  activation.setContextViewRegistration(registration);
+});
+
 exports.consumeNuclideContextView = consumeNuclideContextView;
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, 'next'); var callThrow = step.bind(null, 'throw'); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -97,10 +106,4 @@ function deactivate() {
     activation.dispose();
     activation = null;
   }
-}
-
-function consumeNuclideContextView(contextView) {
-  (0, (_assert2 || _assert()).default)(activation != null);
-  var registration = contextView.registerProvider(activation.getContextProvider());
-  activation.setContextViewRegistration(registration);
 }

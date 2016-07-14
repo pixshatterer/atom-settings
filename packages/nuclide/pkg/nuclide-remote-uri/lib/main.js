@@ -38,6 +38,12 @@ function _url() {
   return _url2 = _interopRequireDefault(require('url'));
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var REMOTE_PATH_URI_PREFIX = 'nuclide://';
 
 function isRemote(uri) {
@@ -88,7 +94,7 @@ function parse(uri) {
 
   var parsedUri = (_url2 || _url()).default.parse(_escapeBackslashes(uri));
 
-  (0, (_assert2 || _assert()).default)(parsedUri.path, 'Nuclide URIs must contain paths, \'' + parsedUri.path + '\' found while parsing \'' + uri + '\'');
+  (0, (_assert2 || _assert()).default)(parsedUri.path, 'Nuclide URIs must contain paths, ' + ((0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(parsedUri.path) + '\' found while parsing \'' + uri + '\''));
 
   var path = parsedUri.path;
   // `url.parse` treates the first '#' character as the beginning of the `hash` attribute. That
@@ -97,7 +103,7 @@ function parse(uri) {
     path += parsedUri.hash;
   }
 
-  (0, (_assert2 || _assert()).default)(parsedUri.pathname, 'Nuclide URIs must contain pathnamess, \'' + parsedUri.pathname + '\' found while parsing \'' + uri + '\'');
+  (0, (_assert2 || _assert()).default)(parsedUri.pathname, 'Nuclide URIs must contain pathnamess, ' + ('\'' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(parsedUri.pathname) + '\' found while parsing \'' + uri + '\''));
   var pathname = parsedUri.pathname;
   // `url.parse` treates the first '#' character as the beginning of the `hash` attribute. That
   // feature is not used in Nuclide and is instead treated as part of the pathname.
@@ -126,7 +132,7 @@ function parseRemoteUri(remoteUri) {
     throw new Error('Expected remote uri. Got ' + remoteUri);
   }
   var parsedUri = parse(remoteUri);
-  (0, (_assert2 || _assert()).default)(parsedUri.hostname, 'Remote Nuclide URIs must contain hostnames, \'' + parsedUri.hostname + '\' found ' + ('while parsing \'' + remoteUri + '\''));
+  (0, (_assert2 || _assert()).default)(parsedUri.hostname, 'Remote Nuclide URIs must contain hostnames, \'' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(parsedUri.hostname) + '\' found ' + ('while parsing \'' + remoteUri + '\''));
 
   // Explicitly copying object properties appeases Flow's "maybe" type handling. Using the `...`
   // operator causes null/undefined errors, and `Object.assign` bypasses type checking.

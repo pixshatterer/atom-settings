@@ -1,6 +1,6 @@
 {
   "name": "nuclide",
-  "version": "0.150.0",
+  "version": "0.155.0",
   "description": "A unified developer experience for web and mobile development, built as a suite of features on top of Atom to provide hackability and the support of an active community.",
   "keywords": [
     "arcanist",
@@ -125,10 +125,10 @@
   "bugs": {
     "url": "https://github.com/facebook/nuclide/issues"
   },
-  "_id": "nuclide@0.150.0",
-  "_shasum": "3f28524786977f2733337d2ab4f81a708460700e",
-  "_resolved": "file:../d-11667-3794-12foztw/package.tgz",
-  "_from": "../d-11667-3794-12foztw/package.tgz",
+  "_id": "nuclide@0.155.0",
+  "_shasum": "a0b0988257d03dca9acf1e4a05df6e8376c77fdd",
+  "_resolved": "file:../d-116614-48182-1jr7vxg/package.tgz",
+  "_from": "../d-116614-48182-1jr7vxg/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -8269,6 +8269,7 @@
           "pkg/nuclide-context-view/menus",
           "pkg/nuclide-context-view",
           "pkg/nuclide-current-working-directory/lib",
+          "pkg/nuclide-current-working-directory/menus",
           "pkg/nuclide-current-working-directory",
           "pkg/nuclide-datatip/lib",
           "pkg/nuclide-datatip",

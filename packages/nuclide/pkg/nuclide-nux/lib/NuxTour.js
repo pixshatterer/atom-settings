@@ -22,6 +22,12 @@ function _nuclideAnalytics() {
   return _nuclideAnalytics2 = _interopRequireDefault(require('../../nuclide-analytics'));
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _NuxView2;
 
 function _NuxView() {
@@ -113,7 +119,7 @@ var NuxTour = (function () {
         tourId: this._id,
         step: this._currentStep + 1 + '/' + (this._nuxList.length + 1),
         completed: '' + completed.toString(),
-        error: '' + error
+        error: (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(error)
       });
     }
   }, {

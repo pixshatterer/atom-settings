@@ -68,7 +68,8 @@ var ConnectionDetailsForm = (function (_React$Component) {
       remoteServerCommand: props.initialRemoteServerCommand,
       sshPort: props.initialSshPort,
       pathToPrivateKey: props.initialPathToPrivateKey,
-      selectedAuthMethodIndex: authMethods.indexOf(props.initialAuthMethod)
+      selectedAuthMethodIndex: authMethods.indexOf(props.initialAuthMethod),
+      displayTitle: props.initialDisplayTitle
     };
 
     this._handleAuthMethodChange = this._handleAuthMethodChange.bind(this);
@@ -318,7 +319,8 @@ var ConnectionDetailsForm = (function (_React$Component) {
         sshPort: this._getText('sshPort'),
         pathToPrivateKey: this._getText('pathToPrivateKey'),
         authMethod: this._getAuthMethod(),
-        password: this._getPassword()
+        password: this._getPassword(),
+        displayTitle: this.state.displayTitle
       };
     }
   }, {
@@ -338,6 +340,9 @@ var ConnectionDetailsForm = (function (_React$Component) {
       this._setText('sshPort', fields.sshPort);
       this._setText('pathToPrivateKey', fields.pathToPrivateKey);
       this._setAuthMethod(fields.authMethod);
+      // `displayTitle` is not editable and therefore has no `<atom-text-editor mini>`. Its value is
+      // stored only in local state.
+      this.setState({ displayTitle: fields.displayTitle });
     }
   }, {
     key: '_getText',

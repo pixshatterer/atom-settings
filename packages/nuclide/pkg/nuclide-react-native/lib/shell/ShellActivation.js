@@ -30,7 +30,7 @@ var ShellActivation = (function () {
     //     'nuclide-react-native:reload-app': () => this._reload(),
     //   }),
     // );
-    this._shellManager = new (_ShellMessageManager2 || _ShellMessageManager()).ShellMessageManager();
+    this._shellManager = null;
   }
 
   _createClass(ShellActivation, [{
@@ -39,6 +39,9 @@ var ShellActivation = (function () {
   }, {
     key: '_reload',
     value: function _reload() {
+      if (this._shellManager == null) {
+        this._shellManager = new (_ShellMessageManager2 || _ShellMessageManager()).ShellMessageManager();
+      }
       var message = {
         version: 1,
         target: 'bridge',

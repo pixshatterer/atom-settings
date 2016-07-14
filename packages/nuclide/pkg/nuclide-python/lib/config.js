@@ -5,6 +5,7 @@ exports.getAutocompleteArguments = getAutocompleteArguments;
 exports.getIncludeOptionalArguments = getIncludeOptionalArguments;
 exports.getPythonPath = getPythonPath;
 exports.getShowGlobalVariables = getShowGlobalVariables;
+exports.getEnableLinting = getEnableLinting;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -36,4 +37,8 @@ function getPythonPath() {
 
 function getShowGlobalVariables() {
   return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.showGlobalVariables');
+}
+
+function getEnableLinting() {
+  return (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.get('nuclide-python.enableLinting');
 }

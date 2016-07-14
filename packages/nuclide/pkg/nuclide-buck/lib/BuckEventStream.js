@@ -13,6 +13,7 @@ Object.defineProperty(exports, '__esModule', {
 exports.isBuildFinishEvent = isBuildFinishEvent;
 exports.getEventsFromSocket = getEventsFromSocket;
 exports.getEventsFromProcess = getEventsFromProcess;
+exports.combineEventStreams = combineEventStreams;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -131,4 +132,39 @@ function getEventsFromProcess(processStream) {
         throw new Error('impossible');
     }
   });
+}
+
+function combineEventStreams(subcommand, socketEvents, processEvents) {
+  var mergedEvents = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.merge(socketEvents,
+  // Skip everything from Buck's output until the first non-log message.
+  // We ensure that error/info logs will not duplicate messages from the websocket.
+  // $FlowFixMe: add skipWhile to flow-typed rx definitions
+  processEvents.skipWhile(function (event) {
+    return event.type !== 'log' || event.level === 'log';
+  }));
+  if (subcommand === 'test') {
+    // The websocket does not reliably provide test output.
+    // After the build finishes, fall back to the Buck output stream.
+    mergedEvents = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.concat(mergedEvents.takeUntil(socketEvents.filter(isBuildFinishEvent)),
+    // Return to indeterminate progress.
+    (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of({ type: 'progress', progress: null }), processEvents);
+  } else if (subcommand === 'install') {
+    // Add a message indicating that install has started after build completes.
+    // The websocket does not naturally provide any indication.
+    mergedEvents = (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.merge(mergedEvents, socketEvents.filter(isBuildFinishEvent)
+    // $FlowFixMe: add switchMapTo to flow-typed
+    .switchMapTo((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of({
+      type: 'progress',
+      progress: null
+    }, {
+      type: 'log',
+      message: 'Installing...',
+      level: 'info'
+    })));
+  }
+  return mergedEvents
+  // Socket stream never stops, so use the process lifetime.
+  .takeUntil(processEvents.ignoreElements()
+  // Despite the docs, takeUntil doesn't respond to completion.
+  .concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(null)));
 }

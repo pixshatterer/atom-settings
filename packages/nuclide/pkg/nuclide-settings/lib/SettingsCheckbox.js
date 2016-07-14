@@ -37,17 +37,14 @@ var SettingsCheckbox = (function (_React$Component) {
     _classCallCheck(this, SettingsCheckbox);
 
     _get(Object.getPrototypeOf(SettingsCheckbox.prototype), 'constructor', this).call(this, props);
-    this._onChanged = this._onChanged.bind(this);
+    this._handleChange = this._handleChange.bind(this);
   }
 
   _createClass(SettingsCheckbox, [{
-    key: '_onChanged',
-    value: function _onChanged(event) {
+    key: '_handleChange',
+    value: function _handleChange(event) {
       var isChecked = event.target.checked;
-      this.props.onChanged({
-        keyPath: this.props.keyPath,
-        newValue: isChecked
-      });
+      this.props.onChange(isChecked);
     }
   }, {
     key: 'render',
@@ -67,7 +64,7 @@ var SettingsCheckbox = (function (_React$Component) {
           (_reactForAtom2 || _reactForAtom()).React.createElement('input', {
             checked: value,
             id: id,
-            onChange: this._onChanged,
+            onChange: this._handleChange,
             type: 'checkbox'
           }),
           (_reactForAtom2 || _reactForAtom()).React.createElement(

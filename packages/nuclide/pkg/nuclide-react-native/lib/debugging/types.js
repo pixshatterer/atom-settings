@@ -12,4 +12,9 @@ Object.defineProperty(exports, '__esModule', {
 
 // Output from executor.js
 
-// Requests coming from React Native
+// Messages coming from React Native
+
+// Messages from RN are basically forwarded directly to the executor, so the types are pretty much
+// identical.
+
+// This shouldn't be present, but apparently can be in some situations?

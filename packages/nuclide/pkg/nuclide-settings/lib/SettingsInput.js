@@ -45,7 +45,7 @@ var SettingsInput = (function (_React$Component) {
     _get(Object.getPrototypeOf(SettingsInput.prototype), 'constructor', this).call(this, props);
     this._ignoreInputCallback = false;
 
-    this._onChanged = this._onChanged.bind(this);
+    this._handleChange = this._handleChange.bind(this);
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
   }
@@ -58,17 +58,14 @@ var SettingsInput = (function (_React$Component) {
       this._ignoreInputCallback = false;
     }
   }, {
-    key: '_onChanged',
-    value: function _onChanged(newValue) {
+    key: '_handleChange',
+    value: function _handleChange(newValue) {
       if (this._ignoreInputCallback) {
         return;
       }
 
       newValue = (0, (_settingsUtils2 || _settingsUtils()).parseValue)(this.props.type, newValue);
-      this.props.onChanged({
-        keyPath: this.props.keyPath,
-        newValue: newValue
-      });
+      this.props.onChange(newValue);
     }
   }, {
     key: '_onFocus',
@@ -157,7 +154,7 @@ var SettingsInput = (function (_React$Component) {
               (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibAtomInput2 || _nuclideUiLibAtomInput()).AtomInput, {
                 className: id,
                 initialValue: value,
-                onDidChange: this._onChanged,
+                onDidChange: this._handleChange,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
                 placeholderText: placeholder,

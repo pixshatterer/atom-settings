@@ -116,7 +116,7 @@ function _nuclideRemoteUri() {
 var VERSION = 1;
 
 var DEFAULT_CONF = {
-  vcsStatuses: {},
+  vcsStatuses: new (_immutable2 || _immutable()).default.Map(),
   workingSet: new (_nuclideWorkingSets2 || _nuclideWorkingSets()).WorkingSet(),
   editedWorkingSet: new (_nuclideWorkingSets2 || _nuclideWorkingSets()).WorkingSet(),
   hideIgnoredNames: true,
@@ -292,11 +292,16 @@ var FileTreeStore = (function () {
         this.openFilesExpanded = data.openFilesExpanded;
       }
 
-      var normalizedPaths = atom.project.getPaths().map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator);
-      this._setRoots(new (_immutable2 || _immutable()).default.OrderedMap(data.rootKeys.filter(function (rootUri) {
-        var normalizedRootUri = (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator(rootUri);
-        return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(rootUri) || normalizedPaths.indexOf(normalizedRootUri) >= 0;
-      }).map(function (rootUri) {
+      var normalizedAtomPaths = atom.project.getPaths().map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator);
+      var normalizedDataPaths = data.rootKeys.map((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.ensureTrailingSeparator).filter(function (rootUri) {
+        return (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(rootUri) || normalizedAtomPaths.indexOf(rootUri) >= 0;
+      });
+      var pathsMissingInData = normalizedAtomPaths.filter(function (rootUri) {
+        return normalizedDataPaths.indexOf(rootUri) === -1;
+      });
+      var combinedPaths = normalizedDataPaths.concat(pathsMissingInData);
+
+      this._setRoots(new (_immutable2 || _immutable()).default.OrderedMap(combinedPaths.map(function (rootUri) {
         return [rootUri, buildNode(rootUri, rootUri)];
       })));
     }
@@ -721,14 +726,14 @@ var FileTreeStore = (function () {
 
       if (this._vcsStatusesAreDifferent(rootKey, enrichedVcsStatuses)) {
         this._updateConf(function (conf) {
-          conf.vcsStatuses[rootKey] = enrichedVcsStatuses;
+          conf.vcsStatuses = conf.vcsStatuses.set(rootKey, enrichedVcsStatuses);
         });
       }
     }
   }, {
     key: '_vcsStatusesAreDifferent',
     value: function _vcsStatusesAreDifferent(rootKey, newVcsStatuses) {
-      var currentStatuses = this._conf.vcsStatuses[rootKey];
+      var currentStatuses = this._conf.vcsStatuses.get(rootKey);
       if (currentStatuses == null || newVcsStatuses == null) {
         if (currentStatuses !== newVcsStatuses) {
           return true;

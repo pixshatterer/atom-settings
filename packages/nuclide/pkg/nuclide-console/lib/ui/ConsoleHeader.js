@@ -126,6 +126,7 @@ var ConsoleHeader = (function (_React$Component) {
       var label = undefined;
       var icon = undefined;
       switch (source.status) {
+        case 'starting':
         case 'running':
           {
             action = source.stop;

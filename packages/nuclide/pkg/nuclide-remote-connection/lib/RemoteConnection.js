@@ -101,11 +101,6 @@ var RemoteConnection = (function () {
   }
 
   _createClass(RemoteConnection, [{
-    key: 'dispose',
-    value: function dispose() {
-      this._subscriptions.dispose();
-    }
-  }, {
     key: '_setHgRepoInfo',
 
     // A workaround before Atom 2.0: Atom's Project::setPaths currently uses
@@ -232,6 +227,7 @@ var RemoteConnection = (function () {
   }, {
     key: 'close',
     value: _asyncToGenerator(function* (shutdownIfLast) {
+      this._subscriptions.dispose();
       yield this._connection.removeConnection(this, shutdownIfLast);
       _emitter.emit('did-close', this);
     })

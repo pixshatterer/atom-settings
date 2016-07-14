@@ -26,6 +26,12 @@ function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var BadgeSizes = Object.freeze({
   medium: 'medium',
   small: 'small',
@@ -65,7 +71,7 @@ var Badge = function Badge(props) {
 
   var sizeClassName = size == null ? '' : BadgeSizeClassNames[size] || '';
   var colorClassName = color == null ? '' : BadgeColorClassNames[color] || '';
-  var newClassName = (0, (_classnames2 || _classnames()).default)(className, 'badge', (_ref = {}, _defineProperty(_ref, sizeClassName, size != null), _defineProperty(_ref, colorClassName, color != null), _defineProperty(_ref, 'icon icon-' + icon, icon != null), _ref));
+  var newClassName = (0, (_classnames2 || _classnames()).default)(className, 'badge', (_ref = {}, _defineProperty(_ref, sizeClassName, size != null), _defineProperty(_ref, colorClassName, color != null), _defineProperty(_ref, 'icon icon-' + (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(icon), icon != null), _ref));
   return (_reactForAtom2 || _reactForAtom()).React.createElement(
     'span',
     { className: newClassName },

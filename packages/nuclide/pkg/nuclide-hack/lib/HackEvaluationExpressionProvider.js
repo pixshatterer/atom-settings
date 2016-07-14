@@ -16,12 +16,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _commonsAtomRange2;
 
-var _commonsAtomWordAtPosition2;
-
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 // A heuristic for named variables in Hack.
@@ -36,7 +34,7 @@ var HackEvaluationExpressionProvider = (function () {
   _createClass(HackEvaluationExpressionProvider, [{
     key: 'getEvaluationExpression',
     value: function getEvaluationExpression(editor, position) {
-      var extractedIdentifier = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position, HACK_IDENTIFIER_REGEXP);
+      var extractedIdentifier = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position, HACK_IDENTIFIER_REGEXP);
       if (extractedIdentifier == null) {
         return Promise.resolve(null);
       }

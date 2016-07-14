@@ -123,7 +123,9 @@ var JediServerManager = (function () {
         return;
       }
       var service = yield server.getService();
-      yield service.add_paths([topLevelModulePath]);
+      // Add the parent dir of the top level module path, i.e. the closest
+      // directory that does NOT contain __init__.py.
+      yield service.add_paths([(_nuclideRemoteUri2 || _nuclideRemoteUri()).default.dirname(topLevelModulePath)]);
     })
   }, {
     key: 'reset',

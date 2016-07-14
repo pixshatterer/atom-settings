@@ -20,40 +20,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * the root directory of this source tree.
  */
 
-var _nuclideFeatureConfig2;
-
-function _nuclideFeatureConfig() {
-  return _nuclideFeatureConfig2 = _interopRequireDefault(require('../../nuclide-feature-config'));
-}
-
-var _assert2;
-
-function _assert() {
-  return _assert2 = _interopRequireDefault(require('assert'));
-}
-
 var _reactForAtom2;
 
 function _reactForAtom() {
   return _reactForAtom2 = require('react-for-atom');
 }
 
-var _SettingsCheckbox2;
+var _SettingsControl2;
 
-function _SettingsCheckbox() {
-  return _SettingsCheckbox2 = _interopRequireDefault(require('./SettingsCheckbox'));
-}
-
-var _SettingsInput2;
-
-function _SettingsInput() {
-  return _SettingsInput2 = _interopRequireDefault(require('./SettingsInput'));
-}
-
-var _SettingsSelect2;
-
-function _SettingsSelect() {
-  return _SettingsSelect2 = _interopRequireDefault(require('./SettingsSelect'));
+function _SettingsControl() {
+  return _SettingsControl2 = _interopRequireDefault(require('./SettingsControl'));
 }
 
 var SettingsCategory = (function (_React$Component) {
@@ -75,11 +51,15 @@ var SettingsCategory = (function (_React$Component) {
         var settingsArray = getSortedSettingsArray(pkgData.settings, pkgName);
         var elements = settingsArray.map(function (settingName) {
           var settingData = pkgData.settings[settingName];
-          var settingElement = renderSetting(pkgName, settingData);
           return (_reactForAtom2 || _reactForAtom()).React.createElement(
             ControlGroup,
             { key: settingName },
-            settingElement
+            (_reactForAtom2 || _reactForAtom()).React.createElement((_SettingsControl2 || _SettingsControl()).default, {
+              keyPath: settingData.keyPath,
+              value: settingData.value,
+              onChange: settingData.onChange,
+              schema: settingData.schema
+            })
           );
         });
         // We create a control group for the whole group of controls and then another for each
@@ -142,88 +122,6 @@ function getSortedSettingsArray(settings, pkgName) {
     return settings[a].order - settings[b].order;
   });
   return settingsArray;
-}
-
-function renderSetting(packageName, settingData) {
-  var description = settingData.description;
-  var keyPath = settingData.keyPath;
-  var name = settingData.name;
-  var onChanged = settingData.onChanged;
-  var title = settingData.title;
-  var value = settingData.value;
-
-  (0, (_assert2 || _assert()).default)(keyPath === packageName + '.' + name);
-  var schema = (_nuclideFeatureConfig2 || _nuclideFeatureConfig()).default.getSchema(keyPath);
-
-  if (schema) {
-    if (schema.enum) {
-      return (_reactForAtom2 || _reactForAtom()).React.createElement((_SettingsSelect2 || _SettingsSelect()).default, {
-        description: description,
-        keyPath: keyPath,
-        onChanged: onChanged,
-        title: title,
-        value: value
-      });
-    } else if (schema.type === 'color') {
-      (0, (_assert2 || _assert()).default)(false); // Not implemented.
-    } else if (isBoolean(value) || schema.type === 'boolean') {
-        return (_reactForAtom2 || _reactForAtom()).React.createElement((_SettingsCheckbox2 || _SettingsCheckbox()).default, {
-          description: description,
-          keyPath: keyPath,
-          onChanged: onChanged,
-          title: title,
-          value: value
-        });
-      } else if (Array.isArray(value) || schema.type === 'array') {
-        if (isEditableArray(value)) {
-          return (_reactForAtom2 || _reactForAtom()).React.createElement((_SettingsInput2 || _SettingsInput()).default, {
-            description: description,
-            keyPath: keyPath,
-            onChanged: onChanged,
-            title: title,
-            value: value,
-            type: 'array'
-          });
-        }
-      } else if (isObject(value) || schema.type === 'object') {
-        (0, (_assert2 || _assert()).default)(false); // Not implemented.
-      } else {
-          var type = isNumber(value) ? 'number' : 'string';
-          return (_reactForAtom2 || _reactForAtom()).React.createElement((_SettingsInput2 || _SettingsInput()).default, {
-            description: description,
-            keyPath: keyPath,
-            onChanged: onChanged,
-            title: title,
-            value: value,
-            type: type
-          });
-        }
-  }
-
-  return null;
-}
-
-function isBoolean(obj) {
-  return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-}
-
-function isNumber(obj) {
-  return toString.call(obj) === '[object Number]';
-}
-
-function isObject(obj) {
-  var type = typeof obj;
-  return type === 'function' || type === 'object' && Boolean(obj);
-}
-
-function isEditableArray(array) {
-  for (var i = 0, len = array.length; i < len; i++) {
-    var item = array[i];
-    if (typeof item !== 'string') {
-      return false;
-    }
-  }
-  return true;
 }
 module.exports = exports.default;
 /* Package title. */ /* Category Title */

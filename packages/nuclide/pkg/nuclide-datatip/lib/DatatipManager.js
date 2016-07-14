@@ -138,7 +138,8 @@ var DatatipManager = (function () {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event, editor, editorView) {
-      this._debouncedMouseMove(event, editor, editorView);
+      var mouseEvent = event;
+      this._debouncedMouseMove(mouseEvent, editor, editorView);
     }
   }, {
     key: 'toggleDatatip',

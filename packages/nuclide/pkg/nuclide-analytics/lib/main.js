@@ -34,6 +34,12 @@ function _commonsNodePromise() {
   return _commonsNodePromise2 = require('../../commons-node/promise');
 }
 
+var _commonsNodeString2;
+
+function _commonsNodeString() {
+  return _commonsNodeString2 = require('../../commons-node/string');
+}
+
 var _track2;
 
 function _track() {
@@ -116,7 +122,7 @@ function trackTiming() {
 
       if (!eventName) {
         var constructorName = this.constructor ? this.constructor.name : undefined;
-        eventName = constructorName + '.' + name;
+        eventName = (0, (_commonsNodeString2 || _commonsNodeString()).maybeToString)(constructorName) + '.' + name;
       }
 
       return trackOperationTiming(eventName,

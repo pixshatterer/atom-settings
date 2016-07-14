@@ -10,7 +10,6 @@ Object.defineProperty(exports, '__esModule', {
  * the root directory of this source tree.
  */
 
-exports.compareHackCompletions = compareHackCompletions;
 exports.getIdentifierAndRange = getIdentifierAndRange;
 exports.getIdentifierAtPosition = getIdentifierAtPosition;
 
@@ -60,10 +59,10 @@ function _assert() {
   return _assert2 = _interopRequireDefault(require('assert'));
 }
 
-var _commonsAtomWordAtPosition2;
+var _commonsAtomRange2;
 
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _commonsNodePassesGK2;
@@ -72,57 +71,12 @@ function _commonsNodePassesGK() {
   return _commonsNodePassesGK2 = _interopRequireDefault(require('../../commons-node/passesGK'));
 }
 
-var MATCH_PREFIX_CASE_SENSITIVE_SCORE = 6;
-var MATCH_PREFIX_CASE_INSENSITIVE_SCORE = 4;
-var MATCH_TOKEN_CASE_SENSITIVE_SCORE = 2;
-var MATCH_TOKEN_CASE_INSENSITIVE_SCORE = 0;
-var MATCH_PRIVATE_FUNCTION_PENALTY = -4;
-var MATCH_APLHABETICAL_SCORE = 1;
 var HACK_SERVICE_NAME = 'HackService';
-
-function compareHackCompletions(token) {
-  var tokenLowerCase = token.toLowerCase();
-
-  return function (matchText1, matchText2) {
-    var matchTexts = [matchText1, matchText2];
-    var scores = matchTexts.map(function (matchText, i) {
-      if (matchText.startsWith(token)) {
-        // Matches starting with the prefix gets the highest score.
-        return MATCH_PREFIX_CASE_SENSITIVE_SCORE;
-      } else if (matchText.toLowerCase().startsWith(tokenLowerCase)) {
-        // Ignore case score matches gets a good score.
-        return MATCH_PREFIX_CASE_INSENSITIVE_SCORE;
-      }
-
-      var score = undefined;
-      if (matchText.indexOf(token) !== -1) {
-        // Small score for a match that contains the token case-sensitive.
-        score = MATCH_TOKEN_CASE_SENSITIVE_SCORE;
-      } else {
-        // Zero score for a match that contains the token without case-sensitive matching.
-        score = MATCH_TOKEN_CASE_INSENSITIVE_SCORE;
-      }
-
-      // Private functions gets negative score.
-      if (matchText.startsWith('_')) {
-        score += MATCH_PRIVATE_FUNCTION_PENALTY;
-      }
-      return score;
-    });
-    // Finally, consider the alphabetical order, but not higher than any other score.
-    if (matchTexts[0] < matchTexts[1]) {
-      scores[0] += MATCH_APLHABETICAL_SCORE;
-    } else {
-      scores[1] += MATCH_APLHABETICAL_SCORE;
-    }
-    return scores[1] - scores[0];
-  };
-}
 
 var HACK_WORD_REGEX = /[a-zA-Z0-9_$]+/g;
 
 function getIdentifierAndRange(editor, position) {
-  var matchData = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position, HACK_WORD_REGEX);
+  var matchData = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position, HACK_WORD_REGEX);
   return matchData == null || matchData.wordMatch.length === 0 ? null : { id: matchData.wordMatch[0], range: matchData.range };
 }
 

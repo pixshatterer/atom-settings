@@ -14,6 +14,8 @@ var GRAMMAR_SET = new Set(['source.python']);
 exports.GRAMMAR_SET = GRAMMAR_SET;
 var PACKAGE_NAME = 'nuclide-python';
 exports.PACKAGE_NAME = PACKAGE_NAME;
+var NO_LINT_EXTENSIONS = new Set(['BUCK', 'TARGETS', 'cconf', 'cinc', 'ctw', 'mcconf', 'tw']);
+exports.NO_LINT_EXTENSIONS = NO_LINT_EXTENSIONS;
 // Type mappings between Jedi types and autocomplete-plus types used for styling.
 var TYPES = {
   module: 'import',

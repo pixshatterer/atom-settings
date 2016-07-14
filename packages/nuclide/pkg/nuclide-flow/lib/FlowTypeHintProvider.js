@@ -28,10 +28,10 @@ function _assert() {
   return _assert2 = _interopRequireDefault(require('assert'));
 }
 
-var _commonsAtomWordAtPosition2;
+var _commonsAtomRange2;
 
-function _commonsAtomWordAtPosition() {
-  return _commonsAtomWordAtPosition2 = _interopRequireDefault(require('../../commons-atom/word-at-position'));
+function _commonsAtomRange() {
+  return _commonsAtomRange2 = require('../../commons-atom/range');
 }
 
 var _nuclideFeatureConfig2;
@@ -91,7 +91,7 @@ var FlowTypeHintProvider = (function () {
       // TODO(nmote) refine this regex to better capture JavaScript expressions.
       // Having this regex be not quite right is just a display issue, though --
       // it only affects the location of the tooltip.
-      var word = (0, (_commonsAtomWordAtPosition2 || _commonsAtomWordAtPosition()).default)(editor, position, (_constants2 || _constants()).JAVASCRIPT_WORD_REGEX);
+      var word = (0, (_commonsAtomRange2 || _commonsAtomRange()).wordAtPosition)(editor, position, (_constants2 || _constants()).JAVASCRIPT_WORD_REGEX);
       var range = undefined;
       if (word) {
         range = word.range;

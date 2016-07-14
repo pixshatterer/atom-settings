@@ -38,9 +38,11 @@ function getDefaultFlags() {
   return config.defaultFlags;
 }
 
+var clangServices = new WeakSet();
+
 module.exports = {
 
-  getDiagnostics: _asyncToGenerator(function* (editor, clean) {
+  getDiagnostics: _asyncToGenerator(function* (editor) {
     var src = editor.getPath();
     if (src == null) {
       return null;
@@ -51,7 +53,14 @@ module.exports = {
     var service = (0, (_nuclideRemoteConnection2 || _nuclideRemoteConnection()).getServiceByNuclideUri)('ClangService', src);
     (0, (_assert2 || _assert()).default)(service);
 
-    return service.compile(src, contents, clean, defaultFlags).toPromise();
+    // When we fetch diagnostics for the first time, reset the server state.
+    // This is so the user can easily refresh the Clang + Buck state by reloading Atom.
+    if (!clangServices.has(service)) {
+      clangServices.add(service);
+      yield service.reset();
+    }
+
+    return service.compile(src, contents, defaultFlags).toPromise();
   }),
 
   getCompletions: _asyncToGenerator(function* (editor, prefix) {

@@ -18,10 +18,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * the root directory of this source tree.
  */
 
-var _FileTreeHelpers2;
+var _MomoizedFieldsDeriver2;
 
-function _FileTreeHelpers() {
-  return _FileTreeHelpers2 = require('./FileTreeHelpers');
+function _MomoizedFieldsDeriver() {
+  return _MomoizedFieldsDeriver2 = require('./MomoizedFieldsDeriver');
 }
 
 var _nuclideRemoteUri2;
@@ -34,12 +34,6 @@ var _immutable2;
 
 function _immutable() {
   return _immutable2 = _interopRequireDefault(require('immutable'));
-}
-
-var _nuclideHgRepositoryBaseLibHgConstants2;
-
-function _nuclideHgRepositoryBaseLibHgConstants() {
-  return _nuclideHgRepositoryBaseLibHgConstants2 = require('../../nuclide-hg-repository-base/lib/hg-constants');
 }
 
 var DEFAULT_OPTIONS = {
@@ -64,16 +58,14 @@ var DEFAULT_OPTIONS = {
 * links no properties are to be updated after the creation.
 *
 *   The class contains multiple derived fields. The derived fields are calculated from the options,
-* from the configuration values and even from chieldren's properties. Once calculated the properties
-* are immutable.
+* from the configuration values and even from children's properties. Once calculated the properties
+* are immutable. This calculation is handled by a separate class - `MemoizedFieldsDeriver`. It
+* is optimized to avoid redundant recalculations.
 *
 *   Setting any of the properties (except for the aforementioned links to parent and siblings) will
 * create a new instance of the class, with required properties set. If, however, the set operation
 * is a no-op (such if setting a property to the same value it already has), new instance creation
 * is not skipped and same instance is returned instead.
-*
-*   When possible, the class
-* strives not to recompute the derived fields, but reuses the previous values.
 *
 *
 * THE CONFIGURATION
@@ -94,7 +86,7 @@ var DEFAULT_OPTIONS = {
 * needs to find the parent of a node. Parent property, however, can't be one of the node's immutable
 * fields, otherwise it'd create circular references. Therefore the parent property is never given
 * to the node's constructor, but rather set by the parent itself when the node is assigned to it.
-* This means that we need to avoid the state when same node node is contained in the .children map
+* This means that we must avoid the state when same node node is contained in the .children map
 * of several other nodes. As only the latest one it was assigned to is considered its parent from
 * the node's perspective.
 *
@@ -106,13 +98,6 @@ var DEFAULT_OPTIONS = {
 * visible sub-tree.
 *
 *   All property derivation and links set-up is done with one traversal only over the children.
-*
-*
-* HACKS
-*   In order to make things efficient the recalculation of the derived fields is being avoided when
-* possible. For instance, when setting an unrelated property, when an instance is created all
-* of the derived fields are just copied over in the `options` instance even though they don't
-* match the type definition of the options.
 */
 
 var FileTreeNode = (function () {
@@ -136,7 +121,7 @@ var FileTreeNode = (function () {
   }]);
 
   function FileTreeNode(options, conf) {
-    var _derivedChange = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+    var _deriver = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
     _classCallCheck(this, FileTreeNode);
 
@@ -147,15 +132,9 @@ var FileTreeNode = (function () {
 
     this._assignOptions(options);
 
-    // Perf optimization:
-    // when conf does not change the derived fields will be passed along with the options
-    // it's not type-safe, but it's way more efficient than recalculate them
-    if (_derivedChange) {
-      var derived = this._buildDerivedFields(options.uri, options.rootUri, conf);
-      this._assignDerived(derived);
-    } else {
-      this._assignDerived(options);
-    }
+    this._deriver = _deriver || new (_MomoizedFieldsDeriver2 || _MomoizedFieldsDeriver()).MomoizedFieldsDeriver(options.uri, options.rootUri);
+    var derived = this._deriver.buildDerivedFields(conf);
+    this._assignDerived(derived);
 
     this._handleChildren();
   }
@@ -298,21 +277,7 @@ var FileTreeNode = (function () {
         connectionTitle: this.connectionTitle,
         subscription: this.subscription,
         highlightedText: this.highlightedText,
-        matchesFilter: this.matchesFilter,
-
-        // Derived fields
-        isRoot: this.isRoot,
-        name: this.name,
-        hashKey: this.hashKey,
-        relativePath: this.relativePath,
-        localPath: this.localPath,
-        isContainer: this.isContainer,
-        shouldBeShown: this.shouldBeShown,
-        shouldBeSoftened: this.shouldBeSoftened,
-        vcsStatusCode: this.vcsStatusCode,
-        repo: this.repo,
-        isIgnored: this.isIgnored,
-        checkedStatus: this.checkedStatus
+        matchesFilter: this.matchesFilter
       };
     }
   }, {
@@ -383,7 +348,7 @@ var FileTreeNode = (function () {
         return this;
       }
 
-      return this.newNode(props, this.conf, false);
+      return this.newNode(props, this.conf);
     }
 
     /**
@@ -603,106 +568,6 @@ var FileTreeNode = (function () {
       return depth;
     }
   }, {
-    key: '_buildDerivedFields',
-    value: function _buildDerivedFields(uri, rootUri, conf) {
-      var isContainer = (0, (_FileTreeHelpers2 || _FileTreeHelpers()).isDirKey)(uri);
-      var rootVcsStatuses = conf.vcsStatuses[rootUri] || {};
-      var repo = conf.reposByRoot[rootUri];
-      var isIgnored = this._deriveIsIgnored(uri, rootUri, repo, conf);
-      var checkedStatus = this._deriveCheckedStatus(uri, isContainer, conf.editedWorkingSet);
-
-      return {
-        isRoot: uri === rootUri,
-        name: (0, (_FileTreeHelpers2 || _FileTreeHelpers()).keyToName)(uri),
-        hashKey: (0, (_FileTreeHelpers2 || _FileTreeHelpers()).buildHashKey)(uri),
-        isContainer: isContainer,
-        relativePath: uri.slice(rootUri.length),
-        localPath: (0, (_FileTreeHelpers2 || _FileTreeHelpers()).keyToPath)((_nuclideRemoteUri2 || _nuclideRemoteUri()).default.isRemote(uri) ? (_nuclideRemoteUri2 || _nuclideRemoteUri()).default.parse(uri).pathname : uri),
-        isIgnored: isIgnored,
-        shouldBeShown: this._deriveShouldBeShown(uri, rootUri, isContainer, repo, conf, isIgnored),
-        shouldBeSoftened: this._deriveShouldBeSoftened(uri, isContainer, conf),
-        vcsStatusCode: rootVcsStatuses[uri] || (_nuclideHgRepositoryBaseLibHgConstants2 || _nuclideHgRepositoryBaseLibHgConstants()).StatusCodeNumber.CLEAN,
-        repo: repo,
-        checkedStatus: checkedStatus
-      };
-    }
-  }, {
-    key: '_deriveCheckedStatus',
-    value: function _deriveCheckedStatus(uri, isContainer, editedWorkingSet) {
-      if (editedWorkingSet.isEmpty()) {
-        return 'clear';
-      }
-
-      if (isContainer) {
-        if (editedWorkingSet.containsFile(uri)) {
-          return 'checked';
-        } else if (editedWorkingSet.containsDir(uri)) {
-          return 'partial';
-        } else {
-          return 'clear';
-        }
-      }
-
-      return editedWorkingSet.containsFile(uri) ? 'checked' : 'clear';
-    }
-  }, {
-    key: '_deriveShouldBeShown',
-    value: function _deriveShouldBeShown(uri, rootUri, isContainer, repo, conf, isIgnored) {
-      if (isIgnored && conf.excludeVcsIgnoredPaths) {
-        return false;
-      }
-
-      if (conf.hideIgnoredNames && conf.ignoredPatterns.some(function (pattern) {
-        return pattern.match(uri);
-      })) {
-        return false;
-      }
-
-      if (conf.isEditingWorkingSet) {
-        return true;
-      }
-
-      if (isContainer) {
-        return conf.workingSet.containsDir(uri) || !conf.openFilesWorkingSet.isEmpty() && conf.openFilesWorkingSet.containsDir(uri);
-      } else {
-        return conf.workingSet.containsFile(uri) || !conf.openFilesWorkingSet.isEmpty() && conf.openFilesWorkingSet.containsFile(uri);
-      }
-    }
-  }, {
-    key: '_deriveIsIgnored',
-    value: function _deriveIsIgnored(uri, rootUri, repo, conf) {
-      if (repo != null && repo.isProjectAtRoot() && repo.isPathIgnored(uri)) {
-        return true;
-      }
-
-      return false;
-    }
-  }, {
-    key: '_deriveShouldBeSoftened',
-    value: function _deriveShouldBeSoftened(uri, isContainer, conf) {
-      if (conf.isEditingWorkingSet) {
-        return false;
-      }
-
-      if (conf.workingSet.isEmpty() || conf.openFilesWorkingSet.isEmpty()) {
-        return false;
-      }
-
-      if (isContainer) {
-        if (!conf.workingSet.containsDir(uri) && conf.openFilesWorkingSet.containsDir(uri)) {
-          return true;
-        }
-
-        return false;
-      } else {
-        if (!conf.workingSet.containsFile(uri) && conf.openFilesWorkingSet.containsFile(uri)) {
-          return true;
-        }
-
-        return false;
-      }
-    }
-  }, {
     key: '_propsAreTheSame',
     value: function _propsAreTheSame(props) {
       if (props.isSelected !== undefined && this.isSelected !== props.isSelected) {
@@ -748,9 +613,7 @@ var FileTreeNode = (function () {
   }, {
     key: 'newNode',
     value: function newNode(props, conf) {
-      var derivedChange = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
-
-      return new FileTreeNode(_extends({}, this._buildOptions(), props), conf, derivedChange);
+      return new FileTreeNode(_extends({}, this._buildOptions(), props), conf, this._deriver);
     }
   }, {
     key: '_findLastByNamePath',

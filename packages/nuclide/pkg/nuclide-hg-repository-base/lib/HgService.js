@@ -475,7 +475,7 @@ var HgService = (function () {
       try {
         output = yield this._hgAsyncExecute(args, options);
       } catch (e) {
-        (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)().error('Error when running hg diff for paths: ' + filePaths + ' \n\tError: ' + e.stderr);
+        (0, (_nuclideLogging2 || _nuclideLogging()).getLogger)().error('Error when running hg diff for paths: ' + filePaths.toString() + ' \n\tError: ' + e.stderr);
         return null;
       }
       var pathToDiffInfo = (0, (_hgDiffOutputParser2 || _hgDiffOutputParser()).parseMultiFileHgDiffUnifiedOutput)(output.stdout);

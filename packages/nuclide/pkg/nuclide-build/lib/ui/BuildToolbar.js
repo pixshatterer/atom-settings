@@ -111,7 +111,7 @@ var BuildToolbar = (function (_React$Component) {
               }
             })
           ),
-          ExtraUi ? (_reactForAtom2 || _reactForAtom()).React.createElement(ExtraUi, null) : null
+          ExtraUi ? (_reactForAtom2 || _reactForAtom()).React.createElement(ExtraUi, { activeTaskType: this.props.activeTaskType }) : null
         ),
         (_reactForAtom2 || _reactForAtom()).React.createElement((_ProgressBar2 || _ProgressBar()).ProgressBar, {
           progress: this.props.progress,

@@ -20,10 +20,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * the root directory of this source tree.
  */
 
+var _nuclideUiLibAddTooltip2;
+
+function _nuclideUiLibAddTooltip() {
+  return _nuclideUiLibAddTooltip2 = _interopRequireDefault(require('../../nuclide-ui/lib/add-tooltip'));
+}
+
+var _classnames2;
+
+function _classnames() {
+  return _classnames2 = _interopRequireDefault(require('classnames'));
+}
+
 var _ConnectionDetailsForm2;
 
 function _ConnectionDetailsForm() {
   return _ConnectionDetailsForm2 = _interopRequireDefault(require('./ConnectionDetailsForm'));
+}
+
+var _nuclideUiLibHR2;
+
+function _nuclideUiLibHR() {
+  return _nuclideUiLibHR2 = require('../../nuclide-ui/lib/HR');
 }
 
 var _nuclideUiLibMutableListSelector2;
@@ -55,9 +73,11 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(ConnectionDetailsPrompt.prototype), 'constructor', this).call(this, props);
     this._settingFormFieldsLock = false;
+
     this._handleConnectionDetailsFormDidChange = this._handleConnectionDetailsFormDidChange.bind(this);
-    this._onProfileClicked = this._onProfileClicked.bind(this);
+    this._onDefaultProfileClicked = this._onDefaultProfileClicked.bind(this);
     this._onDeleteProfileClicked = this._onDeleteProfileClicked.bind(this);
+    this._onProfileClicked = this._onProfileClicked.bind(this);
   }
 
   _createClass(ConnectionDetailsPrompt, [{
@@ -70,6 +90,9 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
       prevProps.connectionProfiles != null && this.props.connectionProfiles != null && prevProps.connectionProfiles.length !== this.props.connectionProfiles.length) {
         var existingConnectionDetailsForm = this.refs['connection-details-form'];
         if (existingConnectionDetailsForm) {
+          // Setting values in the ConnectionDetailsForm fires change events. However, this is a
+          // controlled update that should not trigger any change events. "Lock" change events until
+          // synchronous updates to the form are complete.
           this._settingFormFieldsLock = true;
           existingConnectionDetailsForm.setFormFields(this.getPrefilledConnectionParams());
           existingConnectionDetailsForm.clearPassword();
@@ -91,8 +114,8 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
   }, {
     key: 'getPrefilledConnectionParams',
     value: function getPrefilledConnectionParams() {
-      // If there are profiles, pre-fill the form with the information from the
-      // specified selected profile.
+      // If there are profiles, pre-fill the form with the information from the specified selected
+      // profile.
       if (this.props.connectionProfiles != null && this.props.connectionProfiles.length > 0 && this.props.indexOfSelectedConnectionProfile != null) {
         var selectedProfile = this.props.connectionProfiles[this.props.indexOfSelectedConnectionProfile];
         return selectedProfile.params;
@@ -108,10 +131,9 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
       this.props.onDidChange();
     }
   }, {
-    key: '_onProfileClicked',
-    value: function _onProfileClicked(profileId) {
-      // The id of a profile is its index in the list of props.
-      this.props.onProfileClicked(parseInt(profileId, 10));
+    key: '_onDefaultProfileClicked',
+    value: function _onDefaultProfileClicked() {
+      this.props.onProfileClicked(0);
     }
   }, {
     key: '_onDeleteProfileClicked',
@@ -119,20 +141,70 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
       if (profileId == null) {
         return;
       }
+
       // The id of a profile is its index in the list of props.
-      this.props.onDeleteProfileClicked(parseInt(profileId, 10));
+      // * This requires a `+ 1` because the default profile is sliced from the Array during render
+      //   creating an effective offset of -1 for each index passed to the `MutableListSelector`.
+      this.props.onDeleteProfileClicked(parseInt(profileId, 10) + 1);
+    }
+  }, {
+    key: '_onProfileClicked',
+    value: function _onProfileClicked(profileId) {
+      // The id of a profile is its index in the list of props.
+      // * This requires a `+ 1` because the default profile is sliced from the Array during render
+      //   creating an effective offset of -1 for each index passed to the `MutableListSelector`.
+      this.props.onProfileClicked(parseInt(profileId, 10) + 1);
     }
   }, {
     key: 'render',
     value: function render() {
+
       // If there are profiles, pre-fill the form with the information from the
       // specified selected profile.
       var prefilledConnectionParams = this.getPrefilledConnectionParams() || {};
 
-      // Create helper data structures.
+      var defaultConnectionProfileList = undefined;
       var listSelectorItems = undefined;
-      if (this.props.connectionProfiles) {
-        listSelectorItems = this.props.connectionProfiles.map(function (profile, index) {
+      var connectionProfiles = this.props.connectionProfiles;
+      if (connectionProfiles == null || connectionProfiles.length === 0) {
+        listSelectorItems = [];
+      } else {
+        var mostRecentClassName = (0, (_classnames2 || _classnames()).default)('list-item', {
+          selected: this.props.indexOfSelectedConnectionProfile === 0
+        });
+
+        defaultConnectionProfileList = (_reactForAtom2 || _reactForAtom()).React.createElement(
+          'div',
+          { className: 'block select-list' },
+          (_reactForAtom2 || _reactForAtom()).React.createElement(
+            'ol',
+            { className: 'list-group', style: { marginTop: 0 } },
+            (_reactForAtom2 || _reactForAtom()).React.createElement(
+              'li',
+              {
+                className: mostRecentClassName,
+                onClick: this._onDefaultProfileClicked,
+                onDoubleClick: this.props.onConfirm },
+              (_reactForAtom2 || _reactForAtom()).React.createElement('span', {
+                className: 'icon icon-info pull-right connection-details-icon-info',
+                ref: (0, (_nuclideUiLibAddTooltip2 || _nuclideUiLibAddTooltip()).default)({
+                  // Intentionally *not* an arrow function so the jQuery Tooltip plugin can set the
+                  // context to the Tooltip instance.
+                  placement: function placement() {
+                    // Atom modals have z indices of 9999. This Tooltip needs to stack on top of the
+                    // modal; beat the modal's z-index.
+                    this.tip.style.zIndex = 10999;
+                    return 'right';
+                  },
+                  title: 'The settings most recently used to connect. To save settings permanently, ' + 'create a profile.'
+                }) }),
+              'Most Recent'
+            )
+          ),
+          (_reactForAtom2 || _reactForAtom()).React.createElement((_nuclideUiLibHR2 || _nuclideUiLibHR()).HR, null)
+        );
+
+        listSelectorItems = connectionProfiles.slice(1).map(function (profile, index) {
           // Use the index of each profile as its id. This is safe because the
           // items are immutable (within this React component).
           return {
@@ -142,11 +214,16 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
             saveable: profile.saveable
           };
         });
-      } else {
-        listSelectorItems = [];
       }
 
-      var idOfSelectedItem = this.props.indexOfSelectedConnectionProfile == null ? null : String(this.props.indexOfSelectedConnectionProfile);
+      // The default profile is sliced from the Array to render it separately, which means
+      // decrementing the effective index into the Array passed to the `MutableListSelector`.
+      var idOfSelectedItem = this.props.indexOfSelectedConnectionProfile == null ? null : this.props.indexOfSelectedConnectionProfile - 1;
+      if (idOfSelectedItem === null || idOfSelectedItem < 0) {
+        idOfSelectedItem = null;
+      } else {
+        idOfSelectedItem = String(idOfSelectedItem);
+      }
 
       return (_reactForAtom2 || _reactForAtom()).React.createElement(
         'div',
@@ -157,6 +234,7 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
           (_reactForAtom2 || _reactForAtom()).React.createElement(
             'div',
             { className: 'connection-profiles col-xs-3 inset-panel' },
+            defaultConnectionProfileList,
             (_reactForAtom2 || _reactForAtom()).React.createElement(
               'h6',
               null,
@@ -182,6 +260,7 @@ var ConnectionDetailsPrompt = (function (_React$Component) {
               initialSshPort: prefilledConnectionParams.sshPort,
               initialPathToPrivateKey: prefilledConnectionParams.pathToPrivateKey,
               initialAuthMethod: prefilledConnectionParams.authMethod,
+              initialDisplayTitle: prefilledConnectionParams.displayTitle,
               onConfirm: this.props.onConfirm,
               onCancel: this.props.onCancel,
               onDidChange: this._handleConnectionDetailsFormDidChange,

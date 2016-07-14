@@ -60,6 +60,7 @@ function printLiteral(print, node, context) {
           } else {
             spaceNeeded = true;
           }
+          // $FlowFixMe(kad)
           return [i > 0 ? breakMarker : (_constantsMarkers2 || _constantsMarkers()).default.empty, line];
         }))
       };

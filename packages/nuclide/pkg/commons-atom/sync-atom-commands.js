@@ -47,7 +47,7 @@ function syncAtomCommands(source, project) {
     return (_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.of(new Set()).concat((_rxjsBundlesRxUmdMinJs2 || _rxjsBundlesRxUmdMinJs()).Observable.throw(err));
   });
 
-  return (0, (_commonsNodeStream2 || _commonsNodeStream()).reconcileSetDiffs)((0, (_commonsNodeStream2 || _commonsNodeStream()).diffSets)(sets), function (item) {
+  return (0, (_commonsNodeStream2 || _commonsNodeStream()).reconcileSets)(sets, function (item) {
     var commands = project(item);
     var disposables = Object.keys(commands).map(function (target) {
       return atom.commands.add(target, commands[target]);
